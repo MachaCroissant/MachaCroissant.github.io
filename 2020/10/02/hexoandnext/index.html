@@ -19,30 +19,32 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="记录，分享。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="来个抹茶可颂">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="首先声明本文不是指南，主要是涉及自己在搭建个人博客时的踩坑合集以及出坑方法，最后给出一些实用文档予以借鉴。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于Hexo+NexT搭建个人博客的分享">
+<meta property="og:url" content="http://example.com/2020/10/02/hexoandnext/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="记录，分享。">
+<meta property="og:description" content="首先声明本文不是指南，主要是涉及自己在搭建个人博客时的踩坑合集以及出坑方法，最后给出一些实用文档予以借鉴。">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-02T05:00:11.000Z">
+<meta property="article:modified_time" content="2020-10-02T08:54:36.909Z">
 <meta property="article:author" content="徐徐">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/">
+<link rel="canonical" href="http://example.com/2020/10/02/hexoandnext/">
 
 
 <script id="page-configurations">
   // https://hexo.io/docs/variables.html
   CONFIG.page = {
     sidebar: "",
-    isHome : true,
-    isPost : false,
+    isHome : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>来个抹茶可颂</title>
+  <title>关于Hexo+NexT搭建个人博客的分享 | 来个抹茶可颂</title>
   
 
 
@@ -150,9 +152,10 @@
         <div class="content-wrap">
           
 
-          <div class="content index posts-expand">
+          <div class="content post posts-expand">
             
-      
+
+    
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
@@ -168,10 +171,9 @@
       <meta itemprop="name" content="来个抹茶可颂">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/02/hexoandnext/" class="post-title-link" itemprop="url">关于Hexo+NexT搭建个人博客的分享</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          关于Hexo+NexT搭建个人博客的分享
+        </h1>
 
         <div class="post-meta">
             <span class="post-meta-item">
@@ -208,6 +210,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>3 分钟</span>
             </span>
+            <div class="post-description">首先声明本文不是指南，主要是涉及自己在搭建个人博客时的踩坑合集以及出坑方法，最后给出一些实用文档予以借鉴。</div>
 
         </div>
       </header>
@@ -218,119 +221,55 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <p>首先声明本文不是指南，主要是涉及自己在搭建个人博客时的踩坑合集以及出坑方法，最后给出一些实用文档予以借鉴。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/02/hexoandnext/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
+        <h1 id="踩坑与出坑"><a href="#踩坑与出坑" class="headerlink" title="踩坑与出坑"></a>踩坑与出坑</h1><h2 id="Mac终端生成SSH-key并添加到Github上"><a href="#Mac终端生成SSH-key并添加到Github上" class="headerlink" title="Mac终端生成SSH key并添加到Github上"></a>Mac终端生成SSH key并添加到Github上</h2><p>参考<a target="_blank" rel="noopener" href="https://vic.kim/2019/05/21/Mac%E7%94%B5%E8%84%91%E7%94%A8%E7%BB%88%E7%AB%AF%E7%94%9F%E6%88%90SSH%20key%20%E8%AE%BF%E9%97%AE%E8%87%AA%E5%B7%B1%E7%9A%84Github/">这篇博客</a>。</p>
+<p>比较实用的部分是<code>如何检测SSH key是否有权限访问github</code>这一部分，通过在终端输入<code>ssh git@github.com</code>。</p>
+<h2 id="执行npm-install出现的各种问题"><a href="#执行npm-install出现的各种问题" class="headerlink" title="执行npm install出现的各种问题"></a>执行<code>npm install</code>出现的各种问题</h2><p>错误1：<code>npm ERR! Unexpected end of JSON input while parsing near</code></p>
+<p>执行<code>npm cache clean --force</code>，再执行<code>npm intsall</code>。可能要多尝试几次。</p>
+<p>错误2：<code>Missing write access to /usr/local/lib/node_modules</code></p>
+<p>执行<code>sudo chown -R $USER /usr/local/lib/node_modules</code>，具体解释在<a target="_blank" rel="noopener" href="https://flaviocopes.com/npm-fix-missing-write-access-error/">此处</a>。</p>
+<p>错误3：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/42735837/git-bash-remote-error-you-cant-push-to-git-github-com">Git Bash: remote error: You can’t push to git://github.com/</a></p>
+<p>需要使用HTTPS或SSH URL。</p>
+<h2 id="区分-config-yml文件"><a href="#区分-config-yml文件" class="headerlink" title="区分._config.yml文件"></a>区分._config.yml文件</h2><p>在<code>hexo site root direcotory</code>和<code>theme directory under site root directory</code>下分别有两个<code>._config.yml</code>文件，在阅读安装教程时请一定要看仔细每一步操作是针对哪一个配置文件进行的。</p>
+<p>学会熟练使用配置文件comment中给出的链接，阅读相关内容即可设置出想要的效果。在遇到问题时优先选择阅读最新官方文档！</p>
+<h1 id="实用指南"><a href="#实用指南" class="headerlink" title="实用指南"></a>实用指南</h1><h2 id="博客运作原理"><a href="#博客运作原理" class="headerlink" title="博客运作原理"></a>博客运作原理</h2><p> <a target="_blank" rel="noopener" href="https://juejin.im/post/6844904131266609165">彻底搞懂如何使用Hexo+GitHubPages搭建个人博客</a></p>
+<p>建议参考这篇文章前半部分，能够帮助理解Hexo和Github Pages之间的关系，Hexo在博客中扮演什么角色，Github Pages在博客中扮演什么角色。</p>
+<h2 id="域名解析配置"><a href="#域名解析配置" class="headerlink" title="域名解析配置"></a>域名解析配置</h2><p><a target="_blank" rel="noopener" href="https://sketchk.xyz/2017/03/24/A-Guide-Of-Making-Your-Personal-Blog-Part-3/">A Guide of Making Your Personal Blog - Part3</a></p>
+<p>这系列文章都为我部署我的个人博客提供了很大的帮助。这一篇为我理解域名解析提供了很大帮助，它不仅告诉你操作流程，还告诉你操作流程背后的原因。</p>
+<p>主要有三个部分：Namecheap购买域名，Cloudflare域名解析，Github响应解析。</p>
+<p>Namecheap购买完域名之后，我们需要告诉Namecheap我需要通过Cloudflare的服务器进行域名解析，而不是通过namecheap自带的服务器解析。所以，我们需要在购买的域名中选择<code>Custom DNS</code>，并将<code>nameservers</code>的值更改为Cloudflare的服务器的地址。</p>
+<p>为了获得Cloudflare的服务器地址，需要访问Cloudflare的网站。在这里为购买的域名添加记录，目的是将域名指向Github服务器的地址，添加记录的类型均为CNAME。</p>
+<p>我们在这个定位到的是Github服务器的地址，但是服务器却不知道该返回什么样的子资源。为了让属于我们的Github Pages被返回，我们需要将Github Pages的<code>Settings</code>中的<code>Custom Domain</code>设定为在Namecheap购买的域名。</p>
+<p>由此才可以建立起完整的域名解析。</p>
+<h2 id="Hexo官方文档"><a href="#Hexo官方文档" class="headerlink" title="Hexo官方文档"></a>Hexo官方文档</h2><p><a target="_blank" rel="noopener" href="https://hexo.io/docs/">这是Hexo官方文档</a></p>
+<p>此官方文档能够指导的内容有：Node.js的安装、Hexo的安装、Hexo生成文件中各个参数的作用、如何使用Hexo来产出博客内容。</p>
+<h2 id="NexT官方文档"><a href="#NexT官方文档" class="headerlink" title="NexT官方文档"></a>NexT官方文档</h2><p><a target="_blank" rel="noopener" href="https://theme-next.js.org/">这是NexT最新说明文档</a></p>
+<p>之前已知参考的是<a target="_blank" rel="noopener" href="https://theme-next.iissnan.com/getting-started.html">iissnan</a>给出的说明文档，但是由于NexT更新，最新的指南应该根据最新的文档，否则会发现有<code>hexo/themes/next/_config.yml</code>配置文件内容的不同。</p>
+<p>另外，这个最新的文档似乎没有中文版。</p>
+
     </div>
 
     
     
     
+
       <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
 
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/02/fooder-collection/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="徐徐">
-      <meta itemprop="description" content="记录，分享。">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="来个抹茶可颂">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/10/02/fooder-collection/" class="post-title-link" itemprop="url">B站美食区up主推荐</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-              
-
-              <time title="创建时间：2020-10-02 00:00:00 / 修改时间：16:54:35" itemprop="dateCreated datePublished" datetime="2020-10-02T00:00:00+08:00">2020-10-02</time>
-            </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E9%A3%9F%E7%89%A9%E7%8C%8E%E4%BA%BA/" itemprop="url" rel="index"><span itemprop="name">食物猎人</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>2.6k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
-            </span>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <p>这篇文章主要介绍一些私人收藏、关注许久的B站美食up主们。大致可以分为四类：烘焙专长、硬菜复刻、健康轻食、评测探店。</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2020/10/02/fooder-collection/">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/02/fooder-collection/" rel="prev" title="B站美食区up主推荐">
+      <i class="fa fa-chevron-left"></i> B站美食区up主推荐
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
       </footer>
+    
   </article>
   
   
-  
-
-
   
 
 
@@ -383,6 +322,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%B8%A9%E5%9D%91%E4%B8%8E%E5%87%BA%E5%9D%91"><span class="nav-number">1.</span> <span class="nav-text">踩坑与出坑</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mac%E7%BB%88%E7%AB%AF%E7%94%9F%E6%88%90SSH-key%E5%B9%B6%E6%B7%BB%E5%8A%A0%E5%88%B0Github%E4%B8%8A"><span class="nav-number">1.1.</span> <span class="nav-text">Mac终端生成SSH key并添加到Github上</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%A7%E8%A1%8Cnpm-install%E5%87%BA%E7%8E%B0%E7%9A%84%E5%90%84%E7%A7%8D%E9%97%AE%E9%A2%98"><span class="nav-number">1.2.</span> <span class="nav-text">执行npm install出现的各种问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%86-config-yml%E6%96%87%E4%BB%B6"><span class="nav-number">1.3.</span> <span class="nav-text">区分._config.yml文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-number">2.</span> <span class="nav-text">实用指南</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%9A%E5%AE%A2%E8%BF%90%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">博客运作原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%9F%E5%90%8D%E8%A7%A3%E6%9E%90%E9%85%8D%E7%BD%AE"><span class="nav-number">2.2.</span> <span class="nav-text">域名解析配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Hexo%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3"><span class="nav-number">2.3.</span> <span class="nav-text">Hexo官方文档</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NexT%E5%AE%98%E6%96%B9%E6%96%87%E6%A1%A3"><span class="nav-number">2.4.</span> <span class="nav-text">NexT官方文档</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
