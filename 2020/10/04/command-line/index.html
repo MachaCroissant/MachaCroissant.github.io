@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="阅读学习MDN web docs Command line crash course的记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常用命令行的整理与记忆">
+<meta property="og:url" content="http://example.com/2020/10/04/command-line/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="阅读学习MDN web docs Command line crash course的记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-04T03:02:14.000Z">
+<meta property="article:modified_time" content="2020-10-05T01:04:27.401Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="CS基础">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/10/04/command-line/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>常用命令行的整理与记忆 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/04/command-line/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常用命令行的整理与记忆
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-04 11:02:14" itemprop="dateCreated datePublished" datetime="2020-10-04T11:02:14+08:00">2020-10-04</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-05 09:04:27" itemprop="dateModified" datetime="2020-10-05T09:04:27+08:00">2020-10-05</time>
+              </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">阅读学习MDN web docs Command line crash course的记录。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="内置命令行"><a href="#内置命令行" class="headerlink" title="内置命令行"></a>内置命令行</h1><p>CLI tools: command line interface tools</p>
+<p>Change directory: <code>cd your-target-directory</code>.</p>
+<p>Listing directory contents: <code>ls</code>(short for list).</p>
+<p>Create a new directory in current directory: <code>mkdir your-new-directory</code>.</p>
+<p>Remove the named directory: <code>rmdir your-target-directory</code>.</p>
+<p>Create a new empty file inside the current directory: <code>touch mdn-example.md</code>.</p>
+<p>Move a file from the first specified location to the second specified location: <code>mv first-specified-location second-specified-location</code>. Technically moving a file, but practically renaming a file.</p>
+<p>Create a copy of the file:  <code>cp first-specified-location second-specified-location</code>.</p>
+<p>Remove the specified file: <code>rm your-target-file</code>. Pernament delete and can not be undone via the recycle bin.</p>
+<p>Request contents from URLs: <code>curl you-target-URLs</code></p>
+<p>Return all the lines that contain the word you want: <code>grep the-word-you-want</code></p>
+<h1 id="使用工具"><a href="#使用工具" class="headerlink" title="使用工具"></a>使用工具</h1><p>Autocomplete names: using <code>tab</code> key, a very useful terminal shortcut</p>
+<p>Look at the <code>manage</code> page to find out what options each command has available: <code>man your-target-command</code></p>
+<p>To run a command with mutiple options at the same time, you can usually put them all in a single string after the dash character.</p>
+<p>Use asterisks <code>*</code> as wild card characters meaning “any sequence of characters”, which allows you an operation concerning large number of files at once.</p>
+<p>Chian commands together using pipe symbol <code>|</code>. The pipe redirects the output of the former command to the input of the latter command.</p>
+<p>Counts the number of words, characters, or bytes of whatever is inputted into it: <code>wc the-thing-you-want-to-count</code></p>
+<h1 id="开发工具链-Tool-Chain"><a href="#开发工具链-Tool-Chain" class="headerlink" title="开发工具链 Tool Chain"></a>开发工具链 Tool Chain</h1><h2 id="Package-mangement"><a href="#Package-mangement" class="headerlink" title="Package mangement"></a>Package mangement</h2><p><code>npm</code>: Node Package Management. Together with <code>node.js</code>. A package manager is a system taht will manage your project dependencies.</p>
+<p><code>Package registries</code>: a central place that a package is published to and thus can be installed from. e.g. The npm registry exists at <a target="_blank" rel="noopener" href="https://www.npmjs.com/">npmjs.com</a>.</p>
+<p><code>dependency</code>:  a third-party bit of software that was probably written by someone else and ideally solves a single problem for you.</p>
+<h3 id="what-we-can-do-with-npm"><a href="#what-we-can-do-with-npm" class="headerlink" title="what we can do with npm"></a>what we can do with npm</h3><p>Intialise a new project: <code>npm init</code>.</p>
+<p>installing dependencies: <code>npm install your-target-dependency</code>.</p>
+<p>updating dependencies: <code>npm update</code>. Version of dependencies are specified in <code>package.json</code>.</p>
+<p>Audit for vulnerabilities: <code>npm audit</code>.</p>
+<p>Checking on a dependency: <code>npm ls your-target-dependency</code>.</p>
+<h2 id="Development-Tools"><a href="#Development-Tools" class="headerlink" title="Development Tools"></a>Development Tools</h2><h3 id="Formatting"><a href="#Formatting" class="headerlink" title="Formatting"></a>Formatting</h3><p><code>prettier</code>: an opinionated code formatter.</p>
+<p>Find the problems in the code format and fix it: <code>prettier --wirte the-path-you-want-prettier-to-fix</code></p>
+<h3 id="Linting"><a href="#Linting" class="headerlink" title="Linting"></a>Linting</h3><p>Linting helps with code quality but also is a way to catch potential errors earlier during development.</p>
+<p><code>eslint</code>: a linting for JavaScript.</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/CS%E5%9F%BA%E7%A1%80/" rel="tag"># CS基础</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/04/myOctober-plan/" rel="prev" title="关于个人受益匪浅的生活好习惯">
+      <i class="fa fa-chevron-left"></i> 关于个人受益匪浅的生活好习惯
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/05/es6/" rel="next" title="JavaScript ES6 语法特征">
+      JavaScript ES6 语法特征 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%86%85%E7%BD%AE%E5%91%BD%E4%BB%A4%E8%A1%8C"><span class="nav-number">1.</span> <span class="nav-text">内置命令行</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">2.</span> <span class="nav-text">使用工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7%E9%93%BE-Tool-Chain"><span class="nav-number">3.</span> <span class="nav-text">开发工具链 Tool Chain</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Package-mangement"><span class="nav-number">3.1.</span> <span class="nav-text">Package mangement</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#what-we-can-do-with-npm"><span class="nav-number">3.1.1.</span> <span class="nav-text">what we can do with npm</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Development-Tools"><span class="nav-number">3.2.</span> <span class="nav-text">Development Tools</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Formatting"><span class="nav-number">3.2.1.</span> <span class="nav-text">Formatting</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Linting"><span class="nav-number">3.2.2.</span> <span class="nav-text">Linting</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">15k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">27 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

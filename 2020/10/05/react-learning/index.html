@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要提炼React官方文档作为要点，以便个人参考。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React的元素、组件与事件处理">
+<meta property="og:url" content="http://example.com/2020/10/05/react-learning/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="本文主要提炼React官方文档作为要点，以便个人参考。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-05T13:37:31.000Z">
+<meta property="article:modified_time" content="2020-10-07T10:08:53.702Z">
+<meta property="article:author" content="徐徐">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/10/05/react-learning/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>React的元素、组件与事件处理 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/05/react-learning/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React的元素、组件与事件处理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-05 21:37:31" itemprop="dateCreated datePublished" datetime="2020-10-05T21:37:31+08:00">2020-10-05</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-07 18:08:53" itemprop="dateModified" datetime="2020-10-07T18:08:53+08:00">2020-10-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+            <div class="post-description">本文主要提炼React官方文档作为要点，以便个人参考。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="HTML-DOM结点与React-DOM"><a href="#HTML-DOM结点与React-DOM" class="headerlink" title="HTML DOM结点与React DOM"></a>HTML DOM结点与React DOM</h1><p>一个HTML DOM结点对于React来说是“根”DOM结点，关于该节点的所有内容都由React DOM管理。</p>
+<p>在<code>.js</code>文件中利用<code>React</code>语法生成各种元素、组件，而后通过<code>ReactDOM.render(待渲染的元素或组件, 利用普通DOM获得HTML中的节点)</code>渲染到HTML中对应的根DOM节点中。</p>
+<p>利用React DOM的优点是它只将元素和它的子元素与它们之前的状态比较，只进行必要的更新来达到预期状态。</p>
+<h1 id="元素"><a href="#元素" class="headerlink" title="元素"></a>元素</h1><p>React元素既可以是原HTML文件中的DOM标签及其组合，也可以是用户自定义的组件。</p>
+<p><code>const element = DOM-tag-or-self-defined-component</code></p>
+<h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p><strong>组件名称必须大写字母开头。</strong></p>
+<h2 id="一般组件"><a href="#一般组件" class="headerlink" title="一般组件"></a>一般组件</h2><h3 id="函数组件：本质是编写JavaScript函数。"><a href="#函数组件：本质是编写JavaScript函数。" class="headerlink" title="函数组件：本质是编写JavaScript函数。"></a>函数组件：本质是编写JavaScript函数。</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Toppercase</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> React-element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="class组件"><a href="#class组件" class="headerlink" title="class组件"></a><code>class</code>组件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toppercase</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</span><br><span class="line">  render()&#123;</span><br><span class="line">    <span class="keyword">return</span> React-element;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="组合组件"><a href="#组合组件" class="headerlink" title="组合组件"></a>组合组件</h3><p>（更高一层级/更偏向用户层的）组件可以在其输出中引用其他（更低一层级/实现功能更单一的）组件。</p>
+<p>一般来说，每个新的React应用程序的顶层组件都是<code>App</code>组件。</p>
+<h2 id="如何抽取组件"><a href="#如何抽取组件" class="headerlink" title="如何抽取组件"></a>如何抽取组件</h2><p>元素的声明可以包含不止一个HTML结点（当然这是被允许的JSX写法），将元素抽取出来利用组件重新声明。</p>
+<p>在被抽取出来的部分需要利用<code>props</code>对象在组件内部访问组件本身的属性、子组件及其属性；在更高层次的组件内部使用较低层次的组件，使用大写的单闭合的标签来标明属性及其取值。</p>
+<p>这是属于外观的封装。</p>
+<h2 id="组件内部属性访问"><a href="#组件内部属性访问" class="headerlink" title="组件内部属性访问"></a>组件内部属性访问</h2><h3 id="props"><a href="#props" class="headerlink" title="props"></a><code>props</code></h3><p>当React元素为用户自定义组件时，它会将JSX所接收的属性attributes以及子组件children转换为<strong>单个对象</strong>传递给组件，这个对象被称为<strong>props</strong>。</p>
+<p>要在更高层级更抽象的组件层次访问更低层次更具体的组件层次，需要使用点访问，<code>props.children.child-attribute</code>或<code>props.attribute</code>。</p>
+<p><code>props</code>具有只读性，组件不能修改自身的<code>props</code>。因为这是静态的，不可更改的，后面需要在组件中引入<code>state</code>来实现组件自我更新。</p>
+<h3 id="state"><a href="#state" class="headerlink" title="state"></a><code>state</code></h3><p>1、只能在构造函数中对<code>this.state=</code>使用赋值语句。</p>
+<p>2、为了达成更改state且重新渲染组件的目的，需要使用<code>setState()</code>。</p>
+<p>3、<code>this.state</code>与<code>this.props</code>的更新可能是异步的，不要利用这两个值来更新下一个状态。应当将他们作为函数的参数传入，在函数体内更新。</p>
+<p>4、 当state包含多个属性时，单独更新其中某一个属性的值时，<code>setState()</code>会自动将更新的state合并到当前没有更改的state。</p>
+<h3 id="state与props的关系"><a href="#state与props的关系" class="headerlink" title="state与props的关系"></a>state与props的关系</h3><p>自上而下的单项数据流决定了：</p>
+<p>任何state只属于拥有并设置了它的组件，是局部的、封装的。</p>
+<p>某一组件可以将state作为props乡下传递给它的子组件。</p>
+<h2 id="将函数组件转换成class组件"><a href="#将函数组件转换成class组件" class="headerlink" title="将函数组件转换成class组件"></a>将函数组件转换成class组件</h2><h3 id="为什么需要从函数组件转换到class组件"><a href="#为什么需要从函数组件转换到class组件" class="headerlink" title="为什么需要从函数组件转换到class组件"></a>为什么需要从函数组件转换到class组件</h3><p>每次组件更新时都有实例中的<code>render()</code>被调用。</p>
+<p>让<code>ReactDOM</code>渲染DOM节点的时候，只有一个此组件的实例被创建，关于这个实例可以使用<code>state</code>或生命周期方法。</p>
+<h3 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h3><p>1、同名class且继承与<code>React.Component</code></p>
+<p>2、类体添加<code>render()</code>方法并将函数体放入其中</p>
+<p>3、函数体中的<code>this.props</code>替换<code>props</code></p>
+<p>4、删除剩余的空函数声明</p>
+<h3 id="在class组件中添加并使用state"><a href="#在class组件中添加并使用state" class="headerlink" title="在class组件中添加并使用state"></a>在class组件中添加并使用state</h3><p>1、将需要做出变化的属性从<code>props</code>的点访问转移到<code>state</code>的点访问。</p>
+<p>2、添加<code>class</code>构造函数，为<code>this.state</code>赋初始值，且通过<code>super(props)</code>传递到父类的构造函数中。</p>
+<h3 id="在class组件中添加并使用生命周期方法"><a href="#在class组件中添加并使用生命周期方法" class="headerlink" title="在class组件中添加并使用生命周期方法"></a>在class组件中添加并使用生命周期方法</h3><p>目的是在组件被销毁时释放资源。</p>
+<p>当组件第一次被渲染到DOM的时候，设置一个“挂载”(mount)。<code>componentDidMount()&#123;&#125;</code>。</p>
+<p>当组件被删除的时候，设置一个“卸载”(unmount)。<code>componentWillUnmount()&#123;&#125;</code>。</p>
+<h3 id="class组件关于state和生命周期的调用顺序"><a href="#class组件关于state和生命周期的调用顺序" class="headerlink" title="class组件关于state和生命周期的调用顺序"></a>class组件关于state和生命周期的调用顺序</h3><p>组件被传递给<code>ReactDOM.render()</code>，对应到匹配的根节点DOM，进入组件。</p>
+<p>React会调用该组件的构造函数，对象初始化。</p>
+<p>React会调用该组件的<code>render()</code>方法，确定在html页面上要展示什么，更新根节点DOM来匹配组件输出。</p>
+<p>一旦组件的初始输出被插入到根节点DOM中后，React调用组件中挂载的生命周期方法。</p>
+<p>生命周期方法或其调用的其他方法会涉及<code>setstate()</code>方法，由此React知道了state已经改变，重新调用<code>render()</code>确定页面显示内容，从而渲染更新根节点DOM。</p>
+<p>一旦组件从DOM中被移除，React调用卸载的生命周期方法。</p>
+<h2 id="列表组件与key"><a href="#列表组件与key" class="headerlink" title="列表组件与key"></a>列表组件与key</h2><p>在一个组件中渲染列表，通常可以对数组进行调用<code>arr.map( arrow-function)</code>。箭头函数执行将数组转化为列表元素(list item)的功能。</p>
+<p>当我们创建一个列表元素(list item)时，我们必须给每一个列表元素指定一个<code>key</code>属性，即<code>&lt;li key=&#123;&#125;&gt; &#123;JS-expression&#125; &lt;/li&gt;</code>。</p>
+<h3 id="key"><a href="#key" class="headerlink" title="key"></a>key</h3><p>key 帮助 React 识别哪些元素改变了，比如被添加或删除。</p>
+<p>key是传递给React的，而不是传递给组件的，即不能用<code>props.key</code>来获取key属性的值。可以另外引入一个别名属性如id，其属性值与key属性值相同，可以被组件利用<code>props.id</code>读出。</p>
+<p>一般使用数据中的id(<code>data.id</code>)来作为元素的key，不到万不得已使用元素索引。</p>
+<p>key不一定要全局唯一，但是在其兄弟节点之间独一无二。</p>
+<p>当把单个列表元素作为函数组件提取出来的时候，应该在哪里设置key？经验总是：在<code>map()</code>方法中的元素设置key。</p>
+<h2 id="受控组件与表单"><a href="#受控组件与表单" class="headerlink" title="受控组件与表单"></a>受控组件与表单</h2><h3 id="为什么需要受控组件"><a href="#为什么需要受控组件" class="headerlink" title="为什么需要受控组件"></a>为什么需要受控组件</h3><p>HTML表单元素的工作方式与其他DOM元素不一样。表单元素如<code>&lt;input&gt;</code>，<code>&lt;textarea&gt;</code>，<code>&lt;select&gt;</code>通常会维护一个属于自己的“state”，根据用户输入自动进行UI上的更新。</p>
+<p>React中，组件的state属性控制着可变状态(mutable state)，并且只能通过<code>setState()</code>来更新。</p>
+<p>需要让这两个state建立依赖关系统一起来——让React组件的state称为唯一的数据源，并让组件能够控制用户输入过程中表单发生的操作。</p>
+<p>被 React 以这种方式控制取值的表单输入元素就叫做“受控组件”。</p>
+<h3 id="受控组件的建立"><a href="#受控组件的建立" class="headerlink" title="受控组件的建立"></a>受控组件的建立</h3><p>分为两个步骤</p>
+<p>1、 将<code>React</code>里的<code>state</code>属性和表单元素的值建立依赖关系。</p>
+<p>也就是让组件获得对表单元素输入框内容的控制权。输入框的内容取决于元素的<code>value</code>属性，将表单元素的<code>value</code>属性赋值为<code>this.state.value-of-element</code>。</p>
+<p>此时，表单元素内容是只读的，用户输入新的内容并不会让组件的state有所变化。此时运行会给出警告：</p>
+<blockquote>
+<p>Warning: Failed prop type: You provided a <code>value</code> prop to a form field without an <code>onChange</code> handler. This will render a read-only field. If the field should be mutable use <code>defaultValue</code>. Otherwise, set either <code>onChange</code> or <code>readOnly</code>.</p>
+</blockquote>
+<p>2、 通过<code>onChange</code>事件与<code>setState()</code>结合更新<code>state</code>属性</p>
+<p>用一个事件来监听输入内容的改变，在回调函数中利用<code>this.setState</code>更新表单元素的<code>value</code>属性。</p>
+<h2 id="组件间的数据共享"><a href="#组件间的数据共享" class="headerlink" title="组件间的数据共享"></a>组件间的数据共享</h2><p>多个组件需要反应相同的数据变化时，需要把共享<strong>状态提升</strong>到共同父组件中去，让父组件中共享的state称为多个子组件的唯一的数据源。实现<strong>自上而下的数据流</strong>。</p>
+<p>一般在一个组件内部变化的数据通过state来访问或控制，多个组件在个字内部的state中相互独立地保存着各自的数据。</p>
+<h3 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h3><p>第一步，需要夺取子组件对共享数据的控制权，包括初始赋值与变化赋值。其思想与受控组件相同。</p>
+<p>将想要共享的数据从由子组件内部state访问变成由父组件props传入，即由<code>this.state.shared-data</code>变为<code>this.props.shared-data</code>。</p>
+<p>当我们需要子组件相应来自父组件的数据改变时，不再使用<code>this.setState()</code>，而是调用<code>this.props.shared-data-change-function</code>，获取父组件中具体的值，这个值就是一个事件处理函数。</p>
+<p>第二步，相应改变父组件。</p>
+<p>需要在父组件中构造函数中把<code>this.state</code>设置为想要共享的数据。</p>
+<p>在父组件中提供子组件相应数据更改的函数，并作为属性值传入子组件中。</p>
+<h1 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h1><h2 id="空元素"><a href="#空元素" class="headerlink" title="空元素"></a>空元素</h2><p>**空元素(empty element)**是在HTML中不能存在子节点（例如内嵌的元素或者元素内的文本）的element。</p>
+<p>一般的HTML元素的名称是在<strong>尖括号</strong>中使用的<strong>小写</strong>名称。例如，<code>&lt;p&gt;&lt;\p&gt;</code>带有一个斜杠开始的<strong>结束标记</strong>。</p>
+<p>在一个空元素上结束标记既不需要也不允许，使用闭合标签是无效的。<code>&lt;input&gt;&lt;\input&gt;</code>是无效的写法，应该使用<code>&lt;input \&gt;</code>。</p>
+<h2 id="组件使用的约定"><a href="#组件使用的约定" class="headerlink" title="组件使用的约定"></a>组件使用的约定</h2><p>在组件使用中我们需要注意两点：</p>
+<p>1、 必须大写字母开头。这是为了和一般的HTML元素的小写名称加以区别</p>
+<p>2、 在使用时没有闭合标签。这样的组件就与之前提到的空元素类似。</p>
+<p>第二个注意点不一定是完全成立。当我在组件中包含/嵌套子组件，可以通过带闭合标签的尖括号将子组件传递给组合组件。由此引入组合、<code>props.children</code>的概念。</p>
+<h2 id="组合与props"><a href="#组合与props" class="headerlink" title="组合与props"></a>组合与<code>props</code></h2><p>方式1:</p>
+<p>在组件定义中引入<code>&#123;props.children&#125;</code>。</p>
+<p>在组件使用时传入<code>&lt;Component&gt;your-children-Component&lt;\Component&gt;</code>。</p>
+<p>方式2:</p>
+<p>在组件定义中引入<code>&#123;props.self-defined-attribute&#125;</code>。</p>
+<p>在组件使用时传入<code>&lt;Component self-defiend-attribute=&#123;sub-Component&#125;\&gt;</code>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/05/react-components/" rel="prev" title="React的条件渲染">
+      <i class="fa fa-chevron-left"></i> React的条件渲染
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/06/callback-function/" rel="next" title="JavaScript中的回调函数">
+      JavaScript中的回调函数 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#HTML-DOM%E7%BB%93%E7%82%B9%E4%B8%8EReact-DOM"><span class="nav-number">1.</span> <span class="nav-text">HTML DOM结点与React DOM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%83%E7%B4%A0"><span class="nav-number">2.</span> <span class="nav-text">元素</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6"><span class="nav-number">3.</span> <span class="nav-text">组件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E8%88%AC%E7%BB%84%E4%BB%B6"><span class="nav-number">3.1.</span> <span class="nav-text">一般组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6%EF%BC%9A%E6%9C%AC%E8%B4%A8%E6%98%AF%E7%BC%96%E5%86%99JavaScript%E5%87%BD%E6%95%B0%E3%80%82"><span class="nav-number">3.1.1.</span> <span class="nav-text">函数组件：本质是编写JavaScript函数。</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#class%E7%BB%84%E4%BB%B6"><span class="nav-number">3.1.2.</span> <span class="nav-text">class组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E7%BB%84%E4%BB%B6"><span class="nav-number">3.1.3.</span> <span class="nav-text">组合组件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%8A%BD%E5%8F%96%E7%BB%84%E4%BB%B6"><span class="nav-number">3.2.</span> <span class="nav-text">如何抽取组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E5%86%85%E9%83%A8%E5%B1%9E%E6%80%A7%E8%AE%BF%E9%97%AE"><span class="nav-number">3.3.</span> <span class="nav-text">组件内部属性访问</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#props"><span class="nav-number">3.3.1.</span> <span class="nav-text">props</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#state"><span class="nav-number">3.3.2.</span> <span class="nav-text">state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#state%E4%B8%8Eprops%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">3.3.3.</span> <span class="nav-text">state与props的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B0%86%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6%E8%BD%AC%E6%8D%A2%E6%88%90class%E7%BB%84%E4%BB%B6"><span class="nav-number">3.4.</span> <span class="nav-text">将函数组件转换成class组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E4%BB%8E%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6%E8%BD%AC%E6%8D%A2%E5%88%B0class%E7%BB%84%E4%BB%B6"><span class="nav-number">3.4.1.</span> <span class="nav-text">为什么需要从函数组件转换到class组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.4.2.</span> <span class="nav-text">步骤</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8class%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%B9%B6%E4%BD%BF%E7%94%A8state"><span class="nav-number">3.4.3.</span> <span class="nav-text">在class组件中添加并使用state</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8class%E7%BB%84%E4%BB%B6%E4%B8%AD%E6%B7%BB%E5%8A%A0%E5%B9%B6%E4%BD%BF%E7%94%A8%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E6%96%B9%E6%B3%95"><span class="nav-number">3.4.4.</span> <span class="nav-text">在class组件中添加并使用生命周期方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#class%E7%BB%84%E4%BB%B6%E5%85%B3%E4%BA%8Estate%E5%92%8C%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F%E7%9A%84%E8%B0%83%E7%94%A8%E9%A1%BA%E5%BA%8F"><span class="nav-number">3.4.5.</span> <span class="nav-text">class组件关于state和生命周期的调用顺序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%97%E8%A1%A8%E7%BB%84%E4%BB%B6%E4%B8%8Ekey"><span class="nav-number">3.5.</span> <span class="nav-text">列表组件与key</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#key"><span class="nav-number">3.5.1.</span> <span class="nav-text">key</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6%E4%B8%8E%E8%A1%A8%E5%8D%95"><span class="nav-number">3.6.</span> <span class="nav-text">受控组件与表单</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6"><span class="nav-number">3.6.1.</span> <span class="nav-text">为什么需要受控组件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%97%E6%8E%A7%E7%BB%84%E4%BB%B6%E7%9A%84%E5%BB%BA%E7%AB%8B"><span class="nav-number">3.6.2.</span> <span class="nav-text">受控组件的建立</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E5%85%B1%E4%BA%AB"><span class="nav-number">3.7.</span> <span class="nav-text">组件间的数据共享</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%AD%A5%E9%AA%A4"><span class="nav-number">3.7.1.</span> <span class="nav-text">操作步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%84%E5%90%88"><span class="nav-number">4.</span> <span class="nav-text">组合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%A9%BA%E5%85%83%E7%B4%A0"><span class="nav-number">4.1.</span> <span class="nav-text">空元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E4%BB%B6%E4%BD%BF%E7%94%A8%E7%9A%84%E7%BA%A6%E5%AE%9A"><span class="nav-number">4.2.</span> <span class="nav-text">组件使用的约定</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%84%E5%90%88%E4%B8%8Eprops"><span class="nav-number">4.3.</span> <span class="nav-text">组合与props</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">9</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">15k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">27 分钟</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
