@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="台大李宏毅机器学习概率分类模型与Logistic回归部分。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="概率分类与Logistic回归">
+<meta property="og:url" content="http://example.com/2020/10/26/classification-basics/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="台大李宏毅机器学习概率分类模型与Logistic回归部分。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-10-26T05:48:20.000Z">
+<meta property="article:modified_time" content="2020-10-28T01:45:32.666Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="DL">
+<meta property="article:tag" content="Logistic">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/10/26/classification-basics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>概率分类与Logistic回归 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/10/26/classification-basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          概率分类与Logistic回归
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-10-26 13:48:20" itemprop="dateCreated datePublished" datetime="2020-10-26T13:48:20+08:00">2020-10-26</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-10-28 09:45:32" itemprop="dateModified" datetime="2020-10-28T09:45:32+08:00">2020-10-28</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>7.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>14 分钟</span>
+            </span>
+            <div class="post-description">台大李宏毅机器学习概率分类模型与Logistic回归部分。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="分类定义"><a href="#分类定义" class="headerlink" title="分类定义"></a>分类定义</h1><p>找一个function，输入对象x的特征，输出该对象是属于n个类别中的哪一个。</p>
+<h1 id="生成模型"><a href="#生成模型" class="headerlink" title="生成模型"></a>生成模型</h1><h2 id="盒子抽球问题"><a href="#盒子抽球问题" class="headerlink" title="盒子抽球问题"></a>盒子抽球问题</h2><blockquote>
+<p>两个盒子，每个盒子中各有XX的概率抽出红球或者蓝球，问抽出一个球，抽到x号盒子中蓝色球的概率。</p>
+</blockquote>
+<h3 id="需要的已知信息"><a href="#需要的已知信息" class="headerlink" title="需要的已知信息"></a>需要的已知信息</h3><p>将一个盒子映射成一个类别，抽一个球是某个盒子中的球的概率分别是$class1-P(C_1), class2 - P(C_2)$ ；对于一个盒子，抽出球$x$的概率分别是$class1 - P(x|C_1), class2-P(x|C_2)$。</p>
+<h3 id="利用已知信息推测回答"><a href="#利用已知信息推测回答" class="headerlink" title="利用已知信息推测回答"></a>利用已知信息推测回答</h3><p>对于给定的一个$x$，就可以计算出它属于每一个盒子的概率是多少<br>$$<br>P(C_i|x)=\frac{P(x|C_i)*P(C_i)}{\sum{P(x|C_i)*P(C_i)}}(贝叶斯公式)=\frac{P(x|C_i)*P(C_i)}{P(x)(全概率公式)}<br>$$</p>
+<p>依据哪个盒子的概率大，我们就判断这个球属于哪个盒子。</p>
+<p>如何获得等式右边的各种数据？我们需要从训练集中估测需要的已知信息。这个想法叫做**生成模型(Generative Model)**。</p>
+<h2 id="贝叶斯公式"><a href="#贝叶斯公式" class="headerlink" title="贝叶斯公式"></a>贝叶斯公式</h2><h3 id="先验概率"><a href="#先验概率" class="headerlink" title="先验概率"></a>先验概率</h3><p>先验概率是通过我们的训练集，也就是已知分类的对象来获取的。</p>
+<p>对于某个特定分类的对象的数据，可以把它当作某个随机变量$X$的抽样。如果我们有了这个随机变量$X$的分布函数或概率密度函数，就可以推测其他我们未知取值的概率。</p>
+<p>每一个真实世界中的待分类或者已分类的对象需要在数学上被抽象成一个vector，该vector的每个分量都是这个对象的attribute，我们称之为feature。</p>
+<h3 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h3><p>如何确定这个训练集数据的分布函数或概率密度函数呢？</p>
+<p>首先要确定这个分布的形式。是高斯分布、伯努利分布或者其他，这需要自己选择。例如对于二元分类来说，可以假设是符合Bernoulli distribution。</p>
+<p>其次将分布函数/概率密度函数看作一个function，输入的就是向量$x$，输出是选中$x$的概率。如果选高斯分布，那就是求期望$\mu$和协方差矩阵$\sum$，分别决定了最高点和离散度。</p>
+<p>根据已有sample求解概率密度函数的estimate，采用最大似然估计Maximum Likelihood。任意的期望和协方差都能构成高斯分布，都可以生成我们训练集中的数据，但是问题是对我们已有数据的命中率的高低。</p>
+<h3 id="寻找最好的函数-求参数"><a href="#寻找最好的函数-求参数" class="headerlink" title="寻找最好的函数/求参数"></a>寻找最好的函数/求参数</h3><p>如何衡量一个确定estimate为$\mu_0,\sum_0$的高斯函数对我们已有数据的命中率？引入样本的似然函数的概念。</p>
+<p>对于高斯分布的样本$x_1, x_2, x_3 \dots , x_n$，我们假设高斯分布的期望为$\mu$，协方差矩阵为$\sum$，用这些样本的概率值——也就是样本作为输入传入高斯函数后的输出——的乘积，作为样本的似然函数。<br>$$<br>L(\mu,\sum) = f_{\mu,\sum}(x_1)<em>f_{\mu,\sum}(x_2)<em>f_{\mu,\sum}(x_1) * \dots * f_{\mu,\sum}(x_n)<br>$$<br>能让$L(\mu,\sum)$最大的$L(\mu^</em>,\sum^</em>)$就是所有$L(\mu,\sum)$的最大似然估计。</p>
+<p>用数学来求解就是对两个estimate分别求偏微分为0的点。直观的来看，期望就是样本平均，协方差就是样本方差。</p>
+<h3 id="抽球模型和分类问题的联系"><a href="#抽球模型和分类问题的联系" class="headerlink" title="抽球模型和分类问题的联系"></a>抽球模型和分类问题的联系</h3><p>回到盒子抽球问题中的贝叶斯公式，等式中的$P(x|C_i)$就是通过概率密度函数求得的。</p>
+<p>我们需要定义计算出来的$P(C_i|x)$在什么样的情况下我们会把对象$x$归为$C_i$。可能概率大于某一个数值？</p>
+<p>为什么令每个类别的高斯分布的协方差矩阵相同后，高斯分布获得的最大似然函数是线性的？<br>$$<br>\begin{split}<br>P(C_1|x) &amp;= \frac{1}{1+\frac{P(x|C_2)P(C_2)}{P(x|C_1)P(C_1)}}\&amp;=\frac{1}{1+exp(-z)} \&amp;= \sigma(z)[Sigmoid , function] \<br>\end{split}<br>\<br>z = ln\frac{P(x|C_1)P(C_1)}{P(x|C_2)P(C_2)}<br>$$<br>拆分$ln$，用概率密度函数替换掉表达式的中的$P$，展开项合并，并对表达式进行关于$x$的整理，可以得到一个一次函数。</p>
+<p>详细推导见GoodNotes。</p>
+<p>$$<br>P_{\omega, b}(C_1|x) = \sigma(z) [Sigmoid Function]\<br>z = \omega  x + b<br>$$</p>
+<blockquote>
+<p>之前学的多变量分析中的判别分析，为了降低输入数据的维度，将数据投影到了组间直线的分界线上discriminant score。输入为$x$，输出经过一个一次方程式。</p>
+</blockquote>
+<p>整理出来得到的是一个一次函数，回顾之前的推导过程，我们需要estimate很多参数包括$\mu_1,\mu_2,\sum_1,\sum_2$，并且我们做了假设样本数据服从于某个分布。</p>
+<h2 id="步骤优化"><a href="#步骤优化" class="headerlink" title="步骤优化"></a>步骤优化</h2><ul>
+<li><p>描述类别的高斯分布的协方差矩阵强制相同。此时分类的边界线，也就是最大似然函数（？）是线性的，所以也叫linear model。</p>
+<p>理由有二。</p>
+<p>第一，因为协方差矩阵和输入feature的大小的平方成正比，因此feature较大时，协方差矩阵增长会过快。</p>
+<p>第二，因为模型参数过多容易过拟合，应当有效减少参数。</p>
+</li>
+<li><p>如果数据的feature是一个vector，每一个维度的概率分布相互独立，可以将多维的高斯分布通过每一维度的概率密度函数相乘，转化成一维高斯分布(Naive Bayes Classifier朴素贝叶斯分类器)。</p>
+</li>
+</ul>
+<p>从获得的结果来看，最终只与$\omega, b$有关，是否可以尝试直接求解这两个参数？由此引入Logistic Regression。</p>
+<h1 id="Logistic-Regression"><a href="#Logistic-Regression" class="headerlink" title="Logistic Regression"></a>Logistic Regression</h1><h2 id="逻辑回归的函数集"><a href="#逻辑回归的函数集" class="headerlink" title="逻辑回归的函数集"></a>逻辑回归的函数集</h2><p>定义Logistic Regression的函数集为$f_{\omega,b}(x) = P_{\omega,b}(C_1,x)=\sigma (z)$。我们需要假设训练数据集从此密度函数上获得，即任意一对$\omega,b$都能让我们的训练数据集的input通过此函数获得一个output，即在该input下，分类正确的几率作为output。</p>
+<p>对于用于训练的数据集通过某个function，可以获得input$x_1, x_2, \dots, x_n$，output$C_1, C_2, \dots, C_n$。要将所有的数据都转换成实际的数据，用分类结果$C_i$肯定不行。对于二元分类问题直接映射分类结果到0和1；对于多元分类问题该怎么办？后面解决。</p>
+<h2 id="定义损失函数-1"><a href="#定义损失函数-1" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><p>如何从function set中选出令衡量效果最好的那一个function？直观来说就是能够正确分类，输出概率最大的那个function是最好的。确定最优化函数function也就是查找一个特定的$\omega^*,b^*$。<br>$$<br>L(\omega, b) = f_{\omega,b}(x_1) f_{\omega,b}(x_2) (1-f_{\omega,b}(x_3)) \dots f_{\omega,b}(x_n)  \<br>$$</p>
+<p>$$<br>\begin{split}<br>\omega^*, b^* &amp;= {arg , \max\limits_{\omega^*,b^*}} , {L(\omega, b)} \<br>&amp;\lrarr<br>{arg , \min\limits_{\omega^*,b^*}} ,{ -\ln{L(\omega, b)}}</p>
+<p>\end{split}<br>$$</p>
+<p>注意到有两种形式的分式在相乘，不可能展开求解，需要改写函数集来同时能够匹配分类正确/属于Class0和分类错误/属于Class1两种情况。<br>$$<br>\begin{split}<br>-\ln{L(\omega, b)} &amp;= \ln{f_{\omega,b}(x_1)}\ln{f_{\omega,b}(x_2)} \ln{(1-f_{\omega,b}{(x_3)})} \dots  \<br>&amp;= \sum_\limits{n} -[\hat{y}^n \ln{f_{\omega,b}(x_n)} + (1-\hat{y}^n) \ln{(1-f_{\omega,b}(x_n))}] , \</p>
+<p>\end{split}<br>$$<br>上式可以看作两个0-1分布的交叉熵。</p>
+<h3 id="MLE-amp-amp-Cross-Entrpy-Explanation"><a href="#MLE-amp-amp-Cross-Entrpy-Explanation" class="headerlink" title="MLE &amp;&amp; Cross-Entrpy Explanation"></a>MLE &amp;&amp; Cross-Entrpy Explanation</h3><p>什么是Cross Entropy？为什么作为衡量goodness of function的标准？</p>
+<p><a target="_blank" rel="noopener" href="https://medium.com/konvergen/cross-entropy-and-maximum-likelihood-estimation-58942b52517a">Reference</a></p>
+<h4 id="熵的定义"><a href="#熵的定义" class="headerlink" title="熵的定义"></a>熵的定义</h4><p>熵用于衡量随机变量的不确定性。</p>
+<p>Entropy is a measure of <strong>the uncertainty</strong> of a random variable. If we have a random variable <em>X</em>, and we have probability mass function <em>p</em>(<em>x</em>) = Pr[<em>X=x</em>], we define the Entropy <em>H</em>(<em>X)</em> of the random variable <em>X</em> with<br>$$<br>H(X) = -\sum\limits_{x}{p(x)\log{p(x)}}<br>$$<br>由于形式和随机变量的数学期望十分相像，所以将它改写为<br>$$<br>\begin{split}<br>H(X) &amp;= -\sum\limits_{x}{p(x)\log{p(x)}} \<br>&amp;= \sum\limits_{x}{p(x)\log{\frac{1}{p(x)}}}\<br>&amp;= \mathbb{E}_{X \sim p(x)}[\log{\frac{1}{p(x)}}]<br>\end{split}<br>$$<br>So the entropy of a random variable is the expected value of the random variable log(1/<em>p</em>(<em>x</em>)) where <em>X</em> is drawn from <em>p</em>(<em>x</em>). </p>
+<hr>
+<h4 id="交叉熵"><a href="#交叉熵" class="headerlink" title="交叉熵"></a>交叉熵</h4><p>假设对于我们的数据集，有两个分布，一个是unkown but true的distribution$p(x)$，一个是modeled approximate的distribution$q(x)$。为了衡量这两个分布之间的差异性，我们引入the Kullback–Leibler divergence (also called <strong>relative entropy</strong>)的概念。如果两个分布一摸一样的话，交叉熵就是熵。<br>$$<br>\begin{split}<br>D_{KL}(p||q) &amp;= \sum\limits_{x}{p(x)\log{\frac{q(x)}{p(x)}}}<br>\&amp;= \mathbb{E}<em>{X \sim p(x)}[\log{\frac{q(x)}{p(x)}}] \ &amp;=<br>\mathbb{E}</em>{X \sim p(x)}[\log{\frac{1}{p(x)}}] - \mathbb{E}_{X \sim p(x)}[\log{\frac{1}{p(x)}}]<br>\end{split}<br>$$<br>第一项是Cross-Entropy，第二项是分布<em>p</em>(x)的熵。</p>
+<p>将Cross-Entropy为$H(p,q)$，用真实分布的熵和Relative-Entropy表示Cross-Entropy，为$H(p,q) = H(p) + D_{KL}(p||q)$。</p>
+<hr>
+<h4 id="Cross-Entropy-amp-amp-MLE-Relationship"><a href="#Cross-Entropy-amp-amp-MLE-Relationship" class="headerlink" title="Cross-Entropy &amp;&amp; MLE Relationship"></a>Cross-Entropy &amp;&amp; MLE Relationship</h4><p>如何将Cross Entropy和Maximum Likelihood Estimation联系起来？需要理解的是，极大似然估计是用来估计一个概率模型的参数的一种方法。</p>
+<p>Suppose that for a problem, we have a set of examples X_example = {<em>x</em>_1, <em>x</em>_2, …, <em>x</em>_m} that drawn independently from a true but unknown distribution p_data(x). </p>
+<p>Then we try to model the true distribution by parametric model p_model(<em>x</em>;𝜃) with 𝜃 as the parameter. </p>
+<p>We can say that p_model(<em>x</em>,𝜃) maps <em>x</em> to estimate the true but unknown p_data(<em>x</em>) given the same data.</p>
+<p>To get the best model, <strong>we need to find such 𝜃 that yields the most similar outcome of p_model(<em>x</em>,𝜃) to p_data(<em>x</em>)</strong>. We can use MLE principle to find such 𝜃, that is by using maximum likelihood estimator for 𝜃.</p>
+<hr>
+<p>Simlification1. <em>i.i.d</em>.<br>$$<br>\begin{split}<br>\theta_{ML} &amp;= arg\max \limits_{\theta} p_{model}(X_{example};\theta) \ &amp; \stackrel{i.i.d}{\longrightarrow} arg\max \limits_{\theta}\prod_{i=1}^{m}p_{model}(x_{i};\theta)<br>\end{split}<br>$$</p>
+<hr>
+<p>Simplification2. prodction to summation</p>
+<p>算数下溢the underflow problem</p>
+<p>The product of p_model(<em>x</em>_i;𝜃) is going to be very close to 0 when the example set size m is large since the probability will be in the range of 0≤p_model(<em>x</em>_i;𝜃)≤1. This could cause a serious underflow to the computer, resulting in a less precise estimation of the model.</p>
+<p>数据量很大的时候会导致每一个数据的出现概率很小，乘积就会无限趋近于零，在计算机中处理浮点数会带来很大的误差。一个解决办法就是取对数，将相成转换为相加。</p>
+<p>改写式子，并scale一个$\frac{1}{m}$，让他变成数学期望的形式。<br>$$<br>\begin{split}<br>\theta_{ML} &amp;= arg\max \limits_{\theta}\sum_{i=1}^{m}p_{model}(x_{i};\theta) \&amp;= arg\max \limits_{\theta} {\frac{1}{m} \cdot \sum_{i=1}^{m}\log {p_{model}(x_{i};\theta) }} \<br>&amp;= arg\max \limits_{\theta} \mathbb{E}<em>{X\sim p</em>{example(x)}}{[\log{p_{model}(x; \theta)}]}<br>\end{split}<br>$$<br>最后的形式和Cross-Entropy一样。</p>
+<hr>
+<h4 id="过程总结"><a href="#过程总结" class="headerlink" title="过程总结"></a>过程总结</h4><p>This shows that we can see <strong>the problem of getting the best parameter 𝜃_ML using maximum likelihood estimation</strong> as <strong>minimizing the cross-entropy between our parametric model p_model(<em>x</em>;𝜃) and the empirical example distribution p_example(<em>x</em>)</strong>.</p>
+<p>Train our model by minimizing the cross-entropy loss since it can lead us to the maximum likelihood estimator of the parameter 𝜃_ML that yields the best model according to the training example.</p>
+<hr>
+<h2 id="寻找最好的函数"><a href="#寻找最好的函数" class="headerlink" title="寻找最好的函数"></a>寻找最好的函数</h2><p>用梯度下降法求解。对$w$进行微分，运用链式法则在两个偏微分上下分别引入偏微分$\partial z$，获得结果<br>$$<br>\frac{\partial{(-\ln{L(\omega, b)} )}}{\partial{w}} = \sum_{n} -(\hat{y}^n-f_{w,b}(x_n))x_i^n\<br>w_i \larr w_i - \eta  \sum_{n} -(\hat{y}^n-f_{w,b}(x_n))x_i^n<br>$$<br>如何理解括号中的相减的两个式子？代表着Larger Difference, Larger Update。</p>
+<h3 id="逻辑回归与线性回归的区别"><a href="#逻辑回归与线性回归的区别" class="headerlink" title="逻辑回归与线性回归的区别"></a>逻辑回归与线性回归的区别</h3><p>从两方面考虑。</p>
+<p>第一，实际数据的输出target$\hat{y}$。对于逻辑回归，限定在0～1之间。对于线性回归，可以是任何实数。</p>
+<p>第二，定义的损失函数的输出output$f_{\omega,b}(x)$。对于逻辑回归，由于Sigmoid Function的性质，限定在0～1之间。对于线性回归，可以是任何值。</p>
+<h3 id="为什么不像线性函数中一样使用Square-Error代表Loss-Function？"><a href="#为什么不像线性函数中一样使用Square-Error代表Loss-Function？" class="headerlink" title="为什么不像线性函数中一样使用Square Error代表Loss Function？"></a>为什么不像线性函数中一样使用Square Error代表Loss Function？</h3><p>从两方面解释。</p>
+<p>一方面，output of loss function无论是close to target还是far from target，loss function梯度下降后的偏微分都可以是零。</p>
+<p>另一方面，交叉熵距离target越远，微分值越大，更新参数越大。但是平方误差在离target很远的时候，微分值特别小，更新参数会特别慢，效果很差。</p>
+<h1 id="Discriminative-Model-V-S-Generative-Model"><a href="#Discriminative-Model-V-S-Generative-Model" class="headerlink" title="Discriminative Model V.S. Generative Model"></a>Discriminative Model V.S. Generative Model</h1><p>用逻辑回归和生成模型找出来的$\omega, b$是不一样的。因为两个模型所做的assumpition都不同，逻辑回归并没有做任何假设；但是生成模型预先假设了样本符合某个分布，给予了更多的信息。</p>
+<p>生成方法的优势在于训练数据集很小的情况下，结果受数据量的影响很小，基于分布假设，对噪声数据有更好的鲁棒性。</p>
+<p>判别方法的优势在于看训练数据集计算，训练数据量越大，error越小。</p>
+<h1 id="多类别分类-n-class"><a href="#多类别分类-n-class" class="headerlink" title="多类别分类 n-class"></a>多类别分类 n-class</h1><p>$$<br>input \stackrel{\omega_i ,b_i}{\longrightarrow} z_i<br>\stackrel{exponential}{\longrightarrow} e^{z_i} \stackrel{normalize}{\longrightarrow} output=\frac{e^{z_i}}{\sum_{j=1}^{n}{e^{z_i}}}<br>$$</p>
+<p>exponential和normalize的过程都可以被一个叫softmax的方程来完成，这个步骤的工作就是对最大值进行强化。</p>
+<p>target该如何定义？如果用连续的0-1-2-3-4存在类别之间有距离大小的问题，而每个类别应当同等看待地位相同。用一个列向量来表示target。</p>
+<h1 id="逻辑回归的限制"><a href="#逻辑回归的限制" class="headerlink" title="逻辑回归的限制"></a>逻辑回归的限制</h1><p>逻辑回归就是区分类别，如果raw data并不能让逻辑回归做区别的？比如在平面上，一个正方形的四个顶点，对角同类别，无论怎么拉线都不能分类。这种时候该怎么办？</p>
+<p>利用特征转换Feature Transfomation。但是如何衡量一个特征转换的优劣又是需要考虑的。</p>
+<p>逻辑回归可以用来做特征转换，也可以用来做分类。把这些逻辑回归级联在一起就得到级联逻辑回归模型。</p>
+<p>一个逻辑回归的输入可以来源于其他逻辑回归的输出，这个逻辑回归的输出也可以是其他逻辑回归的输入。把每个逻辑回归称为一个 Neuron（神经元），把这些神经元连接起来的网络，就叫做 Neural Network（神经网络）。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/DL/" rel="tag"># DL</a>
+              <a href="/tags/Logistic/" rel="tag"># Logistic</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/23/dl-math-bacis/" rel="prev" title="线性回归">
+      <i class="fa fa-chevron-left"></i> 线性回归
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/10/27/latex-and-typora/" rel="next" title="使用LaTeX编辑数学公式">
+      使用LaTeX编辑数学公式 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%88%86%E7%B1%BB%E5%AE%9A%E4%B9%89"><span class="nav-number">1.</span> <span class="nav-text">分类定义</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E6%88%90%E6%A8%A1%E5%9E%8B"><span class="nav-number">2.</span> <span class="nav-text">生成模型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%92%E5%AD%90%E6%8A%BD%E7%90%83%E9%97%AE%E9%A2%98"><span class="nav-number">2.1.</span> <span class="nav-text">盒子抽球问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9C%80%E8%A6%81%E7%9A%84%E5%B7%B2%E7%9F%A5%E4%BF%A1%E6%81%AF"><span class="nav-number">2.1.1.</span> <span class="nav-text">需要的已知信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%B7%B2%E7%9F%A5%E4%BF%A1%E6%81%AF%E6%8E%A8%E6%B5%8B%E5%9B%9E%E7%AD%94"><span class="nav-number">2.1.2.</span> <span class="nav-text">利用已知信息推测回答</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%85%AC%E5%BC%8F"><span class="nav-number">2.2.</span> <span class="nav-text">贝叶斯公式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E9%AA%8C%E6%A6%82%E7%8E%87"><span class="nav-number">2.2.1.</span> <span class="nav-text">先验概率</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">2.2.2.</span> <span class="nav-text">定义损失函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E6%9C%80%E5%A5%BD%E7%9A%84%E5%87%BD%E6%95%B0-%E6%B1%82%E5%8F%82%E6%95%B0"><span class="nav-number">2.2.3.</span> <span class="nav-text">寻找最好的函数&#x2F;求参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%BD%E7%90%83%E6%A8%A1%E5%9E%8B%E5%92%8C%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98%E7%9A%84%E8%81%94%E7%B3%BB"><span class="nav-number">2.2.4.</span> <span class="nav-text">抽球模型和分类问题的联系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%E4%BC%98%E5%8C%96"><span class="nav-number">2.3.</span> <span class="nav-text">步骤优化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Logistic-Regression"><span class="nav-number">3.</span> <span class="nav-text">Logistic Regression</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E5%87%BD%E6%95%B0%E9%9B%86"><span class="nav-number">3.1.</span> <span class="nav-text">逻辑回归的函数集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0-1"><span class="nav-number">3.2.</span> <span class="nav-text">定义损失函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MLE-amp-amp-Cross-Entrpy-Explanation"><span class="nav-number">3.2.1.</span> <span class="nav-text">MLE &amp;&amp; Cross-Entrpy Explanation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%86%B5%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-number">3.2.1.1.</span> <span class="nav-text">熵的定义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BA%A4%E5%8F%89%E7%86%B5"><span class="nav-number">3.2.1.2.</span> <span class="nav-text">交叉熵</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cross-Entropy-amp-amp-MLE-Relationship"><span class="nav-number">3.2.1.3.</span> <span class="nav-text">Cross-Entropy &amp;&amp; MLE Relationship</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%87%E7%A8%8B%E6%80%BB%E7%BB%93"><span class="nav-number">3.2.1.4.</span> <span class="nav-text">过程总结</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BB%E6%89%BE%E6%9C%80%E5%A5%BD%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">寻找最好的函数</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E4%B8%8E%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">3.3.1.</span> <span class="nav-text">逻辑回归与线性回归的区别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E5%83%8F%E7%BA%BF%E6%80%A7%E5%87%BD%E6%95%B0%E4%B8%AD%E4%B8%80%E6%A0%B7%E4%BD%BF%E7%94%A8Square-Error%E4%BB%A3%E8%A1%A8Loss-Function%EF%BC%9F"><span class="nav-number">3.3.2.</span> <span class="nav-text">为什么不像线性函数中一样使用Square Error代表Loss Function？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Discriminative-Model-V-S-Generative-Model"><span class="nav-number">4.</span> <span class="nav-text">Discriminative Model V.S. Generative Model</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E7%B1%BB%E5%88%AB%E5%88%86%E7%B1%BB-n-class"><span class="nav-number">5.</span> <span class="nav-text">多类别分类 n-class</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%BB%E8%BE%91%E5%9B%9E%E5%BD%92%E7%9A%84%E9%99%90%E5%88%B6"><span class="nav-number">6.</span> <span class="nav-text">逻辑回归的限制</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">71k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">2:09</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
