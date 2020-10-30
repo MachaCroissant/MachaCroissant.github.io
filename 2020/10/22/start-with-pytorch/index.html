@@ -27,7 +27,7 @@
 <meta property="og:description" content="记录Pytorch基本使用。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-22T10:50:03.000Z">
-<meta property="article:modified_time" content="2020-10-24T01:05:04.999Z">
+<meta property="article:modified_time" content="2020-10-30T00:17:33.558Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="DL">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-24 09:05:04" itemprop="dateModified" datetime="2020-10-24T09:05:04+08:00">2020-10-24</time>
+                <time title="修改时间：2020-10-30 08:17:33" itemprop="dateModified" datetime="2020-10-30T08:17:33+08:00">2020-10-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -241,32 +241,23 @@
 <li>导入必要的包</li>
 </ul>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
 <ul>
-<li><p>四种形式的加法(+, add(), add_(), +=)</p>
-</li>
-<li><p>PyTorch操作inplace版本都有后缀<code>_</code>, 例如<code>x.copy_(y), x.t_()</code></p>
-</li>
-<li><p>获取tensor的形状可以通过两个方法，方法返回的torch.Size其实就是一个tuple, 支持所有tuple的操作。</p>
-</li>
+<li>四种形式的加法(+, add(), add_(), +=)</li>
+<li>PyTorch操作inplace版本都有后缀<code>_</code>, 例如<code>x.copy_(y), x.t_()</code></li>
+<li>获取tensor的形状可以通过两个方法，方法返回的torch.Size其实就是一个tuple, 支持所有tuple的操作。</li>
 <li><p>我们还可以使用类似NumPy的索引操作(:)来访问<code>Tensor</code>的一部分，不会开辟内存。需要注意的是：<strong>索引出来的结果与原数据共享内存，也即修改一个，另一个会跟着修改。</strong></p>
 </li>
-<li><p>**注意<code>view()</code>返回的新<code>Tensor</code>与源<code>Tensor</code>虽然可能有不同的<code>size</code>，但是是共享<code>data</code>的，也即更改其中的一个，另外一个也会跟着改变。(顾名思义，view仅仅是改变了对这个张量的观察角度，内部数据并未改变)**。</p>
+<li><p><strong>注意<code>view()</code>返回的新<code>Tensor</code>与源<code>Tensor</code>虽然可能有不同的<code>size</code>，但是是共享<code>data</code>的，也即更改其中的一个，另外一个也会跟着改变。(顾名思义，view仅仅是改变了对这个张量的观察角度，内部数据并未改变)</strong>。</p>
 </li>
-<li><p>虽然<code>view</code>返回的<code>Tensor</code>与源<code>Tensor</code>是共享<code>data</code>的，但是依然是一个新的<code>Tensor</code>（因为<code>Tensor</code>除了包含<code>data</code>外还有一些其他属性），二者id（内存地址）并不一致。</p>
-</li>
-<li><p>想返回一个真正新的副本（即不共享data内存）该用<code>clone</code>创造一个副本然后再使用<code>view</code>。view和copy存在区别。</p>
-</li>
+<li>虽然<code>view</code>返回的<code>Tensor</code>与源<code>Tensor</code>是共享<code>data</code>的，但是依然是一个新的<code>Tensor</code>（因为<code>Tensor</code>除了包含<code>data</code>外还有一些其他属性），二者id（内存地址）并不一致。</li>
+<li>想返回一个真正新的副本（即不共享data内存）该用<code>clone</code>创造一个副本然后再使用<code>view</code>。view和copy存在区别。</li>
 <li><p>常用的函数就是<code>item()</code>, 它可以将一个标量<code>Tensor</code>转换成一个Python number</p>
 </li>
 <li><p>判断操作是否开辟新内存，使用Python自带的<code>id</code>函数：如果两个实例的ID一致，那么它们所对应的内存地址相同；反之则不同。</p>
 </li>
-<li><p>用<code>numpy()</code>和<code>from_numpy()</code>将<code>Tensor</code>和NumPy中的数组相互转换。但是需要注意的一点是： <strong>这两个函数所产生的的<code>Tensor</code>和NumPy中的数组共享相同的内存（所以他们之间的转换很快），改变其中一个时另一个也会改变</strong>。</p>
-</li>
-<li><p>将NumPy中的array转换成<code>Tensor</code>的方法就是<code>torch.tensor()</code>, 需要注意的是，此方法总是会进行数据拷贝（就会消耗更多的时间和空间），所以返回的<code>Tensor</code>和原来的数据不再共享内存。</p>
-</li>
-<li><p>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</p>
-</li>
+<li>用<code>numpy()</code>和<code>from_numpy()</code>将<code>Tensor</code>和NumPy中的数组相互转换。但是需要注意的一点是： <strong>这两个函数所产生的的<code>Tensor</code>和NumPy中的数组共享相同的内存（所以他们之间的转换很快），改变其中一个时另一个也会改变</strong>。</li>
+<li>将NumPy中的array转换成<code>Tensor</code>的方法就是<code>torch.tensor()</code>, 需要注意的是，此方法总是会进行数据拷贝（就会消耗更多的时间和空间），所以返回的<code>Tensor</code>和原来的数据不再共享内存。</li>
+<li>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</li>
 </ul>
 <h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><p>Because <code>out</code> contains a single scalar, <code>out.backward()</code> is equivalent to <code>out.backward(torch.tensor(1.))</code>.</p>
 <p><code>torch.autograd</code> is an engine for computing vector-Jacobian product. </p>
@@ -291,9 +282,7 @@
 </li>
 <li><p>不允许张量对张量求导，只允许标量对张量求导，求导结果是和自变量同形的张量。y.backward()<code>时，如果</code>y<code>是标量，则不需要为</code>backward()<code>传入任何参数；否则，需要传入一个与</code>y<code>同形的</code>Tensor。</p>
 </li>
-<li><p>如果我们想要修改<code>tensor</code>的数值，但是又不希望被<code>autograd</code>记录（即不会影响反向传播），那么我么可以对<code>tensor.data</code>进行操作。</p>
-</li>
-<li></li>
+<li>如果我们想要修改<code>tensor</code>的数值，但是又不希望被<code>autograd</code>记录（即不会影响反向传播），那么我么可以对<code>tensor.data</code>进行操作。</li>
 </ul>
 
     </div>
@@ -393,18 +382,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -440,12 +429,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -496,6 +485,8 @@
 
 
 
+
+  
 
   
 

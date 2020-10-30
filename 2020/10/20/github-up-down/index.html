@@ -230,42 +230,32 @@
 <li>or create a new repositoory on the command line</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">git init</span><br><span class="line">git add README.md</span><br><span class="line">git commit -m <span class="string">&quot;first commit&quot;</span></span><br><span class="line">git remote add origin SSH-KEY</span><br><span class="line">git push -u origin BRANCH-NAME</span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>or push an existing repository from the command line</li>
 </ul>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin SSH-KEY</span><br><span class="line">git push -u origin BRANCH-NAME</span><br></pre></td></tr></table></figure>
-
 <p>二者区别主要在于我们的本地电脑上是否有初始化git仓库，即含有代码的文件夹有没有在命令行中被git化。</p>
 <p>git化之后的文件夹当中应当有一个隐藏的<code>.git</code>文件，在mac下直接<code>cmd</code>+<code>shift</code>+<code>.</code>可以显示。</p>
 <p>SSH-KEY和BRANCH-NAME就是下图所示的内容。</p>
 <p><img src="/Users/drunk99/machacroissant/source/_posts/image-20201020134101845.png" alt="image-20201020134101845"></p>
 <h2 id="第一次上传代码"><a href="#第一次上传代码" class="headerlink" title="第一次上传代码"></a>第一次上传代码</h2><h3 id="在终端下分别进入目标文件夹并初始化git"><a href="#在终端下分别进入目标文件夹并初始化git" class="headerlink" title="在终端下分别进入目标文件夹并初始化git"></a>在终端下分别进入目标文件夹并初始化git</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> target-dir</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-
 <h3 id="关联本地库与远程库"><a href="#关联本地库与远程库" class="headerlink" title="关联本地库与远程库"></a>关联本地库与远程库</h3><p>从本地工作区(working directory)到暂缓区/提交区(staging srea)；从暂缓区/提交区到git目录/版本库(git directory)。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add -a</span><br><span class="line">git commit -m &quot;description-for-this-commit&quot;</span><br></pre></td></tr></table></figure>
-
 <p>关联远程github库</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin SSH-KEY</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>可能遇到的问题：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Repository not found.</span><br><span class="line">fatal: repository <span class="string">&#x27;https://github.com/MyRepo/project.git/&#x27;</span> not found</span><br></pre></td></tr></table></figure>
-
 <p>解决办法1: 尝试从钥匙串中删除所有与GitHub有关的内容</p>
 <p>解决办法2: 检查是否正确地设置了远程仓库地址</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
-
 <p>如果发现不对就重新设置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url origin https://username@github.com/MyRepo/project.git</span><br></pre></td></tr></table></figure>
-
 <hr>
 <p>上传到github</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin BRANCH-NAME</span><br></pre></td></tr></table></figure>
-
 <h2 id="第二次更新代码"><a href="#第二次更新代码" class="headerlink" title="第二次更新代码"></a>第二次更新代码</h2><p>首先查看仓库状态</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
-
 <p>之后的操作和关联本地库与远程库相同。</p>
 
     </div>
@@ -365,18 +355,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -412,12 +402,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -468,6 +458,8 @@
 
 
 
+
+  
 
   
 

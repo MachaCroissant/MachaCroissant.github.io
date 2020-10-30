@@ -241,13 +241,10 @@
 </ul>
 <p>DOM的初始结构在HTML文件中预设，一般是</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">element-name</span> <span class="attr">id</span>=<span class="string">&quot;your-id&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">span</span> <span class="attr">v-bind:title</span>=<span class="string">&quot;message&quot;</span>&gt;</span></span><br><span class="line">        // contents</span><br><span class="line">    <span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">element-name</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>实际传入的数据在JS文件中进行，并通过元素标签(element id)关联二者。一般是</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> truedata = &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            <span class="comment">// data lists</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">Vue.createApp(truedata).mount(<span class="string">&#x27;#your-id&#x27;</span>)</span><br></pre></td></tr></table></figure>
-
 <h1 id="Vue实例"><a href="#Vue实例" class="headerlink" title="Vue实例"></a>Vue实例</h1><p>用<code>Vue</code>函数创建一个新的Vue实例</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> vm = <span class="keyword">new</span> Vue(&#123;</span><br><span class="line">    <span class="comment">//contents</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
 <p><code>vm</code>变量名是ViewModel的缩写。</p>
 <h1 id="实例生命周期钩子-Lifecycle-Hooks"><a href="#实例生命周期钩子-Lifecycle-Hooks" class="headerlink" title="实例生命周期钩子 Lifecycle Hooks"></a>实例生命周期钩子 Lifecycle Hooks</h1><p>每个Vue实例被创建时都要经过一系列初始化过程， 而实例生命周期钩子就是在初始化过程中执行的函数，可以在特定的初始化阶段插入我们想要的代码。</p>
 <hr>
@@ -274,7 +271,6 @@
 <h1 id="Template-Syntax"><a href="#Template-Syntax" class="headerlink" title="Template Syntax"></a>Template Syntax</h1><p>Vue.js使用了基于HTML的模版语法，在Vue实例的template中直接写入合法的HTML。Vue将模版内容template编译成虚拟DOM渲染函数，结合响应系统智能计算最少需要重新渲染多少组件，最优化DOM操作次数。</p>
 <h2 id="Interpolations"><a href="#Interpolations" class="headerlink" title="Interpolations"></a>Interpolations</h2><h3 id="Plain-Text-amp-amp-Raw-HTML"><a href="#Plain-Text-amp-amp-Raw-HTML" class="headerlink" title="Plain Text &amp;&amp; Raw HTML"></a>Plain Text &amp;&amp; Raw HTML</h3><p>在HTML文件中，将想要传递值的属性用双括号(“Mustache” Syntax)包裹。但是只能在HTML元素两个尖括号之间使用，作为HTML元素内容。</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">tag</span>&gt;</span>&#123;&#123; Mustache-Syntax &#125;&#125;<span class="tag">&lt;/<span class="name">tag</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>在元素标签中使用<code>v-once</code>可实现只更新一次。</p>
 <p>如果想要在双括号中显示经过翻译后的HTML呈现，需要在元素标签中使用<code>v-html</code>，使用之后元素内容会直接全部变成<code>v-html</code>的取值。</p>
 <h3 id="Attributes概览"><a href="#Attributes概览" class="headerlink" title="Attributes概览"></a>Attributes概览</h3><h3 id="Directives"><a href="#Directives" class="headerlink" title="Directives"></a>Directives</h3><blockquote>
@@ -291,7 +287,6 @@
 <h5 id="条件与循环"><a href="#条件与循环" class="headerlink" title="条件与循环"></a>条件与循环</h5><p><code>v-if=&quot;Syntax-that-returns-t/f&quot;</code>：如果赋的值为真，那么该元素就显示。</p>
 <p><code>v-for=&quot;list-item in lists&quot;</code>：用于显示实例中的数组中的每一个元素。</p>
 <h1 id="Data-Properties"><a href="#Data-Properties" class="headerlink" title="Data Properties"></a>Data Properties</h1><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = Vue.createApp(&#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span> &#123;</span><br><span class="line">            property1: value1</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
 <p>实例中的<code>data()</code>是一个函数，每当新建一个实例，Vue就会调用这个函数。<code>data()</code>函数返回一个对象，这个对象可以通过挂在后的app，即<code>const vm = app.mount(&#39;#app&#39;)</code> 的点访问法<code>vm.$data</code>来访问。访问这个对象属性可以通过两种方法<code>vm.$data.property1</code>或着<code>vm.property1</code>。</p>
 <p>当一个Vue实例被创建的时候，它将外部的数据对象的所有property加入到Vue的响应式系统，当属性值发生改变时，视图将会产生“响应”，即匹配更新为新的值。</p>
 <p>外部数据对象的属性<code>data.property</code>通过Vue实例点访问<code>vm.property</code>，其中任何一个的变更都会影响到另一个。</p>
@@ -302,7 +297,6 @@
 <h1 id="Computed-Attribute"><a href="#Computed-Attribute" class="headerlink" title="Computed Attribute"></a>Computed Attribute</h1><p>我们使用Mustache Syntax的时候建议在花括号内仅存放简单表达式，如果花括号内的template syntax不再简明易懂，即复杂到包含了reactive data的情况下，需要使用计算属性。 </p>
 <p>把复杂表达式抽象成一个函数，在in-template expression中只使用这个函数名<code>&#123;&#123;complex-expression&#125;&#125;</code>，在JS中添加如下</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Vue.createApp(&#123; </span><br><span class="line">    computed: &#123;</span><br><span class="line">        <span class="comment">// a computed getter/no side effects</span></span><br><span class="line">        complex-expression()&#123;</span><br><span class="line">    	<span class="comment">// `this` points to vm instance</span></span><br><span class="line">    		<span class="keyword">return</span> <span class="built_in">this</span>.????</span><br><span class="line">    	&#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
 <p>为什么这个函数放在<code>computed option</code>中而不是<code>methods option</code>中？</p>
 <ul>
 <li><p>计算属性的值依赖于表达式中的reactive data。</p>
@@ -320,23 +314,20 @@
 <h1 id="v-bind-with-class-amp-amp-style"><a href="#v-bind-with-class-amp-amp-style" class="headerlink" title="v-bind with class &amp;&amp; style"></a><code>v-bind</code> with <code>class</code> &amp;&amp; <code>style</code></h1><h2 id="class动态切换"><a href="#class动态切换" class="headerlink" title="class动态切换"></a><code>class</code>动态切换</h2><p><code>:class</code> (short for <code>v-bind:class</code> )。</p>
 <p>利用花括号传递给它一个对象：</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">:class</span>=<span class="string">&quot;&#123; active: isActive &#125;&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p><code>active</code>类的存在与否由对象的数据属性<code>isActive</code>的真假来决定。</p>
 <p>这里的对象不一定要内联地定义在html中，也可以放在Vue实例的data对象中。也可以绑定一个返回对象的计算属性（是一个函数）。也可以把一个数组传递给<code>v-bind:class</code>从而应用一个class列表。</p>
 <p>在自定义组件上使用<code>class</code>属性的<code>v-bind</code>时</p>
 <h2 id="style样式"><a href="#style样式" class="headerlink" title="style样式"></a>style样式</h2><p>可以直接在html元素的<code>v-bind:style=&quot;&#123;赋值&#125;&quot;</code>进行复制，通常用一个样式对象绑定会更好，对象放在JS中，也可以用数组语法将多个样式对象应用到一个元素上；带浏览器引擎前缀的CSS property，Vue.js会自动侦测并添加前缀；给一个CSS property提供一个包含多个值的数组，表示多重可选值，优先匹配知道最后一个数组值。</p>
 <h1 id="Conditional-Rendering"><a href="#Conditional-Rendering" class="headerlink" title="Conditional Rendering"></a>Conditional Rendering</h1><h2 id="v-if-option"><a href="#v-if-option" class="headerlink" title="v-if option"></a><code>v-if option</code></h2><p> <code>v-if option</code>的使用决定了这个标签是否会被销毁或者再造。再造只会在</p>
-<p>如有必要还可以和<code>v-else-if </code> <code>v-else</code>配对使用，但是需要紧邻着才能够成功配对。</p>
+<p>如有必要还可以和<code>v-else-if</code> <code>v-else</code>配对使用，但是需要紧邻着才能够成功配对。</p>
 <p>因为<code>v-if option</code>只能加载一个单独的元素标签上，如果要对好多个元素标签使用条件渲染，应该把需要条件渲染的所有元素标签都放在<code>&lt;template v-if=&quot;??&quot;&gt; &lt;\template&gt;</code>标签中。</p>
 <p>不推荐一起使用<code>v-if</code>和<code>v-for</code>。</p>
 <h2 id="v-show-option"><a href="#v-show-option" class="headerlink" title="v-show option"></a><code>v-show option</code></h2><p>使用了<code>v-show option</code>的元素总是会被渲染并且留在DOM中，它的作用仅仅是切换CSS property是否display。</p>
 <h1 id="List-Rendering"><a href="#List-Rendering" class="headerlink" title="List Rendering"></a>List Rendering</h1><h2 id="v-for进行渲染"><a href="#v-for进行渲染" class="headerlink" title="v-for进行渲染"></a><code>v-for</code>进行渲染</h2><p>可以在<code>v-for</code>中访问parent scope properties。在<code>&lt;template&gt;&lt;/template&gt;</code>中使用<code>v-for</code>来循环渲染包含多个元素的内容。</p>
 <p>情况1：遍历数组元素</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;item in items&quot;</span> <span class="attr">v-bind:key</span>=<span class="string">&quot;item.id&quot;</span>&gt;</span> v-for block<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;item of items&quot;</span>&gt;</span> v-for block<span class="tag">&lt;/<span class="name">li</span>&gt;</span>//更接近JavaScript迭代器的语法</span><br><span class="line"><span class="tag">&lt;<span class="name">li</span> <span class="attr">v-for</span>=<span class="string">&quot;(item, index) in items&quot;</span>&gt;</span> v-for block<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>情况2：遍历对象属性</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">v-for</span>=<span class="string">&quot;(vaalue, name, index) in object&quot;</span>&gt;</span></span><br><span class="line">    &#123;&#123;name&#125;&#125; : &#123;&#123;value&#125;&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <p>注意：Vue对使用v-for进行渲染的时候，默认使用就地更新(in-place patch strategy)。如果数据项的顺序改变，Vue不会移动DOM元素来匹配数据项的顺序，而是就地更新，并确保它们在每个索引位置正确渲染。因此，为了确保Vue正确识别节点，在使用<code>v-for</code>的时候带上<code>v-bind:key=&quot;&quot;</code>。</p>
 <h2 id="数组变更方法"><a href="#数组变更方法" class="headerlink" title="数组变更方法"></a>数组变更方法</h2><p>变更并返回原数组。</p>
 <ul>
@@ -354,8 +345,7 @@
 </li>
 <li><p><code>concat()</code> </p>
 </li>
-<li><p><code>slice()</code></p>
-</li>
+<li><code>slice()</code></li>
 </ul>
 <h2 id="v-for的in后面可以使用："><a href="#v-for的in后面可以使用：" class="headerlink" title="v-for的in后面可以使用："></a><code>v-for</code>的<code>in</code>后面可以使用：</h2><ol>
 <li>计算属性/(带参数的)方法</li>
@@ -363,7 +353,7 @@
 <p>如何显示过滤/排序后的数组且不改变原数组？</p>
 <p>方法一：创建计算属性，将过滤/排序后的数组结果放入return中。</p>
 <p>方法二：计算属性不适用的情况下，使用一个方法。</p>
-<ol start="2">
+<ol>
 <li>直接数值</li>
 </ol>
 <h2 id="v-for与v-if"><a href="#v-for与v-if" class="headerlink" title="v-for与v-if"></a><code>v-for</code>与<code>v-if</code></h2><p>当二者存在于同一个元素节点上时，<code>v-if</code>有更高的优先级，总是先测试它。因此<code>v-if</code>没有权限访问<code>v-for</code>作用域内的变量。</p>
@@ -383,10 +373,10 @@
 </ul>
 <h2 id="按键修饰符-Key-Modifiers"><a href="#按键修饰符-Key-Modifiers" class="headerlink" title="按键修饰符 Key Modifiers"></a>按键修饰符 Key Modifiers</h2><p>监听键盘事件时需要检查详细按键，<code>Vue</code>允许为<code>v-on</code>在监听键盘事件时添加按键修饰符。将<code>KeyBoardEvent.key</code>中规定的任意有效按键名转换为kebab-case(短横线形式)作为按键修饰符即可。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;input v-on:keyup.page-down=<span class="string">&quot;onPageDown&quot;</span>/&gt;<span class="comment">//处理函数只会在$event.key等于PageDown时才会被调用。</span></span><br></pre></td></tr></table></figure>
-
 <h1 id="表单输入绑定"><a href="#表单输入绑定" class="headerlink" title="表单输入绑定"></a>表单输入绑定</h1><p><code>v-model</code>指令用于表单<code>input</code> <code>textarea</code> 以及 <code>select</code>元素上创建和JavaScript的data对象的双向数据绑定。</p>
 <p>本质上是语法糖，负责监听用户输入并更新数据。</p>
 <p><code>v-model</code>会忽略HTML文件中表单元素的各种属性的初始值，只会依据JavaScript文件中的实例数据作为初始数据来源，需要在组件的<code>data</code>选项中声明初始值。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
@@ -395,7 +385,8 @@
 <th>Event</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>text/textarea</td>
 <td>Value</td>
 <td>Input</td>
@@ -410,7 +401,9 @@
 <td>Value</td>
 <td>Change</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <ul>
 <li><p>单行文本用text</p>
 </li>
@@ -418,13 +411,11 @@
 </li>
 </ul>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- wont work --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">textarea</span>&gt;</span>&#123;&#123; text &#125;&#125;<span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- will work --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">textarea</span> <span class="attr">v-model</span>=<span class="string">&quot;text&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">textarea</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <ul>
 <li>单个复选框绑定到布尔值，多个复选框绑定到同一个数组</li>
 <li>选择框单选时需要注意提供一个值为空的禁用选项，选择框多选时绑定到一个数组</li>
 </ul>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">select</span> <span class="attr">v-model</span>=<span class="string">&quot;selected&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span> <span class="attr">disabled</span> <span class="attr">value</span>=<span class="string">&quot;&quot;</span>&gt;</span>请选择<span class="tag">&lt;/<span class="name">option</span>&gt;</span>//值为空的禁用选项，以免表达式v-model初始值不能匹配任何选项导致select元素被渲染为未选中状态。</span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span>&gt;</span>A<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span>&gt;</span>B<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">option</span>&gt;</span>C<span class="tag">&lt;/<span class="name">option</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">select</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
 <h2 id="v-model的值绑定"><a href="#v-model的值绑定" class="headerlink" title="v-model的值绑定"></a><code>v-model</code>的值绑定</h2><p>通常绑定的是静态字符串，就是上面一张表格中的peoperty标签属性。</p>
 <p>也可以绑定到Vue实例的一个动态property上，利用<code>v-bind</code>实现。</p>
 <h2 id="v-model的修饰符"><a href="#v-model的修饰符" class="headerlink" title="v-model的修饰符"></a><code>v-model</code>的修饰符</h2><p><code>.lazy</code>在Change事件之后进行同步</p>
@@ -433,7 +424,6 @@
 <h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p>组件在JavaScript文件中就是一个Vue实例，和根实例一样接收相同的如<code>data/computed/watch/methods/lifecycle-hooks</code>等选项，与根实例(root element)的区别在于根实例拥有<code>el</code>的选项。</p>
 <p>在HTML文件中被当做可以被重复利用的用户自定义元素(custom element)。</p>
 <h1 id="创建自定义组件"><a href="#创建自定义组件" class="headerlink" title="创建自定义组件"></a>创建自定义组件</h1><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> app = Vue.createApp(&#123;&#125;)</span><br><span class="line"></span><br><span class="line">app.component(<span class="string">&#x27;your-globally-registered-component-name&#x27;</span>, &#123;</span><br><span class="line">    data() &#123;</span><br><span class="line">        <span class="keyword">return</span>&#123;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">    template:</span><br><span class="line">    </span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
 <p>全剧注册的组件(根实例的子实例)可以被根实例中的template和根实例中的所有其他子组件使用。</p>
 <h2 id="利用props将数据传递给子组件"><a href="#利用props将数据传递给子组件" class="headerlink" title="利用props将数据传递给子组件"></a>利用<code>props</code>将数据传递给子组件</h2><blockquote>
 <p>Props are custom attributes you can register on a component. When a value is passed to a prop attribute, it becomes a property on that component instance. </p>
@@ -536,18 +526,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -583,12 +573,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -639,6 +629,8 @@
 
 
 
+
+  
 
   
 

@@ -241,13 +241,7 @@
 <p><code>const element = DOM-tag-or-self-defined-component</code></p>
 <h1 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h1><p><strong>组件名称必须大写字母开头。</strong></p>
 <h2 id="一般组件"><a href="#一般组件" class="headerlink" title="一般组件"></a>一般组件</h2><h3 id="函数组件：本质是编写JavaScript函数。"><a href="#函数组件：本质是编写JavaScript函数。" class="headerlink" title="函数组件：本质是编写JavaScript函数。"></a>函数组件：本质是编写JavaScript函数。</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Toppercase</span>(<span class="params">props</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> React-element;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="class组件"><a href="#class组件" class="headerlink" title="class组件"></a><code>class</code>组件</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Toppercase</span> <span class="keyword">extends</span> <span class="title">React</span>.<span class="title">Component</span></span>&#123;</span><br><span class="line">  render()&#123;</span><br><span class="line">    <span class="keyword">return</span> React-element;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="组合组件"><a href="#组合组件" class="headerlink" title="组合组件"></a>组合组件</h3><p>（更高一层级/更偏向用户层的）组件可以在其输出中引用其他（更低一层级/实现功能更单一的）组件。</p>
 <p>一般来说，每个新的React应用程序的顶层组件都是<code>App</code>组件。</p>
 <h2 id="如何抽取组件"><a href="#如何抽取组件" class="headerlink" title="如何抽取组件"></a>如何抽取组件</h2><p>元素的声明可以包含不止一个HTML结点（当然这是被允许的JSX写法），将元素抽取出来利用组件重新声明。</p>
@@ -308,7 +302,7 @@
 <p>第二步，相应改变父组件。</p>
 <p>需要在父组件中构造函数中把<code>this.state</code>设置为想要共享的数据。</p>
 <p>在父组件中提供子组件相应数据更改的函数，并作为属性值传入子组件中。</p>
-<h1 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h1><h2 id="空元素"><a href="#空元素" class="headerlink" title="空元素"></a>空元素</h2><p>**空元素(empty element)**是在HTML中不能存在子节点（例如内嵌的元素或者元素内的文本）的element。</p>
+<h1 id="组合"><a href="#组合" class="headerlink" title="组合"></a>组合</h1><h2 id="空元素"><a href="#空元素" class="headerlink" title="空元素"></a>空元素</h2><p><strong>空元素(empty element)</strong>是在HTML中不能存在子节点（例如内嵌的元素或者元素内的文本）的element。</p>
 <p>一般的HTML元素的名称是在<strong>尖括号</strong>中使用的<strong>小写</strong>名称。例如，<code>&lt;p&gt;&lt;\p&gt;</code>带有一个斜杠开始的<strong>结束标记</strong>。</p>
 <p>在一个空元素上结束标记既不需要也不允许，使用闭合标签是无效的。<code>&lt;input&gt;&lt;\input&gt;</code>是无效的写法，应该使用<code>&lt;input \&gt;</code>。</p>
 <h2 id="组件使用的约定"><a href="#组件使用的约定" class="headerlink" title="组件使用的约定"></a>组件使用的约定</h2><p>在组件使用中我们需要注意两点：</p>
@@ -424,18 +418,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -471,12 +465,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -527,6 +521,8 @@
 
 
 
+
+  
 
   
 

@@ -236,39 +236,40 @@
 <h2 id="HTTP-Requests"><a href="#HTTP-Requests" class="headerlink" title="HTTP Requests"></a>HTTP Requests</h2><blockquote>
 <p>Use <strong>HTTP requests</strong> to communicate to a publicly available URL <strong>endpoint</strong> containing JSON data. </p>
 </blockquote>
-<h3 id="常用HTTP方法"><a href="#常用HTTP方法" class="headerlink" title="常用HTTP方法"></a>常用HTTP方法</h3><table>
+<h3 id="常用HTTP方法"><a href="#常用HTTP方法" class="headerlink" title="常用HTTP方法"></a>常用HTTP方法</h3><div class="table-container">
+<table>
 <thead>
 <tr>
-<th align="left">动作</th>
-<th align="center">方法</th>
-<th align="center">操作</th>
+<th style="text-align:left">动作</th>
+<th style="text-align:center">方法</th>
+<th style="text-align:center">操作</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">Create</td>
-<td align="center"><code>POST</code></td>
-<td align="center">创建新的资源</td>
+<tbody>
+<tr>
+<td style="text-align:left">Create</td>
+<td style="text-align:center"><code>POST</code></td>
+<td style="text-align:center">创建新的资源</td>
 </tr>
 <tr>
-<td align="left">Read</td>
-<td align="center"><code>GET</code></td>
-<td align="center">获取资源</td>
+<td style="text-align:left">Read</td>
+<td style="text-align:center"><code>GET</code></td>
+<td style="text-align:center">获取资源</td>
 </tr>
 <tr>
-<td align="left">Update</td>
-<td align="center"><code>PUT/PATCH</code></td>
-<td align="center">更新已有资源</td>
+<td style="text-align:left">Update</td>
+<td style="text-align:center"><code>PUT/PATCH</code></td>
+<td style="text-align:center">更新已有资源</td>
 </tr>
 <tr>
-<td align="left">Create</td>
-<td align="center"><code>DELETE</code></td>
-<td align="center">删除资源</td>
+<td style="text-align:left">Create</td>
+<td style="text-align:center"><code>DELETE</code></td>
+<td style="text-align:center">删除资源</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <h3 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤"></a>操作步骤</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> request = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">request.open(<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;https://ghibliapi.herokuapp.com/films&#x27;</span>, <span class="literal">true</span>);</span><br><span class="line">request.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> data = <span class="built_in">JSON</span>.parse(<span class="built_in">this</span>.response)</span><br><span class="line">  <span class="keyword">if</span>(request.status &gt;= <span class="number">200</span> &amp;&amp; request.status &lt; <span class="number">400</span>)&#123;</span><br><span class="line">  <span class="comment">// 对数据的操作</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">  <span class="comment">// 链接不存在的情况</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">request.send();</span><br><span class="line">  </span><br></pre></td></tr></table></figure>
-
-
-
 <h3 id="一些技巧"><a href="#一些技巧" class="headerlink" title="一些技巧"></a>一些技巧</h3><ol>
 <li>在获取到JSON数据后，先不着急把数据放入到已存在的或者已创建的DOM元素中，先使用<code>console.log()</code>在<strong>控制台输出数据</strong>，并用浏览器的检查元素<code>Inspect</code>查看一下。</li>
 <li>需要<strong>考虑链接失效的情况</strong>，对于每一个<code>HMLHttpRequest</code>对象，都会在请求结束资源后返回一个状态码<code>status</code>，用它来判断是否成功获取了资源。</li>
@@ -280,9 +281,6 @@
 <p>一旦 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Response"><code>Response</code></a> 被返回，就可以使用一些方法来定义内容的形式，以及应当如何处理内容（参见 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/Body"><code>Body</code></a>）。</p>
 </blockquote>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// replace url with your JSON feed</span></span><br><span class="line">fetch(<span class="string">&#x27;url&#x27;</span>)</span><br><span class="line">	.then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> response.json();</span><br><span class="line">&#125;)</span><br><span class="line">	.then(<span class="function">(<span class="params">data</span>) =&gt;</span> &#123;</span><br><span class="line">  	<span class="comment">// work with JSON data here</span></span><br><span class="line">  	<span class="built_in">console</span>.log(data);</span><br><span class="line">&#125;)</span><br><span class="line">	.catch(<span class="function">(<span class="params">error</span>) =&gt;</span>&#123;</span><br><span class="line">  	<span class="comment">// do something for an error here</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-
-
-
 <h1 id="简单Demo"><a href="#简单Demo" class="headerlink" title="简单Demo"></a>简单Demo</h1><p><a target="_blank" rel="noopener" href="https://www.taniarascia.com/how-to-connect-to-an-api-with-javascript/">How to Connect to an API with JavaScript</a></p>
 
     </div>
@@ -385,18 +383,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -432,12 +430,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -488,6 +486,8 @@
 
 
 
+
+  
 
   
 

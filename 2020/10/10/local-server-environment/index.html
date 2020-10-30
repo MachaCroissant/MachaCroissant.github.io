@@ -241,21 +241,14 @@
 <h2 id="浏览器问题（未出坑）"><a href="#浏览器问题（未出坑）" class="headerlink" title="浏览器问题（未出坑）"></a>浏览器问题（未出坑）</h2><p>Chrome浏览器是默认浏览器，在设置完不代理的主机之后能够成功访问虚拟主机。但是在Firefox中无法访问，显示链接被重置。</p>
 <h2 id="Allow-SymLink-Override设定方式"><a href="#Allow-SymLink-Override设定方式" class="headerlink" title="Allow SymLink Override设定方式"></a>Allow SymLink Override设定方式</h2><p>教程中给出的是在路径为<code>/Applications/MAMP/conf/apache/httpd.conf</code>的<code>http.conf</code>文件中修改None为All。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Directory &#x2F;&gt;</span><br><span class="line">    Options Indexes FollowSymLinks</span><br><span class="line">    AllowOverride None</span><br><span class="line">&lt;&#x2F;Directory&gt;</span><br></pre></td></tr></table></figure>
-
 <p>后来自己没有修改这部分，而是直接在添加的虚拟主机配置中设定，删除示例的两个虚拟主机，并在文件尾部添加如下内容：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;VirtualHost *:80&gt;</span><br><span class="line">    DocumentRoot &quot;&#x2F;Applications&#x2F;MAMP&#x2F;htdocs&quot;</span><br><span class="line">    ServerName myphpdev.test</span><br><span class="line">    ServerAlias myphpdev.test</span><br><span class="line">    &lt;Directory &quot;&#x2F;Applications&#x2F;MAMP&#x2F;htdocs&quot;&gt;</span><br><span class="line">        Options Indexes FollowSymLinks   </span><br><span class="line">        AllowOverride All</span><br><span class="line">        Order deny,allow</span><br><span class="line">        Allow from all</span><br><span class="line">    &lt;&#x2F;Directory&gt;</span><br><span class="line">&lt;&#x2F;VirtualHost&gt;</span><br></pre></td></tr></table></figure>
-
 <h2 id="虚拟主机名的设定"><a href="#虚拟主机名的设定" class="headerlink" title="虚拟主机名的设定"></a>虚拟主机名的设定</h2><p>谷歌浏览器不再支持<code>.dev</code>结尾的域名，自定义的虚拟主机名不要完全按照教程中来。</p>
 <h2 id="端口更改"><a href="#端口更改" class="headerlink" title="端口更改"></a>端口更改</h2><p>端口更改需要在两个地方确认，一个是配置文件，一个是MAMP图形界面中的偏好设置。</p>
 <h3 id="配置文件"><a href="#配置文件" class="headerlink" title="配置文件"></a>配置文件</h3><p><code>/Applications/MAMP/conf/apache/httpd.conf</code>的<code>http.conf</code>文件中修改两处</p>
 <p><code>Listen 80</code>以及<code>ServerName localhost:8888</code>，这两个语句不在同一处。</p>
 <h3 id="MAMP的偏好设置"><a href="#MAMP的偏好设置" class="headerlink" title="MAMP的偏好设置"></a>MAMP的偏好设置</h3><p>在MAMP的图形界面中打开<code>Preferences &gt; Ports</code>并修改端口分别为：</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Apache Port: 80</span><br><span class="line">Ngix Port: 8888</span><br><span class="line">MySQL Port: 3306</span><br></pre></td></tr></table></figure>
-
-
-
-
-
 
     </div>
 
@@ -357,18 +350,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -404,12 +397,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -460,6 +453,8 @@
 
 
 
+
+  
 
   
 

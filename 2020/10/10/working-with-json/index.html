@@ -240,11 +240,9 @@
 <p>因此访问对象可以利用<code>-&gt;</code>访问法以及<code>[]</code>访问法。</p>
 <p>对象总以左花括号开始，右花括号结束，“名称/值”对之间用逗号分隔。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// object</span></span><br><span class="line">&#123;</span><br><span class="line">  key1: value1,</span><br><span class="line">  key2: value2</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <h2 id="数组"><a href="#数组" class="headerlink" title="数组"></a>数组</h2><p>数组是值的有序集合。</p>
 <p>数组总以左中括号开始，右中括号结束。值之间使用逗号分隔。</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// array</span></span><br><span class="line">[</span><br><span class="line">  value1,</span><br><span class="line">  value2,</span><br><span class="line">  value3</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
-
 <h1 id="值"><a href="#值" class="headerlink" title="值"></a>值</h1><p>值可以是双引号括起来的字符串、数值、布尔值、null、对象、或者数组。</p>
 <h1 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h1><p>字符串是由双引号包围的任意数量的Unicode字符的集合，使用反斜线转义。</p>
 <h1 id="使用JSON"><a href="#使用JSON" class="headerlink" title="使用JSON"></a>使用JSON</h1><h2 id="设置XHR加载JSON格式数据"><a href="#设置XHR加载JSON格式数据" class="headerlink" title="设置XHR加载JSON格式数据"></a>设置XHR加载JSON格式数据</h2><ol>
@@ -261,25 +259,16 @@
 </li>
 <li><p>相应来自服务器的返回数据，并自定义处理</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">request.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> data = request.response;</span><br><span class="line">	<span class="comment">// function-with-data-as-params</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
 </li>
 </ol>
 <h2 id="JSON传输中数据和字符串的转换"><a href="#JSON传输中数据和字符串的转换" class="headerlink" title="JSON传输中数据和字符串的转换"></a>JSON传输中数据和字符串的转换</h2><ol>
 <li><p>接收一些字符串作为JSON数据，需要将它转换为对象。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">request.open(<span class="string">&quot;GET&quot;</span>, requestURL);</span><br><span class="line">request.responseType = <span class="string">&#x27;text&#x27;</span>;</span><br><span class="line">request.send()</span><br><span class="line"></span><br><span class="line">request.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> textObj = request.response;</span><br><span class="line">	<span class="keyword">var</span> jsonObj = <span class="built_in">JSON</span>.parse(textObj);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
 </li>
 </ol>
-<ol start="2">
+<ol>
 <li><p>发送JSON数据作为信息，需要将它转换为字符串。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myJson = &#123;&#125;;</span><br><span class="line"><span class="keyword">var</span> myString = <span class="built_in">JSON</span>.stringify(myJSON);</span><br></pre></td></tr></table></figure>
-
-
-
 </li>
 </ol>
 
@@ -380,18 +369,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -427,12 +416,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -483,6 +472,8 @@
 
 
 
+
+  
 
   
 

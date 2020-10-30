@@ -27,10 +27,10 @@
 <meta property="og:description" content="参考PyTorch版动手学深度学习以及李宏毅深度学习，主要内容是线性回归。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-23T14:22:06.000Z">
-<meta property="article:modified_time" content="2020-10-28T01:45:37.726Z">
+<meta property="article:modified_time" content="2020-10-30T00:17:21.911Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="DL">
-<meta property="article:tag" content="Regression">
+<meta property="article:tag" content="LinearRegression">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://example.com/2020/10/23/dl-math-bacis/">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-28 09:45:37" itemprop="dateModified" datetime="2020-10-28T09:45:37+08:00">2020-10-28</time>
+                <time title="修改时间：2020-10-30 08:17:21" itemprop="dateModified" datetime="2020-10-30T08:17:21+08:00">2020-10-30</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,8 +253,7 @@
 </li>
 <li><p>引入更多参数/特征/input。</p>
 </li>
-<li><p>正则化Regularization，目的是为了让函数更加平滑，相对于训练数据输入相近的测试输入，在进入函数之后引起的输出变化会比较小。并不是越平滑越好，bias对于平滑度没有影响。</p>
-</li>
+<li>正则化Regularization，目的是为了让函数更加平滑，相对于训练数据输入相近的测试输入，在进入函数之后引起的输出变化会比较小。并不是越平滑越好，bias对于平滑度没有影响。</li>
 </ul>
 <h1 id="误差来源"><a href="#误差来源" class="headerlink" title="误差来源"></a>误差来源</h1><p>在统计学中涉及到评估随机变量$X$的偏差和方差。涉及到无偏估计.</p>
 <h2 id="Bias"><a href="#Bias" class="headerlink" title="Bias"></a>Bias</h2><p>Average/ Expectations描述准确性</p>
@@ -282,7 +281,7 @@
 <p>Where $\eta$ is what we call a “<strong>learning rate</strong>“, and is <strong>constant for each given update</strong>. It’s the reason why <strong>we don’t care much about the magnitude of the derivative at $x_0$, only its direction</strong>. </p>
 <p>Reference: <a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2016/understanding-gradient-descent/">理解梯度下降</a></p>
 </blockquote>
-<h2 id="数学理论"><a href="#数学理论" class="headerlink" title="数学理论"></a>数学理论</h2><p>对于损失函数的一个初始点${\theta_1, \theta_2}$，需要在其邻域(表现在这里就是在等高图上着一个平面圆圈)找一个新的值使得损失函数更小，该怎么找？</p>
+<h2 id="数学理论"><a href="#数学理论" class="headerlink" title="数学理论"></a>数学理论</h2><p>对于损失函数的一个初始点$\{\theta_1, \theta_2\}$，需要在其邻域(表现在这里就是在等高图上着一个平面圆圈)找一个新的值使得损失函数更小，该怎么找？</p>
 <blockquote>
 <p>contour graph和gradient是什么关系？如果把等高线图画出来，且标出所有的梯度方向，可以发现等高线和梯度垂直。</p>
 </blockquote>
@@ -300,7 +299,7 @@
 <h1 id="方向导数与偏微分-梯度向量"><a href="#方向导数与偏微分-梯度向量" class="headerlink" title="方向导数与偏微分/梯度向量"></a>方向导数与偏微分/梯度向量</h1><p>由内积的定义可知，梯度向量是方向导数最大的地方，就是曲面最陡峭的方向。</p>
 <h1 id="全微分"><a href="#全微分" class="headerlink" title="全微分"></a>全微分</h1><p>全微分就是改变坐标系基向量的所有维度的值，衡量函数值变化的情况。</p>
 <h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/39059717">知乎专栏</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=AXqhWeUEtQU&list=PLSQl0a2vh4HC5feHa6Rc5c0wbRTx56nF7&index=15&ab_channel=KhanAcademy">Khan Acadamy Multivariable Calculus</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=AXqhWeUEtQU&amp;list=PLSQl0a2vh4HC5feHa6Rc5c0wbRTx56nF7&amp;index=15&amp;ab_channel=KhanAcademy">Khan Acadamy Multivariable Calculus</a></p>
 </blockquote>
 <p>注意这里化简的前提，是基于泰勒展开式对于损失函数在该点的模拟的精确度，因此我们适用的邻域就要足够小，这个邻域的大小表现在数据上就是我们选择的学习率。</p>
 <h2 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h2><h3 id="小心地调整Learning-Rate"><a href="#小心地调整Learning-Rate" class="headerlink" title="小心地调整Learning Rate"></a>小心地调整Learning Rate</h3><ul>
@@ -313,10 +312,14 @@
 <li><p>不同的参数需要不同的学习率。</p>
 </li>
 </ul>
-<h4 id="常规梯度下降法-Vanilla-Gradient-Descent"><a href="#常规梯度下降法-Vanilla-Gradient-Descent" class="headerlink" title="常规梯度下降法 Vanilla Gradient Descent"></a>常规梯度下降法 Vanilla Gradient Descent</h4><p>$$<br>\omega^{t+1} \larr \omega^{t} - \eta^tg^t \<br>\eta^t = \frac{\eta^t}{\sqrt{t+1}}<br>$$</p>
-<h4 id="Adagrad算法"><a href="#Adagrad算法" class="headerlink" title="Adagrad算法"></a>Adagrad算法</h4><p>$$<br>\omega^{t+1} \larr \omega^{t} - \frac{\eta^t}{\sigma^t}g^t \<br>g^t = \frac{\partial{L(\theta^t)}}{\partial{\omega}}\<br>$$</p>
-<p>$\sigma^t = \sqrt{\frac{1}{t+1} \sum_{i=0}^t(g^i)^2}$是之间该参数的所有微分的均方根，对于每个参数都是不一样的。</p>
-<p>代入化简可得<br>$$<br>\omega^{t+1} \larr \omega^{t} - \frac{\eta}{\sqrt{\sum_{i=0}^t(g^i)^2}}g^t<br>$$<br>这个式子中的分式是为了显示how suprise this step is，要求步长前后反差大。</p>
+<h4 id="常规梯度下降法-Vanilla-Gradient-Descent"><a href="#常规梯度下降法-Vanilla-Gradient-Descent" class="headerlink" title="常规梯度下降法 Vanilla Gradient Descent"></a>常规梯度下降法 Vanilla Gradient Descent</h4><script type="math/tex; mode=display">
+\omega^{t+1} \larr \omega^{t} - \eta^tg^t \\
+\eta^t = \frac{\eta^t}{\sqrt{t+1}}</script><h4 id="Adagrad算法"><a href="#Adagrad算法" class="headerlink" title="Adagrad算法"></a>Adagrad算法</h4><script type="math/tex; mode=display">
+\omega^{t+1} \larr \omega^{t} - \frac{\eta^t}{\sigma^t}g^t \\
+g^t = \frac{\partial{L(\theta^t)}}{\partial{\omega}}\\</script><p>$\sigma^t = \sqrt{\frac{1}{t+1} \sum_{i=0}^t(g^i)^2}$是之间该参数的所有微分的均方根，对于每个参数都是不一样的。</p>
+<p>代入化简可得</p>
+<script type="math/tex; mode=display">
+\omega^{t+1} \larr \omega^{t} - \frac{\eta}{\sqrt{\sum_{i=0}^t(g^i)^2}}g^t</script><p>这个式子中的分式是为了显示how suprise this step is，要求步长前后反差大。</p>
 <p>对于单参数问题，梯度越大就代表和最低点的距离越远。对于多参数问题，前面的结论不成立。</p>
 <p>不仅要和一次微分成正比，还要和二次微分成反比。但是求二次微分带来的代价过于巨大，所以尝试使用一次微分来estimate二次微分，也就是分式中的分母。</p>
 <h3 id="随机梯度下降法-Stochastic-Gradient-Descent"><a href="#随机梯度下降法-Stochastic-Gradient-Descent" class="headerlink" title="随机梯度下降法 Stochastic Gradient Descent"></a>随机梯度下降法 Stochastic Gradient Descent</h3><p>常规梯度下降法走一步要处理所有数据。而随机梯度下降法的损失函数每次只选取一个数据，对其进行梯度更新，因此速度更快。</p>
@@ -332,7 +335,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/DL/" rel="tag"># DL</a>
-              <a href="/tags/Regression/" rel="tag"># Regression</a>
+              <a href="/tags/LinearRegression/" rel="tag"># LinearRegression</a>
           </div>
 
         
@@ -420,18 +423,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">31</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">11</span>
+        <span class="site-state-item-count">12</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">51</span>
+        <span class="site-state-item-count">53</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -467,12 +470,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">71k</span>
+    <span title="站点总字数">77k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:09</span>
+    <span title="站点阅读时长">2:21</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
@@ -525,6 +528,61 @@
 
 
   
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
