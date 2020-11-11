@@ -26,18 +26,18 @@
 <meta property="og:site_name" content="来个抹茶可颂">
 <meta property="og:description" content="TA补充课More About Gradient Descent。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/flow.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/sgd.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/SGDM.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adagrad.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/RMSProp.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/Adam.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/flow.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/sgd.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/SGDM.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/adagrad.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/RMSProp.png">
+<meta property="og:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/Adam.png">
 <meta property="article:published_time" content="2020-11-08T03:08:19.000Z">
-<meta property="article:modified_time" content="2020-11-11T12:57:54.200Z">
+<meta property="article:modified_time" content="2020-11-11T13:58:42.508Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML-Tips">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/flow.png">
+<meta name="twitter:image" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/flow.png">
 
 <link rel="canonical" href="http://example.com/2020/11/08/summary-for-loss-function-optimization/">
 
@@ -197,7 +197,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-11 20:57:54" itemprop="dateModified" datetime="2020-11-11T20:57:54+08:00">2020-11-11</time>
+                <time title="修改时间：2020-11-11 21:58:42" itemprop="dateModified" datetime="2020-11-11T21:58:42+08:00">2020-11-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -238,24 +238,24 @@
         <h1 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h1><p>$\theta_t$: model parameters at the time step t.</p>
 <p>$\nabla L(\theta_t)$ or $g_t$: gradient of loss function at $\theta_t$, for updating $\theta_{t+1}$.</p>
 <p>$m_{t+1}$: momentum accumulated for time step 0 to time step t, for updating $\theta_{t+1}$.</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/flow.png" alt="flow"></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/flow.png" alt="flow" style="zoom:50%;"></p>
 <h1 id="参数迭代方式"><a href="#参数迭代方式" class="headerlink" title="参数迭代方式"></a>参数迭代方式</h1><p>on-line：一次用一对input&amp;label算损失函数更新参数</p>
 <p>off-line：一次用所有input&amp;label算损失函数更新参数</p>
 <h1 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h1><p>我们要Minimize Loss Function，梯度代表了增加的方向，往梯度的反方向走，就可以走向最小值。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/sgd.png" alt="sgd" style="zoom:50%;" /></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/sgd.png" alt="sgd" style="zoom:50%;"></p>
 <h1 id="SGDM"><a href="#SGDM" class="headerlink" title="SGDM"></a>SGDM</h1><p>定义了一个momentum，初始值为0。本次参数的更新是momentum和上一次迭代参数的矢量和。注意momentum的求解也用到了gradient，并且用lambda考虑了上一次迭代的momentum。</p>
-<p> <img src="/Users/drunk99/machacroissant/source/_posts/SGDM.png" alt="SGDM" style="zoom:50%;" /></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/SGDM.png" alt="SGDM" style="zoom:50%;"></p>
 <h1 id="Adagrad"><a href="#Adagrad" class="headerlink" title="Adagrad"></a>Adagrad</h1><p>Adagrad就是把SGD的学习率加上了一个分母。如果前几次迭代中gradient值很大的时候，一开始就会一步跨很大，有了分母的约束之后，如果过去的gradient很大的话（代表比较崎岖的地方），就能让每一步走小一点。</p>
 <p>问题在于，分母会越来越大，之后每一步的参数更新会越来越小。要是一开始的gradient就很大，那么没几步就不走了。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/adagrad.png" alt="adagrad" style="zoom:50%;" /></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/adagrad.png" alt="adagrad" style="zoom:50%;"></p>
 <h1 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h1><p>和Adagrad的分母的算法有所不同，同时借用了SGDM的思想。既考虑了gradient，有考虑了momentum，这两者的结合就是下面式子中的v，且用一个参数去权衡这两个的比重，解决了Adagrad的短板。</p>
 <p>但是它还是没有办法解决local minima的问题。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/RMSProp.png" alt="RMSProp" style="zoom:50%;" /></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/RMSProp.png" alt="RMSProp" style="zoom:50%;"></p>
 <h1 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h1><p>Adam就是SGDM+RMSProp。</p>
 <p>$\hat{m}_t$就是SGDM中的momentum除以了一个$1-\beta_1^t$，目的是让整个式子不会随着时间变化越来越大。要注意到$\beta_1$的取值是比较接近1但又小于的，在一开始的time step中，$m^t$的值主要是由$\beta_1m_{t-1}$来决定的，本次更新的$m^t$会比上一次的$m_{t-1}$来的小。通过处以一个$1-\beta_1^t$来让momentum不要那么小。</p>
 <p>类似的，$\hat{v}_t$就是SGDM中的v除以了一个$1-\beta_2^t$。</p>
 <p>一个很小的$\varepsilon$是为了在一开始v为0的时候分母不为0，否则就要无意义且学习率会无穷大。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/Adam.png" alt="Adam" style="zoom:50%;" /></p>
+<p><img src="/2020/11/08/summary-for-loss-function-optimization/Adam.png" alt="Adam" style="zoom:50%;"></p>
 <h1 id="选择算法"><a href="#选择算法" class="headerlink" title="选择算法"></a>选择算法</h1><p>Adapative Learning Rate/Adam： fast training/unstable/larger generalization gap虽然能自适应学习率但是在训练后期表现不是很好。</p>
 <p>SDGM：stable but slow/better convergence/smaller generalization gap虽然训练起来很慢但是总是很稳定，因为每一步走的都一样长。</p>
 <h1 id="Adam优化"><a href="#Adam优化" class="headerlink" title="Adam优化"></a>Adam优化</h1><h2 id="SWATS"><a href="#SWATS" class="headerlink" title="SWATS"></a>SWATS</h2><p>总的思想：first Adam + After SDGM，结合了Adam和SDGM的长处，追求更好的收敛。</p>

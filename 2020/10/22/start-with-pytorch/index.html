@@ -325,7 +325,7 @@
 <p>计算图将函数表达式用树状结构表示。求偏导，联系链式法则，因子路径。</p>
 <p>对于某一个结点往根结点去就是forward propagation，可以求该节点对它上面的所有节点的影响。对于某一个节点往叶子结点去就是backpropagation，可以求该节点受它下面的那些节点的影响。</p>
 <p>记录了计算图，就能追踪每一次微分。</p>
-<h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><h1 id="硬件支持"><a href="#硬件支持" class="headerlink" title="硬件支持"></a>硬件支持</h1><p>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</p>
+<h2 id><a href="#" class="headerlink" title=" "></a> </h2><h1 id="硬件支持"><a href="#硬件支持" class="headerlink" title="硬件支持"></a>硬件支持</h1><p>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gpu = torch.device(<span class="string">&quot;cuda:0&quot;</span>)</span><br><span class="line">x.to(gpu)</span><br></pre></td></tr></table></figure>
 <h1 id="批量数据"><a href="#批量数据" class="headerlink" title="批量数据"></a>批量数据</h1><p>主要涉及两个工具</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</span><br></pre></td></tr></table></figure>

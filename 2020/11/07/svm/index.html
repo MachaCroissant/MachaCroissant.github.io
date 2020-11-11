@@ -26,19 +26,19 @@
 <meta property="og:site_name" content="来个抹茶可颂">
 <meta property="og:description" content="李宏毅机器学习，SVM &#x3D; Hinge Loss + Kernel Method。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-21.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-11.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-13.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/ch31-1.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-15.png">
-<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-20.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/diff.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/lossfunctionequal.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/hingeloss.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/modelinput.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/modeloutput.png">
+<meta property="og:image" content="http://example.com/2020/11/07/svm/sigmoidkernel.png">
 <meta property="article:published_time" content="2020-11-07T07:10:53.000Z">
-<meta property="article:modified_time" content="2020-11-11T13:07:11.096Z">
+<meta property="article:modified_time" content="2020-11-11T14:24:00.803Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="SVM">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter31-21.png">
+<meta name="twitter:image" content="http://example.com/2020/11/07/svm/diff.png">
 
 <link rel="canonical" href="http://example.com/2020/11/07/svm/">
 
@@ -198,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-11 21:07:11" itemprop="dateModified" datetime="2020-11-11T21:07:11+08:00">2020-11-11</time>
+                <time title="修改时间：2020-11-11 22:24:00" itemprop="dateModified" datetime="2020-11-11T22:24:00+08:00">2020-11-11</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -247,19 +247,19 @@ l(f(x^n, \hat{y}^n)) = max(0, 1-\hat{y}^nf(x))</script><p>Loss function的第一
 \frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial w_i} &= \frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial{f(x^n)}}\cdot\frac{\partial{f(x^n)}}{\partial w_i}\\
 &=\frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial{f(x^n)}}\cdot x_i^n \\
 &= c^n(w) \cdot x_i^n
-\end{split}</script><p><img src="/Users/drunk99/machacroissant/source/_posts/chapter31-21.png" alt="chapter31-21"></p>
+\end{split}</script><p><img src="/2020/11/07/svm/diff.png" alt="diff" style="zoom:60%;"></p>
 <h3 id="第二种理解"><a href="#第二种理解" class="headerlink" title="第二种理解"></a>第二种理解</h3><p>用一个极小项$\varepsilon^n$取代损失函数L中的$l(f(x^n, \hat{y}^n))$，我们叫这个极小项是一个slack variable。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/chapter31-11.png" alt="chapter31-11"></p>
-<h1 id="Kernel-Method"><a href="#Kernel-Method" class="headerlink" title="Kernel Method"></a>Kernel Method</h1><h2 id="Dual-Representation-对偶性"><a href="#Dual-Representation-对偶性" class="headerlink" title="Dual Representation 对偶性"></a>Dual Representation 对偶性</h2><p><img src="/Users/drunk99/machacroissant/source/_posts/chapter31-13.png" alt="chapter31-13"></p>
+<p><img src="/2020/11/07/svm/lossfunctionequal.png" alt="lossfunctionequal" style="zoom:50%;"></p>
+<h1 id="Kernel-Method"><a href="#Kernel-Method" class="headerlink" title="Kernel Method"></a>Kernel Method</h1><h2 id="Dual-Representation-对偶性"><a href="#Dual-Representation-对偶性" class="headerlink" title="Dual Representation 对偶性"></a>Dual Representation 对偶性</h2><p><img src="/2020/11/07/svm/hingeloss.png" alt="hingeloss" style="zoom:50%;"></p>
 <p>如果对于之前求出的迭代更新的式子，把$w$初始化为0，式子变成所有数据的线性组合。</p>
-<p>线性参数$\alpha_n^<em>$可能是0，因为结合前面在定义Loss function的时候选择了Hinge Loss，$\alpha_n^</em>$也就是$\sum_nc^n(w)$有可能就是取0（在fit很好的情况下），有可能不是0（在fit不好的情况下），到最后模型越fit，线性参数线性参数$\alpha_n^*$取0越多，越sparse。</p>
-<p>support vectors就是那些线性参数$\alpha_n^*$不为0的$x^n$。</p>
-<p>这样结合的好处是：不是支持向量的数据点（有可能是outlier），去掉（线性参数$\alpha_n^*$是0）也不会有多大影响。如果用了Cross Entropy定义loss function，每一笔data对模型参数的迭代结果都有影响。</p>
+<p>线性参数$\alpha_n^{*}$可能是0，因为结合前面在定义Loss function的时候选择了Hinge Loss。也就是$\sum_nc^{n}(w)$有可能就是取0（在fit很好的情况下），有可能不是0（在fit不好的情况下），到最后模型越fit，线性参数线性参数取0越多，越sparse。</p>
+<p>support vectors就是那些线性参数$\alpha_n^{*}$不为0的$x^n$。</p>
+<p>这样结合的好处是：不是支持向量的数据点（有可能是outlier），去掉（线性参数$\alpha_n^{*}$是0）也不会有多大影响。如果用了Cross Entropy定义loss function，每一笔data对模型参数的迭代结果都有影响。</p>
 <h2 id="Kernel-Trick"><a href="#Kernel-Trick" class="headerlink" title="Kernel Trick"></a>Kernel Trick</h2><h3 id="改写函数集为Kernel-Function"><a href="#改写函数集为Kernel-Function" class="headerlink" title="改写函数集为Kernel Function"></a>改写函数集为Kernel Function</h3><p>重新表示模型参数为$w= \sum_n \alpha_nx^n = X\boldsymbol{\alpha}$</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/ch31-1.png" alt="ch31-1"></p>
+<p><img src="/2020/11/07/svm/modelinput.png" alt="modelinput" style="zoom:50%;"></p>
 <p>重新表示模型函数集为</p>
 <script type="math/tex; mode=display">
-f(x) = w^Tx = \boldsymbol{\alpha}^TX^Tx=\sum_na_n(x^n\cdot x)</script><p><img src="/Users/drunk99/machacroissant/source/_posts/chapter31-15.png" alt="chapter31-15"></p>
+f(x) = w^Tx = \boldsymbol{\alpha}^TX^Tx=\sum_na_n(x^n\cdot x)</script><p><img src="/2020/11/07/svm/modeloutput.png" alt="modeloutput" style="zoom:50%;"></p>
 <p>把内积$(x^n\cdot x)$写成核方法$K(x^n,x)$就是核函数，称为核技巧。写成这样的好处就是，不用具体的知道每一个data的向量表示求出内积，我们只需要知道Kernel Function的输出就可以了。</p>
 <p>接下来最小化损失函数，也就是训练目的：找一组$\alpha_n$，是loss function最小。好处是只需要知道input data vector之间的内积。</p>
 <blockquote>
@@ -273,7 +273,7 @@ f(x) = w^Tx = \boldsymbol{\alpha}^TX^Tx=\sum_na_n(x^n\cdot x)</script><p><img sr
 <h4 id="Sigmoid-Kernel"><a href="#Sigmoid-Kernel" class="headerlink" title="Sigmoid Kernel"></a>Sigmoid Kernel</h4><script type="math/tex; mode=display">
 K(x,z) = tanh(x \cdot z)\\
 f(x) = \sum{\alpha_nK(x^n,x)} = \sum{\alpha_n tanh(x^n \cdot z)}</script><p>每一个函数都可以看作一个Neuron Network。原始数据到第一层neuron的weight就是每一个data point$x^n$，neuron的数目就是support vectors的数目。</p>
-<p><img src="/Users/drunk99/machacroissant/source/_posts/chapter31-20.png" alt="chapter31-20"></p>
+<p><img src="/2020/11/07/svm/sigmoidkernel.png" alt="sigmoidkernel" style="zoom:50%;"></p>
 <h4 id="更多的启发"><a href="#更多的启发" class="headerlink" title="更多的启发"></a>更多的启发</h4><p>直接设计Kernel Function，不用理会x和z的的feature。Kernel Function有点类似于把x和z放到高维之后的相似度。</p>
 <p>核函数做了什么？我们要找的这个Kernel Function，把x和z放进去，会得出一个value，这个value代表了x和z在高维上的inner product。</p>
 <p>什么样的data适合核方法？When x is structured object like sequence, hard to design its feature transformation function $\phi(x)$。（没有办法直接用以vector来描述）</p>
