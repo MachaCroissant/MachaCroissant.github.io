@@ -27,9 +27,9 @@
 <meta property="og:description" content="台大李宏毅机器学习第一次作业中遇到的困难点。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-29T14:09:35.000Z">
-<meta property="article:modified_time" content="2020-10-30T00:15:39.535Z">
+<meta property="article:modified_time" content="2020-11-08T12:49:47.500Z">
 <meta property="article:author" content="徐徐">
-<meta property="article:tag" content="LeeML">
+<meta property="article:tag" content="ML-Tips">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="http://example.com/2020/10/29/MLHW1-tips/">
@@ -190,7 +190,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 08:15:39" itemprop="dateModified" datetime="2020-10-30T08:15:39+08:00">2020-10-30</time>
+                <time title="修改时间：2020-11-08 20:49:47" itemprop="dateModified" datetime="2020-11-08T20:49:47+08:00">2020-11-08</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,14 +208,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>645</span>
+              <span>1.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>3 分钟</span>
             </span>
             <div class="post-description">台大李宏毅机器学习第一次作业中遇到的困难点。</div>
 
@@ -230,6 +230,7 @@
       
         <h1 id="加载数据"><a href="#加载数据" class="headerlink" title="加载数据"></a>加载数据</h1><p>使用<code>pandas</code>库，<code>import pandas as pd</code>。</p>
 <p><code>data = pd.read_csv(&#39;path&#39;);</code></p>
+<p>在加载数据的时候默认第一行就是列号，但是出现第一行就是数据的情况需要添加<code>pd.read_csv(&#39;./Dataset/test.csv&#39;, header=None)</code>。</p>
 <h1 id="数据预处理"><a href="#数据预处理" class="headerlink" title="数据预处理"></a>数据预处理</h1><h2 id="无关行-列处理"><a href="#无关行-列处理" class="headerlink" title="无关行/列处理"></a>无关行/列处理</h2><p>如果存在不是数据，只是辅助信息的多余的列，需要剔除。</p>
 <ul>
 <li>使用<code>iloc</code>，即<code>data.iloc[:, 3:]</code>表示保留所有行，列从第三列开始保留。</li>
@@ -244,8 +245,23 @@
 <h2 id="非数据项转换"><a href="#非数据项转换" class="headerlink" title="非数据项转换"></a>非数据项转换</h2><p>存在一些文字表示的数据项，如果取值为二元就可以转换成0或1的布尔值。</p>
 <p><code>data[data == &#39;NR&#39;] = 0</code></p>
 <h1 id="矩阵操作"><a href="#矩阵操作" class="headerlink" title="矩阵操作"></a>矩阵操作</h1><h2 id="reshape-amp-amp-1"><a href="#reshape-amp-amp-1" class="headerlink" title="reshape &amp;&amp; -1"></a><code>reshape</code> &amp;&amp; <code>-1</code></h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/18691084/what-does-1-mean-in-numpy-reshape">StackOverflow的解答</a> </p>
-<p><code>-1</code>以为着未知的维度，需要<code>numpy</code>依据传入的另外一个参数值进行自行计算。计算遵循的原则是前后数据不能有损失，即<em>‘The new shape should be compatible with the original shape’</em>。</p>
+<p><code>-1</code>意味着未知的维度，需要<code>numpy</code>依据传入的另外一个参数值进行自行计算。计算遵循的原则是前后数据不能有损失，即<em>‘The new shape should be compatible with the original shape’</em>。</p>
 <p><code>reshape(1, -1)</code>转换成一个行向量；<code>reshape(-1, 1)</code>转换成一个列向量。</p>
+<h2 id="np-concatenate"><a href="#np-concatenate" class="headerlink" title="np.concatenate"></a><code>np.concatenate</code></h2><p>在线性回归中有一个bias项要添加到x中去，使用<code>np.concatenate((np.ones([row, column]), x), axis=1)</code></p>
+<h2 id="声明-更改数组数据类型"><a href="#声明-更改数组数据类型" class="headerlink" title="声明/更改数组数据类型"></a>声明/更改数组数据类型</h2><p>一般在声明一个空数组，全1数组的时候会使用<code>dtype=float</code>之类的命令。</p>
+<p>如：<code>test_y = np.empty([240, 1], dtype=float)</code></p>
+<p>在对已有的数组进行拼接/截取操作，或从某个文件读取数据到CSV，会使用<code>.astye(float)</code>之类的命令强制类型转换。</p>
+<p>如<code>test_x = np.concatenate((np.ones([240, 1]), test_x),axis=1).astype(float)</code></p>
+<h1 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h1><p>模型训练是在定义并初始化相关参数以及学习率之后，执行for循环。</p>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><p>for循环的次数是iter_time。for循环内部需要有output_value y，每次迭代得到的loss function的结果，对loss function求gradient的结果，最后更新参数即可。</p>
+<h2 id="参数更新"><a href="#参数更新" class="headerlink" title="参数更新"></a>参数更新</h2><p>如果使用adagrad用到了前面求的梯度，还要专门开设一个变量存放中间结果。</p>
+<p>如果参数更新的表达式，后面的负的gradient的式子中存在分式且分母有可能为0，需要在分母上添加一个eps极小值，目的是保证分式子有意义。</p>
+<h1 id="模型评估"><a href="#模型评估" class="headerlink" title="模型评估"></a>模型评估</h1><h2 id="参数传递"><a href="#参数传递" class="headerlink" title="参数传递"></a>参数传递</h2><p>在train的.py文件中保存好模型参数，并输出到当前路径。<code>np.save(&#39;weight.npy&#39;, w)</code></p>
+<p>在test的.py文件中读入权重。<code>w = np.load(&#39;weight.npy&#39;)</code></p>
+<h2 id="结果输出"><a href="#结果输出" class="headerlink" title="结果输出"></a>结果输出</h2><p>把test的结果输出到CSV文件，前两行通用写法，然后开始定义header并写header；之后开始用for循环写数据，写一次数据就调用一次<code>csv_writer.writerow(content-you-want-write)</code> 。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> open(<span class="string">&#x27;predict.csv&#x27;</span>, mode = <span class="string">&#x27;w&#x27;</span>, newline=<span class="string">&#x27;&#x27;</span>) <span class="keyword">as</span> file:</span><br><span class="line">    csv_writer = csv.writer(file)</span><br><span class="line">    header = [<span class="string">&#x27;id&#x27;</span>, <span class="string">&#x27;PM2.5&#x27;</span>]</span><br><span class="line">    csv_writer.writerow(header)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">240</span>):</span><br><span class="line">        <span class="keyword">if</span> int(test_y[i][<span class="number">0</span>]) &gt; <span class="number">0</span>:</span><br><span class="line">            row = [<span class="string">&#x27;id_&#x27;</span>+str(i), str(int(test_y[i][<span class="number">0</span>]))]</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            row = [<span class="string">&#x27;id_&#x27;</span>+str(i), <span class="string">&#x27;0&#x27;</span>]</span><br><span class="line">        csv_writer.writerow(row)</span><br></pre></td></tr></table></figure>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://mrsuncodes.github.io/2020/03/15/%E6%9D%8E%E5%AE%8F%E6%AF%85%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0-%E7%AC%AC%E4%B8%80%E8%AF%BE%E4%BD%9C%E4%B8%9A/#more">MrSun Blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/sinat_35907936/article/details/105075838">CSDN 意疏</a></p>
 
     </div>
 
@@ -255,7 +271,7 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/LeeML/" rel="tag"># LeeML</a>
+              <a href="/tags/ML-Tips/" rel="tag"># ML-Tips</a>
           </div>
 
         
@@ -329,7 +345,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">加载数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%85%B3%E8%A1%8C-%E5%88%97%E5%A4%84%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">无关行&#x2F;列处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E6%95%B0%E6%8D%AE%E9%A1%B9%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">非数据项转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">矩阵操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape-amp-amp-1"><span class="nav-number">3.1.</span> <span class="nav-text">reshape &amp;&amp; -1</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AE"><span class="nav-number">1.</span> <span class="nav-text">加载数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.</span> <span class="nav-text">数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E5%85%B3%E8%A1%8C-%E5%88%97%E5%A4%84%E7%90%86"><span class="nav-number">2.1.</span> <span class="nav-text">无关行&#x2F;列处理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%9E%E6%95%B0%E6%8D%AE%E9%A1%B9%E8%BD%AC%E6%8D%A2"><span class="nav-number">2.2.</span> <span class="nav-text">非数据项转换</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E6%93%8D%E4%BD%9C"><span class="nav-number">3.</span> <span class="nav-text">矩阵操作</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#reshape-amp-amp-1"><span class="nav-number">3.1.</span> <span class="nav-text">reshape &amp;&amp; -1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#np-concatenate"><span class="nav-number">3.2.</span> <span class="nav-text">np.concatenate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E-%E6%9B%B4%E6%94%B9%E6%95%B0%E7%BB%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="nav-number">3.3.</span> <span class="nav-text">声明&#x2F;更改数组数据类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-number">4.</span> <span class="nav-text">模型训练</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%86%85%E5%AE%B9"><span class="nav-number">4.1.</span> <span class="nav-text">主要内容</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E6%9B%B4%E6%96%B0"><span class="nav-number">4.2.</span> <span class="nav-text">参数更新</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BC%B0"><span class="nav-number">5.</span> <span class="nav-text">模型评估</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E4%BC%A0%E9%80%92"><span class="nav-number">5.1.</span> <span class="nav-text">参数传递</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%9C%E8%BE%93%E5%87%BA"><span class="nav-number">5.2.</span> <span class="nav-text">结果输出</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -343,18 +359,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">50</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -390,12 +406,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">77k</span>
+    <span title="站点总字数">122k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:21</span>
+    <span title="站点阅读时长">3:42</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

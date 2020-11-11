@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="李宏毅机器学习，集成学习Ensemble。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="集成学习">
+<meta property="og:url" content="http://example.com/2020/11/11/ensemble/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="李宏毅机器学习，集成学习Ensemble。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost2.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost3.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost4.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost5.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost6.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost7.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/gradientboosting8.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/gradientboosting9.png">
+<meta property="article:published_time" content="2020-11-11T02:49:02.000Z">
+<meta property="article:modified_time" content="2020-11-11T13:07:40.280Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="集成学习">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adaboost.png">
+
+<link rel="canonical" href="http://example.com/2020/11/11/ensemble/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>集成学习 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/11/ensemble/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          集成学习
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2020-11-11 10:49:02 / 修改时间：21:07:40" itemprop="dateCreated datePublished" datetime="2020-11-11T10:49:02+08:00">2020-11-11</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+            <div class="post-description">李宏毅机器学习，集成学习Ensemble。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Bagging"><a href="#Bagging" class="headerlink" title="Bagging"></a>Bagging</h1><h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><p>有N笔Training Data，从中做sampling，建立多个有相同数据量的dataset。</p>
+<p>用一个复杂的模型对这些dataset做learning，可以得到四个训练好的模型。</p>
+<p>最后将这四个模型的结果做Average/Voting。</p>
+<h2 id="适用于什么情况"><a href="#适用于什么情况" class="headerlink" title="适用于什么情况"></a>适用于什么情况</h2><p>模型复杂，但是bias很小；主要担心overfitting，目的是为了降低variance，将这些用subset训练好（但是只做重采样效果也不一定很好）的子模型做平均/投票。</p>
+<p>比如decision tree这样的模型，Random Forest就是决策树做bagging的版本。传统的决策树很容易在训练集上0% error rate。</p>
+<p>传统的随机森林是通过之前的重采样的方法做，但是得到的结果是每棵树都差不多（效果并不好）。比较多的是随机的限制一些特征或者问题不能用，这样就能保证就算用同样的dataset，每次产生的决策树也会是不一样的，最后把所有的决策树的结果都集合起来，就会得到随机森林。</p>
+<h2 id="如何验证Validate"><a href="#如何验证Validate" class="headerlink" title="如何验证Validate"></a>如何验证Validate</h2><p>如果是用Bagging的方法的话，用out-of-bag可以做验证，不需要把label data划分成training set和validation set。</p>
+<p>对于一个function1，用dataset1和dataset2训练；对于function4，用dataset2和dataset4训练。function1和function4做bagging的结果可以用dataset3来做测试。对所有的function的组合做out-of-bag测试，最终的error是这些测试结果的平均。</p>
+<h1 id="Boosting"><a href="#Boosting" class="headerlink" title="Boosting"></a>Boosting</h1><h2 id="适用于什么情况-1"><a href="#适用于什么情况-1" class="headerlink" title="适用于什么情况"></a>适用于什么情况</h2><p>适用于错误率很高的模型，没有办法fit。</p>
+<p>Boosting有一个很强的保证：如果你的机器学习算法能产生错误率小于50%的分类器，这个方法可以保证错误率达到0%。</p>
+<h2 id="流程-1"><a href="#流程-1" class="headerlink" title="流程"></a>流程</h2><ul>
+<li>先找一个分类器f1(x)</li>
+<li>接下来找一个辅助f1(x)的分类器f2(x)，f2(x)不能和f1(x)很像，f2(x)要能够弥补f1(x)没办法做的事情</li>
+<li>之后再找辅助f2(x)分类器的f3(x)，一直到最后</li>
+</ul>
+<p>注意所有分类器都是按照顺序sequentially得到的。而bagging是没有顺序的，可并行训练。</p>
+<h2 id="细节实现"><a href="#细节实现" class="headerlink" title="细节实现"></a>细节实现</h2><h3 id="如何使classifers-—-fk-x-不相同？"><a href="#如何使classifers-—-fk-x-不相同？" class="headerlink" title="如何使classifers — fk(x)不相同？"></a>如何使classifers — fk(x)不相同？</h3><p>要让每个分类器的参数不同，可以让他们在不同的dataset上训练。</p>
+<p>为了获得不同的数据集，可以重采样原数据集Resampling，就像bagging做的那样；也可以重新给原数据集中的每一个数据重新分配权重，即Re-weighting。$(x^i, \hat{y}^i, u^i) \quad  u^i=1=&gt;u^i=k$，在实际操作的时候并不要对dataset的封装有什么更改，只是更改cost function为$L(f) = \sum_n{u^n l(f(x^n), \hat{y}^n)}$。</p>
+<h3 id="Adaboost"><a href="#Adaboost" class="headerlink" title="Adaboost"></a>Adaboost</h3><p>总的想法就是先训练好一个分类器f1(x)，然后再找一组新的training data，让f1(x)在这组data上表现很差（怎么才算表现差？），然后让f2(x)在这组training data上训练。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost.png" alt="adaboost" style="zoom:50%;" /></p>
+<p>$\varepsilon_1$就是分类器f1(x)在训练数据上的的error rate，分子是所有训练样本的weight之和，分母是分类正确的训练样本的weight之和，要求error rate小于0.5。</p>
+<hr>
+<p>将分类器f1(x)中的训练数据的权重变更（要怎么变更？）后，我们要找分类器f2(x)在新权重的训练集上error rate等于0.5。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost2.png" alt="adaboost2" style="zoom:50%;" /></p>
+<hr>
+<p>如何确定$d_1$？</p>
+<p>已知</p>
+<script type="math/tex; mode=display">
+\begin{split}
+\varepsilon_1 &= \frac{\sum_n{u_1^n\delta{(f_x(x^n)\neq \hat{y}^n)}}}{\sum{u_1^n}} \\
+\varepsilon_2 &= \frac{\sum_n{u_2^n\delta{(f_x(x^n)\neq \hat{y}^n)}}}{\sum{u_2^n}} \\
+&=\frac{\sum_{f_x(x^n)\neq \hat{y}^n}{u_2^n}}{\sum_{f_x(x^n) = \hat{y}^n}{u_2^n} + \sum_{f_x(x^n)\neq \hat{y}^n}{u_2^n} } \\
+&= \frac{\sum_{f_x(x^n)\neq \hat{y}^n}{u_1^nd_1}}{\sum_{f_x(x^n) = \hat{y}^n}{u_1^n/d_1} + \sum_{f_x(x^n)\neq \hat{y}^n}{u_1^nd_1} }\\
+&= 0.5
+\end{split}</script><p>变形获得</p>
+<script type="math/tex; mode=display">
+\begin{aligned}
+\frac{\sum_{f_x(x^n) = \hat{y}^n}{u_1^n/d_1}}{\sum_{f_x(x^n)\neq \hat{y}^n}{u_1^nd_1} } = 1 
+\\ 
+\frac{1}{d_1} \sum_{f_x(x^n) = \hat{y}^n}{u_1^n} = d_1 \sum_{f_x(x^n) \neq \hat{y}^n}{u_1^n} \\
+
+\frac{1}{d_1} Z_1(1-\varepsilon_1) = d_1 Z_1\varepsilon_1 \\
+d_1= \sqrt{(1-\varepsilon_1)/\varepsilon_1} > 1
+\end{aligned}</script><h4 id="算法总结"><a href="#算法总结" class="headerlink" title="算法总结"></a>算法总结</h4><p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost3.png" alt="adaboost3" style="zoom:50%;" /></p>
+<ul>
+<li>多个模型的sequential训练</li>
+</ul>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost4.png" alt="adaboost4" style="zoom:50%;" /></p>
+<ul>
+<li>将多个训练好的模型组装，两种方式Uniform Weight/Non-uniform Weight。</li>
+</ul>
+<h4 id="正确性验证"><a href="#正确性验证" class="headerlink" title="正确性验证"></a>正确性验证</h4><p>要保证最后组装起来的模型$H(x)$的error rate会越来越小。</p>
+<h5 id="问题转换1"><a href="#问题转换1" class="headerlink" title="问题转换1"></a>问题转换1</h5><p>最终的error rate是有上界的，蓝色的函数就是绿色函数的上界。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost5.png" alt="adaboost5"></p>
+<p>要证明最终的函数$H(x)$的error rate会越来越小的问题就变成了证明蓝色的上界函数会越来越小。</p>
+<h5 id="问题转换2"><a href="#问题转换2" class="headerlink" title="问题转换2"></a>问题转换2</h5><p>对蓝色部分的上界函数做一些变形。</p>
+<p>用$u^n_{T+1}$的和表示第T+1次训练数据集权重的和$Z_{T+1}$，运用递推关系式将$u^n_{T+1}$转换成关于y_train/y_pred/alpha的exp相关的表达式。这个式子表明训练数据的权重和（也就是红色表达式）会和训练数据的错误率有关系。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost6.png" alt="adaboost6" style="zoom:50%;" /></p>
+<p>要证明蓝色的上界函数会越来越小就转化为要证明训练数据的权重和会越来越小。</p>
+<h5 id="问题转换3"><a href="#问题转换3" class="headerlink" title="问题转换3"></a>问题转换3</h5><p>对训练数据的权重和做一些变形。</p>
+<p>在用第T+1次训练数据集权重的和$Z_{T}$的两种情况分类结果表示第T+1次训练数据集权重的和$Z_{T+1}$</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adaboost7.png" alt="adaboost7" style="zoom:50%;" /></p>
+<p>最终经过三次转换证明成功。</p>
+<h3 id="Gradient-Boosting"><a href="#Gradient-Boosting" class="headerlink" title="Gradient Boosting"></a>Gradient Boosting</h3><p>Gradient Boosting是Boosting更泛化的一个版本。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/gradientboosting8.png" alt="gradientboosting8" style="zoom:50%;" /></p>
+<p>给定initial function，在每个timestep更新上一个timestep的function，得到最终的output Function。</p>
+<p>从梯度的角度考虑loss function，是上面那个式子，更新就是learning rate和对g(x)微分的结果。</p>
+<p>从boosting的角度考虑就是要添一个新的函数。</p>
+<p>如果这两个同方向就可以最小化损失函数。要让他们同方向就要让这两个式子同符号，把这两个式子的乘积最大化。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/gradientboosting9.png" alt="gradientboosting9" style="zoom:50%;" /></p>
+<p>Adaboost中就自动分配了一个最好的$\alpha_t$，把$f_t(x)$的价值发挥到最大，很类似于learning rate。也可以把Adaboost看成是在做梯度下降，这个梯度就是一个函数，而且学习率可以通过计算得出最好的。</p>
+<p>Gradient Boosting中我们可以自己决定学习率，从而更改目标函数。</p>
+<h1 id="Stacking"><a href="#Stacking" class="headerlink" title="Stacking"></a>Stacking</h1><p>在分类问题中直接对不同结果的模型做Voting并不一定是好的，有的系统比较差。</p>
+<p>当然可以采用bagging分配子系统在最终结果中的权重。</p>
+<p>提出另一种方法，把子系统的输出结果当作新的特征输入到最终的分类器，这个分类器比较简单。Training Data分成两份，一份用来训练子系统，另一份用来训练最终分类器。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/%E9%9B%86%E6%88%90%E5%AD%A6%E4%B9%A0/" rel="tag"># 集成学习</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/10/google-download/" rel="prev" title="从谷歌硬盘获取文件">
+      <i class="fa fa-chevron-left"></i> 从谷歌硬盘获取文件
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/11/MLHW3-tips/" rel="next" title="MLHW3-tips">
+      MLHW3-tips <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Bagging"><span class="nav-number">1.</span> <span class="nav-text">Bagging</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B"><span class="nav-number">1.1.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5"><span class="nav-number">1.2.</span> <span class="nav-text">适用于什么情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%AA%8C%E8%AF%81Validate"><span class="nav-number">1.3.</span> <span class="nav-text">如何验证Validate</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Boosting"><span class="nav-number">2.</span> <span class="nav-text">Boosting</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%80%82%E7%94%A8%E4%BA%8E%E4%BB%80%E4%B9%88%E6%83%85%E5%86%B5-1"><span class="nav-number">2.1.</span> <span class="nav-text">适用于什么情况</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B-1"><span class="nav-number">2.2.</span> <span class="nav-text">流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%86%E8%8A%82%E5%AE%9E%E7%8E%B0"><span class="nav-number">2.3.</span> <span class="nav-text">细节实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BD%BFclassifers-%E2%80%94-fk-x-%E4%B8%8D%E7%9B%B8%E5%90%8C%EF%BC%9F"><span class="nav-number">2.3.1.</span> <span class="nav-text">如何使classifers — fk(x)不相同？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Adaboost"><span class="nav-number">2.3.2.</span> <span class="nav-text">Adaboost</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%AE%97%E6%B3%95%E6%80%BB%E7%BB%93"><span class="nav-number">2.3.2.1.</span> <span class="nav-text">算法总结</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E7%A1%AE%E6%80%A7%E9%AA%8C%E8%AF%81"><span class="nav-number">2.3.2.2.</span> <span class="nav-text">正确性验证</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%BD%AC%E6%8D%A21"><span class="nav-number">2.3.2.2.1.</span> <span class="nav-text">问题转换1</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%BD%AC%E6%8D%A22"><span class="nav-number">2.3.2.2.2.</span> <span class="nav-text">问题转换2</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E8%BD%AC%E6%8D%A23"><span class="nav-number">2.3.2.2.3.</span> <span class="nav-text">问题转换3</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-Boosting"><span class="nav-number">2.3.3.</span> <span class="nav-text">Gradient Boosting</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stacking"><span class="nav-number">3.</span> <span class="nav-text">Stacking</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

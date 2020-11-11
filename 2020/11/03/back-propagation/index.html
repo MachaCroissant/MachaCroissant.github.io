@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="李宏毅机器学习。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习总介绍">
+<meta property="og:url" content="http://example.com/2020/11/03/back-propagation/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="李宏毅机器学习。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter14-5.png">
+<meta property="article:published_time" content="2020-11-03T00:42:45.000Z">
+<meta property="article:modified_time" content="2020-11-07T02:56:06.762Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/chapter14-5.png">
+
+<link rel="canonical" href="http://example.com/2020/11/03/back-propagation/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>深度学习总介绍 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/03/back-propagation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习总介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-03 08:42:45" itemprop="dateCreated datePublished" datetime="2020-11-03T08:42:45+08:00">2020-11-03</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-07 10:56:06" itemprop="dateModified" datetime="2020-11-07T10:56:06+08:00">2020-11-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>10 分钟</span>
+            </span>
+            <div class="post-description">李宏毅机器学习。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="深度学习三个步骤"><a href="#深度学习三个步骤" class="headerlink" title="深度学习三个步骤"></a>深度学习三个步骤</h1><h2 id="Neural-Network"><a href="#Neural-Network" class="headerlink" title="Neural Network"></a>Neural Network</h2><p>前馈feedforward，输入进入网络后流动是单向的。两层之间的连接并没有反馈feedback。</p>
+<p>全链接fully connect，每一层之间两两都有链接。</p>
+<p>Input Layer输入层 1层— Hidden Layer 隐藏层 N层 — Output Layer输出层 1层。</p>
+<p>Deep = many hidden layers</p>
+<h2 id="Goodness-of-function"><a href="#Goodness-of-function" class="headerlink" title="Goodness of function"></a>Goodness of function</h2><h2 id="单个训练样本"><a href="#单个训练样本" class="headerlink" title="单个训练样本"></a>单个训练样本</h2><p>采用损失函数Loss function来反映模型的好差，利用交叉熵函数对$y$和$\hat{y}$的损失进行计算。</p>
+<script type="math/tex; mode=display">
+x_i \stackrel{\omega_i}{\longrightarrow} \dots\stackrel{Activation\,Function}{\longrightarrow} y_i \stackrel{Cross\,Entropy}{\longleftrightarrow} \hat{y}_i</script><p>注意损失函数是定义在单个训练样本上的（在表达式上使用下标，且使用小写的$l$）也就是一个样本的误差。</p>
+<h2 id="所有训练样本"><a href="#所有训练样本" class="headerlink" title="所有训练样本"></a>所有训练样本</h2><script type="math/tex; mode=display">
+x^i \stackrel{Neuron\, Network}{\longrightarrow} y^i \stackrel{Cross\,Entropy\, C^i}{\longrightarrow} \hat{y}^i</script><p>总体损失函数Total loss function是所有样本的误差的总和。也是反向传播需要最小化的值。</p>
+<script type="math/tex; mode=display">
+L = \sum_{n=1}^{n}{l_n}</script><p>注意这里的$x^i$不是一维的数据，是用来表示一个对象的多维度向量，$x^i$和$x_i$表示的对象不相同，注意区分上下标。</p>
+<p>注意是吧所有训练数据的损失都加起来得到的总体损失L。为了最小化这个损失L，也就是要在function set里面找一个最优函数，也是酒找神经网络中的参数$\omega$。</p>
+<h2 id="Pick-best-function"><a href="#Pick-best-function" class="headerlink" title="Pick best function"></a>Pick best function</h2><p>使用梯度下降。</p>
+<p>Back Propagation: an efficient way to compute $\partial{L}/\partial{\omega}$ in neuron network.</p>
+<hr>
+<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><p>反向传播是在使用梯度下降计算参数变化量的时候，让求梯度更方便的一种方法。</p>
+<p>反向传播背后的数学原理就是链式法则。</p>
+<p>因为单个样本的loss function是关于系统输出$y$的函数，输入$x$通过系统一层层传递才到输出$y$，所以链式法则拆分的时候也是拆阶段性结果做微分。</p>
+<h2 id="单个训练样本分析"><a href="#单个训练样本分析" class="headerlink" title="单个训练样本分析"></a>单个训练样本分析</h2><p><img src="/Users/drunk99/machacroissant/source/_posts/chapter14-5.png" alt="chapter14-5" style="zoom:80%;" /></p>
+<p>输入先进入一个由权重weight和偏移b组成的线性系统获得线性函数输出z。</p>
+<p>线性输出z进入一个激励函数non-linear activation function获得一个非线性输出，该输出作为下一层神经网络的输入。最常用的非线性激励函数就是Sigmoid Function。</p>
+<blockquote>
+<p>为什么需要激励函数？用于加入非线性因素。因为有些数据线性可分，但是某些数据线性不可分。</p>
+<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22334626/answer/103835591">神经网络激励函数的作用是什么？有没有形象的解释？ - 颜沁睿的回答 - 知乎</a></p>
+</blockquote>
+<script type="math/tex; mode=display">
+\frac{\partial l}{\partial \omega} = \frac{\partial l}{\partial z} \frac{\partial z}{\partial \omega}</script><p>计算$\frac{\partial z}{\partial \omega} $就是Forward Pass的过程，结果就是the value of the input connected by the weight，该层神经网络的输入。此处需要注意z已经在forward pass中被确定了。</p>
+<p>计算$\frac{\partial l}{\partial z}$就是Backward Pass的过程。运用链式法则的时候需要注意，最终结果$\partial l$是和$\partial y$结合在一起的，而$\partial y$是作为non-linear activation function的输出存在的，而该非线性激励函数的输入又是$z$，即该层神经网络的输入经过线性变换之后得到值。</p>
+<h2 id="Mini-Batch"><a href="#Mini-Batch" class="headerlink" title="Mini-Batch"></a>Mini-Batch</h2><p>相关参数<code>batch_size</code>和<code>nb_epoch</code>。</p>
+<p>实际操作并不总是对所有样本最小化总的损失函数，而是将数据随机分成几个mini-batch，每个batch的batch_size指定之后，可以根据有多少样本算出有多少个batch。</p>
+<p>初始化神经网络参数后，随机选择第一个bacth的样本，对它计算total loss，然后更新神经网络参数；第二个batch..……直到选了batch_size个batch的样本，也就是对神经网络的参数更新了(总样本数/batch_size)次，才能称做遍历了一次nb_epoch。</p>
+<p>batch_size代表一个batch有多大(就是把100个example，放到一个batch里)；nb_epoch等于20表示对每个batch重复20次。</p>
+<h1 id="Tips-for-Deep-Learning"><a href="#Tips-for-Deep-Learning" class="headerlink" title="Tips for Deep Learning"></a>Tips for Deep Learning</h1><p>在完成深度学习的三个步骤，得到神经网络之后，需要首先考虑是否能在训练集上获得好的表现。</p>
+<p>如果在训练集上不能获得好的表现，需要从Adapative Learning Rate和New Activation Function两方面考虑。</p>
+<p>如果在训练集上表现良好，但是在测试集上表现差，说明是overfitting，从Early Stopping和Regularization以及Dropout三方面考虑。</p>
+<h2 id="训练集表现不好"><a href="#训练集表现不好" class="headerlink" title="训练集表现不好"></a>训练集表现不好</h2><h3 id="Vanishing-Gradient-Problem"><a href="#Vanishing-Gradient-Problem" class="headerlink" title="Vanishing Gradient Problem"></a>Vanishing Gradient Problem</h3><p>梯度消失是在使用Sigmoid Function作为激励函数时存在的问题。</p>
+<p>依据Sigmoid Function的图像来看，它将输入输出都限定在0～1范围内，随着输入增大靠近一条渐近线。</p>
+<p>当网络比较深，Sigmoid Function的输入值比较大的情况下，每一次对输入值做的变动delta，都会在输出上表现为很小的变动delta，从而靠后的hidden layer对loss的影响非常小。</p>
+<hr>
+<p>如何解决梯度消失的问题？</p>
+<p>有两个方式，一是动态调整学习率，二是直接更改激励函数。</p>
+<hr>
+<h3 id="更改激励函数"><a href="#更改激励函数" class="headerlink" title="更改激励函数"></a>更改激励函数</h3><h4 id="ReLU激励函数"><a href="#ReLU激励函数" class="headerlink" title="ReLU激励函数"></a>ReLU激励函数</h4><p>input&gt;0, output=input; input&lt;=0, output=0.</p>
+<p>对于input&gt;0的范围，在input比较大且变化比较的地方，梯度下降比较快，可以处理梯度下降问题。</p>
+<p>对于input&lt;=0的范围，那些output=0的部分直接可以从整个网络中拿走。最后整个网络就变成了thinner linear network。</p>
+<h4 id="改进1-Leaky-ReLu"><a href="#改进1-Leaky-ReLu" class="headerlink" title="改进1: Leaky ReLu"></a>改进1: Leaky ReLu</h4><h4 id="改进2-Parametric-ReLU"><a href="#改进2-Parametric-ReLU" class="headerlink" title="改进2: Parametric ReLU"></a>改进2: Parametric ReLU</h4><p>以上改进都是在input&lt;=0的情况下通过乘以一个比较小的参数让output有一点值。</p>
+<h4 id="改进3-Maxout-Learnable-Activation-Function"><a href="#改进3-Maxout-Learnable-Activation-Function" class="headerlink" title="改进3: Maxout/Learnable Activation Function"></a>改进3: Maxout/Learnable Activation Function</h4><p>应该是先对每一层的neuron进行group，每一个group后的结果z都是max{group member result z}，对于所有input的可能取值，就相当于线性规划出了一个linear convex function。group的数量越多，那么convex的角就越多，激励函数也就越复杂，更直观地变成了非线性。</p>
+<p>该如何训练该网络？一方面，max过后，该网络就相当于剪枝了，另外一个线性变化后的z就不需要考虑了，最终还是得到thinner linear function。另一方面，对于较全的训练集input，应当max函数中的每一个weight和bias过后的z都会成为max过后有效网络的一部分。</p>
+<h3 id="动态调整学习率"><a href="#动态调整学习率" class="headerlink" title="动态调整学习率"></a>动态调整学习率</h3><h4 id="PMSProp-Root-Mean-Square-Prop"><a href="#PMSProp-Root-Mean-Square-Prop" class="headerlink" title="PMSProp/Root Mean Square Prop"></a>PMSProp/Root Mean Square Prop</h4><blockquote>
+<p>Adagrad中也提出了动态调整学习率，Use first drivative to estimate second derivative。用固定的learning rate除以这个参数过去所有GD值的平方和开根号。</p>
+<script type="math/tex; mode=display">
+\omega^{t+1} \larr \omega^{t} - \frac{\eta}{\sqrt{\sum_{i=0}^t(g^i)^2}}g^t</script></blockquote>
+<p>Root Mean Square of the gradients with previous gradients being decayed.</p>
+<script type="math/tex; mode=display">
+\omega^{t+1} \larr \omega^{t} - \frac{\eta}{\sigma^t}g^t \\
+\sigma^t = \sqrt{\alpha(\sigma^{t-1})^2+(1-\alpha)(g^t)^2}</script><p>$\alpha$值调的小一点，说明倾向于相信新的gradient指示的error surface的平滑程度/陡峭程度。</p>
+<h3 id="local-minima的解决"><a href="#local-minima的解决" class="headerlink" title="local minima的解决"></a>local minima的解决</h3><p>当神经网络很大，参数越多，出现local minima的几率越低。</p>
+<p>联系物理中的惯性，每次移动的方向，不仅考虑某一点的gradient，还考虑前一个时间点移动的方向movement of last step，将这两者求矢量和。</p>
+<p>对于某一个点$\theta^i$，此处有movement为$v^i$，对该点计算gradient得到$\nabla{L(\theta^i)}$，那么下一次移动的方向movement为$v^{i+1} = \lambda v^i - \eta \nabla{L(\theta^i)} $。如果递推下去，可以有</p>
+<script type="math/tex; mode=display">
+v^{i+1} = \lambda{v^i} - \eta \nabla{L(\theta^i)}  \\
+\begin{split}
+v^{i+2} &= \lambda{v^{i+1}} - \eta \nabla{L(\theta^{i+1})} \\ 
+&= \lambda{(\lambda{v^i} - \eta \nabla{L(\theta^i)})}- \eta \nabla{L(\theta^{i+1})} \\
+&= \lambda^2 v_i -\lambda\eta\nabla{L(\theta_i)} - \eta \nabla{L(\theta^{i+1})} 
+
+\end{split}</script><p>$v^i$ is actually the weighted sum of all the previous gradient.越之前的gradient，对此刻的movement影响越小，越多考虑目前的gradient的影响。</p>
+<p>Adam = RMSProp + Momentum</p>
+<h2 id="测试集表现不好"><a href="#测试集表现不好" class="headerlink" title="测试集表现不好"></a>测试集表现不好</h2><p>注意这个是在训练集表现良好的基础之上进行的。</p>
+<p>此处的测试集是cross validation中从原训练集中抽取出来的validation set。</p>
+<h3 id="Early-stopping"><a href="#Early-stopping" class="headerlink" title="Early stopping"></a>Early stopping</h3><p>虽然训练集在loss降低，但测试集上有可能loss降低后又升高了。需要让epoch停留在测试集的最低点。</p>
+<h3 id="Regulariazation"><a href="#Regulariazation" class="headerlink" title="Regulariazation"></a>Regulariazation</h3><p>通过给原损失函数添加一个Regularization Term，构成一个新的需要最小化的损失函数。目的是weight decay，closer to zero。</p>
+<h4 id="L2-Regularization"><a href="#L2-Regularization" class="headerlink" title="L2 Regularization"></a>L2 Regularization</h4><p>Regularization Term = $\lambda \frac{1}{2}  \left|\theta\right|_2$</p>
+<p>$\left|\theta\right|_2 = (\omega_1)^2 + (\omega_2)^2 + \cdots$</p>
+<p>对新的损失函数求微分且合并同类项后可以发现，对已有weight$\omega^t$总是乘上总小于1的$(1-\eta\lambda)$，相比于之前的乘以1，目的是让weight更接近0。是基于已有weight的。</p>
+<h4 id="L1-Regularization"><a href="#L1-Regularization" class="headerlink" title="L1 Regularization"></a>L1 Regularization</h4><p>Regularization Term = $\lambda \frac{1}{2}  \left|\theta\right|_1$</p>
+<p>$\left|\theta\right|_1 = |\omega_1| + |\omega_2| + \cdots$</p>
+<p>对新的损失函数求微分后发现不可合并同类项，只是减了一个$\eta\lambda sgn(\omega^t)$，每次减的都是固定值。</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>训练时，每次在更新参数之前，让每个neuron都有p%的几率dropout，然后使用new thinner network去训练。for each mini-batch, resample the dropout neurons。在加上dropout之后，training set上的测试结果会变差。</p>
+<p>测试时，不做dropout，训练时的dropout rate是p%，则测试时所有的weight都乘以(1-p)%。</p>
+<hr>
+<p>为什么dropout会有用？</p>
+<p>Dropout is a kind of ensemble. 就相当于把训练集分成了好多个子集，每个子集都生成一个network。当把testing data都分别放入这些网络的时候，每个网络都会给出一个结果，最终给这些结果去一个平均值。</p>
+<h1 id="why-deep"><a href="#why-deep" class="headerlink" title="why deep"></a>why deep</h1><p>深度学习其实就是模组化。</p>
+<p>每一层neural可以被看做是一个basic classifier，第一层的neural就是最基分类器；第二层的neural是比较复杂的classifier，把第一层basic classifier 的output当做第二层的input(把第一层的classifier当做module)，第三层把第二层当做module，以此类推。</p>
+<p>例子：语音辨识/逻辑电路</p>
+<p>similar input — different output / different output — similar output</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/10/30/sketch-app-design-workflow/" rel="prev" title="使用sketch设计商城app原型的流程">
+      <i class="fa fa-chevron-left"></i> 使用sketch设计商城app原型的流程
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/03/markov-chain/" rel="next" title="马尔可夫链">
+      马尔可夫链 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E4%B8%89%E4%B8%AA%E6%AD%A5%E9%AA%A4"><span class="nav-number">1.</span> <span class="nav-text">深度学习三个步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Neural-Network"><span class="nav-number">1.1.</span> <span class="nav-text">Neural Network</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Goodness-of-function"><span class="nav-number">1.2.</span> <span class="nav-text">Goodness of function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%B8%AA%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.3.</span> <span class="nav-text">单个训练样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%80%E6%9C%89%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC"><span class="nav-number">1.4.</span> <span class="nav-text">所有训练样本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pick-best-function"><span class="nav-number">1.5.</span> <span class="nav-text">Pick best function</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="nav-number">2.</span> <span class="nav-text">反向传播</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E4%B8%AA%E8%AE%AD%E7%BB%83%E6%A0%B7%E6%9C%AC%E5%88%86%E6%9E%90"><span class="nav-number">2.1.</span> <span class="nav-text">单个训练样本分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mini-Batch"><span class="nav-number">2.2.</span> <span class="nav-text">Mini-Batch</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tips-for-Deep-Learning"><span class="nav-number">3.</span> <span class="nav-text">Tips for Deep Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E9%9B%86%E8%A1%A8%E7%8E%B0%E4%B8%8D%E5%A5%BD"><span class="nav-number">3.1.</span> <span class="nav-text">训练集表现不好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Vanishing-Gradient-Problem"><span class="nav-number">3.1.1.</span> <span class="nav-text">Vanishing Gradient Problem</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9B%B4%E6%94%B9%E6%BF%80%E5%8A%B1%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.2.</span> <span class="nav-text">更改激励函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ReLU%E6%BF%80%E5%8A%B1%E5%87%BD%E6%95%B0"><span class="nav-number">3.1.2.1.</span> <span class="nav-text">ReLU激励函数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B1-Leaky-ReLu"><span class="nav-number">3.1.2.2.</span> <span class="nav-text">改进1: Leaky ReLu</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B2-Parametric-ReLU"><span class="nav-number">3.1.2.3.</span> <span class="nav-text">改进2: Parametric ReLU</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%94%B9%E8%BF%9B3-Maxout-Learnable-Activation-Function"><span class="nav-number">3.1.2.4.</span> <span class="nav-text">改进3: Maxout&#x2F;Learnable Activation Function</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E8%B0%83%E6%95%B4%E5%AD%A6%E4%B9%A0%E7%8E%87"><span class="nav-number">3.1.3.</span> <span class="nav-text">动态调整学习率</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#PMSProp-Root-Mean-Square-Prop"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">PMSProp&#x2F;Root Mean Square Prop</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#local-minima%E7%9A%84%E8%A7%A3%E5%86%B3"><span class="nav-number">3.1.4.</span> <span class="nav-text">local minima的解决</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B5%8B%E8%AF%95%E9%9B%86%E8%A1%A8%E7%8E%B0%E4%B8%8D%E5%A5%BD"><span class="nav-number">3.2.</span> <span class="nav-text">测试集表现不好</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Early-stopping"><span class="nav-number">3.2.1.</span> <span class="nav-text">Early stopping</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Regulariazation"><span class="nav-number">3.2.2.</span> <span class="nav-text">Regulariazation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#L2-Regularization"><span class="nav-number">3.2.2.1.</span> <span class="nav-text">L2 Regularization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#L1-Regularization"><span class="nav-number">3.2.2.2.</span> <span class="nav-text">L1 Regularization</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">3.2.3.</span> <span class="nav-text">Dropout</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#why-deep"><span class="nav-number">4.</span> <span class="nav-text">why deep</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

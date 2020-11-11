@@ -19,15 +19,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="记录Pytorch基本使用。">
+  <meta name="description" content="Pytorch入门教程。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Pytorch入门">
 <meta property="og:url" content="http://example.com/2020/10/22/start-with-pytorch/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="记录Pytorch基本使用。">
+<meta property="og:description" content="Pytorch入门教程。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-22T10:50:03.000Z">
-<meta property="article:modified_time" content="2020-10-30T00:17:33.558Z">
+<meta property="article:modified_time" content="2020-11-10T11:50:56.894Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="DL">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 08:17:33" itemprop="dateModified" datetime="2020-10-30T08:17:33+08:00">2020-10-30</time>
+                <time title="修改时间：2020-11-10 19:50:56" itemprop="dateModified" datetime="2020-11-10T19:50:56+08:00">2020-11-10</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -209,16 +209,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.6k</span>
+              <span>4.6k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>8 分钟</span>
             </span>
-            <div class="post-description">记录Pytorch基本使用。</div>
+            <div class="post-description">Pytorch入门教程。</div>
 
         </div>
       </header>
@@ -235,55 +235,133 @@
 <p>深度学习可以<strong>逐级表示越来越抽象的概念或模式</strong>。</p>
 <p>深度学习的一个外在特点是<strong>端到端的训练</strong>。也就是说，并不是将单独调试的部分拼凑起来组成一个系统，而是将整个系统组建好之后一起训练。</p>
 <p>除端到端的训练以外，我们也正在经历<strong>从含参数统计模型转向完全无参数的模型</strong>。</p>
-<p>任务可以分为三种：回归Regression(线性模型)，分类classification(非线性模型，包括深度学习、SVM等)，结构化学系structured learning。</p>
+<p>任务可以分为三种：回归Regression(线性模型)，分类classification(非线性模型，包括深度学习、SVM等)，结构化学习structured learning。</p>
 <p>实现的手段可以有：监督学习、半监督学习、无监督学习、强化学习。相同点是统一都有输入，区别在于是否有输入的匹配输出。从前往后输入输出正确匹配对以此减少。</p>
-<h1 id="Tensor包"><a href="#Tensor包" class="headerlink" title="Tensor包"></a>Tensor包</h1><ul>
-<li>导入必要的包</li>
-</ul>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="Tensor与Numpy"><a href="#Tensor与Numpy" class="headerlink" title="Tensor与Numpy"></a>Tensor与Numpy</h1><h2 id="导入包"><a href="#导入包" class="headerlink" title="导入包"></a>导入包</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> __future__ <span class="keyword">import</span> print_function</span><br><span class="line"><span class="keyword">import</span> torch</span><br></pre></td></tr></table></figure>
+<p>PyTorch<strong>操作inplace版本</strong>都有后缀<code>_</code>, 例如<code>x.copy_(y), x.t_()</code></p>
+<p><strong>判断操作是否开辟新内存</strong>，使用Python自带的<code>id</code>函数：如果两个实例的ID一致，那么它们所对应的内存地址相同；反之则不同。</p>
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><p>torch.tensor()与np.array()用法类似，创建方法类似，二者可以转换，可接受基本运算法。</p>
+<p>四种形式的加法(+, add(), add_(), +=)</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>Torch</th>
+<th>Numpy</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>创建</td>
+<td>torch.tensor([0.1, 0.2, 0.3])</td>
+<td>np.array([0.1, 0.2, 0.3])</td>
+<td></td>
+</tr>
+<tr>
+<td>转换</td>
+<td>torch.from_numpy(x_numpy)</td>
+<td>x_torch.numpy()</td>
+<td>这两个函数所产生的<code>Tensor</code>和NumPy中的数组共享相同的内存（所以他们之间的转换很快）。</td>
+</tr>
+<tr>
+<td>四则运算</td>
+<td>x_torch + y_torch</td>
+<td>x_numpy + y_numpy</td>
+<td></td>
+</tr>
+<tr>
+<td>范数</td>
+<td>torch.norm(x_torch)</td>
+<td>np.linalg.norm(x_numpy)</td>
+<td></td>
+</tr>
+<tr>
+<td>正则化</td>
+<td>torch.mean(x_torch, dim=0)</td>
+<td>np.mean(x_numpy, axis=0)</td>
+<td></td>
+</tr>
+<tr>
+<td>索引</td>
+<td></td>
+<td></td>
+<td>我们还可以使用类似NumPy的索引操作(:)来访问<code>Tensor</code>的一部分，不会开辟内存。需要注意的是：<strong>索引出来的结果与原数据共享内存。</strong></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>将NumPy中的array转换成<code>Tensor</code>的另一个方法就是<code>torch.tensor()</code>, 需要注意的是，此方法总是会进行数据拷贝（就会消耗更多的时间和空间），所以返回的<code>Tensor</code>和原来的数据不再共享内存。</p>
+<p>函数<code>item()</code>可以将一个标量<code>Tensor</code>转换成一个Python number。</p>
+<h2 id="Reshape"><a href="#Reshape" class="headerlink" title="Reshape"></a>Reshape</h2><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>Tensor</th>
+<th>Numpy</th>
+<th>备注</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tensor.view()</td>
+<td>np.shape()</td>
+<td>Torch.view() can also automatically calculate the correct dimension if a <code>-1</code> is passed in. This is useful if we are working with batches, but the batch size is unknown. Torch.view()返回的torch.Size其实就是一个tuple, 支持所有tuple的操作。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><strong>注意<code>view()</code>返回的新<code>Tensor</code>与源<code>Tensor</code>虽然可能有不同的<code>size</code>，但是是共享<code>data</code>的，也即更改其中的一个，另外一个也会跟着改变。(顾名思义，view仅仅是改变了对这个张量的观察角度，内部数据并未改变)</strong>。</p>
+<p>虽然<code>view</code>返回的<code>Tensor</code>与源<code>Tensor</code>是共享<code>data</code>的，但是依然是一个新的<code>Tensor</code>（因为<code>Tensor</code>除了包含<code>data</code>外还有一些其他属性），二者id（内存地址）并不一致。</p>
+<p>想返回一个真正新的副本（即不共享data内存）该用<code>clone</code>创造一个副本然后再使用<code>view</code>。view和copy存在区别。</p>
+<h1 id="Broadcasting"><a href="#Broadcasting" class="headerlink" title="Broadcasting"></a>Broadcasting</h1><p>遵循以下两个原则：</p>
 <ul>
-<li>四种形式的加法(+, add(), add_(), +=)</li>
-<li>PyTorch操作inplace版本都有后缀<code>_</code>, 例如<code>x.copy_(y), x.t_()</code></li>
-<li>获取tensor的形状可以通过两个方法，方法返回的torch.Size其实就是一个tuple, 支持所有tuple的操作。</li>
-<li><p>我们还可以使用类似NumPy的索引操作(:)来访问<code>Tensor</code>的一部分，不会开辟内存。需要注意的是：<strong>索引出来的结果与原数据共享内存，也即修改一个，另一个会跟着修改。</strong></p>
-</li>
-<li><p><strong>注意<code>view()</code>返回的新<code>Tensor</code>与源<code>Tensor</code>虽然可能有不同的<code>size</code>，但是是共享<code>data</code>的，也即更改其中的一个，另外一个也会跟着改变。(顾名思义，view仅仅是改变了对这个张量的观察角度，内部数据并未改变)</strong>。</p>
-</li>
-<li>虽然<code>view</code>返回的<code>Tensor</code>与源<code>Tensor</code>是共享<code>data</code>的，但是依然是一个新的<code>Tensor</code>（因为<code>Tensor</code>除了包含<code>data</code>外还有一些其他属性），二者id（内存地址）并不一致。</li>
-<li>想返回一个真正新的副本（即不共享data内存）该用<code>clone</code>创造一个副本然后再使用<code>view</code>。view和copy存在区别。</li>
-<li><p>常用的函数就是<code>item()</code>, 它可以将一个标量<code>Tensor</code>转换成一个Python number</p>
-</li>
-<li><p>判断操作是否开辟新内存，使用Python自带的<code>id</code>函数：如果两个实例的ID一致，那么它们所对应的内存地址相同；反之则不同。</p>
-</li>
-<li>用<code>numpy()</code>和<code>from_numpy()</code>将<code>Tensor</code>和NumPy中的数组相互转换。但是需要注意的一点是： <strong>这两个函数所产生的的<code>Tensor</code>和NumPy中的数组共享相同的内存（所以他们之间的转换很快），改变其中一个时另一个也会改变</strong>。</li>
-<li>将NumPy中的array转换成<code>Tensor</code>的方法就是<code>torch.tensor()</code>, 需要注意的是，此方法总是会进行数据拷贝（就会消耗更多的时间和空间），所以返回的<code>Tensor</code>和原来的数据不再共享内存。</li>
-<li>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</li>
+<li>Each tensor has at least one dimension.</li>
+<li>When iterating over the dimension sizes, starting at the trailing dimension, the dimension sizes must either be equal, one of them is 1, or one of them does not exist.</li>
 </ul>
-<h1 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h1><p>Because <code>out</code> contains a single scalar, <code>out.backward()</code> is equivalent to <code>out.backward(torch.tensor(1.))</code>.</p>
-<p><code>torch.autograd</code> is an engine for computing vector-Jacobian product. </p>
-<p>PyTorch中，所有神经网络的核心是 <code>autograd</code> 包。</p>
-<p>This characteristic of vector-Jacobian product makes it very convenient to feed external gradients into a model that has non-scalar output.(链式法则)</p>
-<h1 id="自动求体度"><a href="#自动求体度" class="headerlink" title="自动求体度"></a>自动求体度</h1><h2 id="追踪梯度的方式"><a href="#追踪梯度的方式" class="headerlink" title="追踪梯度的方式"></a>追踪梯度的方式</h2><p><code>Tensor</code>是这个包的核心类，如果将其属性<code>.requires_grad</code>设置为<code>True</code>，它将开始追踪(track)在其上的所有操作（这样就可以利用链式法则进行梯度传播了）。</p>
-<p>完成计算后，可以调用<code>.backward()</code>来完成所有梯度计算。此<code>Tensor</code>的梯度将累积到<code>.grad</code>属性中。</p>
-<p><code>.requires_grad_( ... )</code> changes an existing Tensor’s <code>requires_grad</code> flag in-place. The input flag defaults to <code>False</code> if not given.</p>
-<h2 id="不追踪梯度的方式"><a href="#不追踪梯度的方式" class="headerlink" title="不追踪梯度的方式"></a>不追踪梯度的方式</h2><ul>
-<li>调用<code>.detach()</code>将其从追踪记录中分离出来。</li>
-</ul>
-<p>Or by using <code>.detach()</code> to get a new Tensor with the same content but that does not require gradients:</p>
+<p>对应dimension要么相同，要么一个是1另一个是更大的数字。</p>
+<h1 id="计算图"><a href="#计算图" class="headerlink" title="计算图"></a>计算图</h1><p>为什么需要用到计算图？<a target="_blank" rel="noopener" href="http://colah.github.io/posts/2015-08-Backprop/">参考</a></p>
+<p>计算图将函数表达式用树状结构表示。求偏导，联系链式法则，因子路径。</p>
+<p>对于某一个结点往根结点去就是forward propagation，可以求该节点对它上面的所有节点的影响。对于某一个节点往叶子结点去就是backpropagation，可以求该节点受它下面的那些节点的影响。</p>
+<p>记录了计算图，就能追踪每一次微分。</p>
+<h2 id=""><a href="#" class="headerlink" title=" "></a> </h2><h1 id="硬件支持"><a href="#硬件支持" class="headerlink" title="硬件支持"></a>硬件支持</h1><p>用方法<code>to()</code>可以将<code>Tensor</code>在CPU和GPU（需要硬件支持）之间相互移动。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gpu = torch.device(<span class="string">&quot;cuda:0&quot;</span>)</span><br><span class="line">x.to(gpu)</span><br></pre></td></tr></table></figure>
+<h1 id="批量数据"><a href="#批量数据" class="headerlink" title="批量数据"></a>批量数据</h1><p>主要涉及两个工具</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> Dataset, DataLoader</span><br></pre></td></tr></table></figure>
+<h2 id="custom-dataset"><a href="#custom-dataset" class="headerlink" title="custom dataset"></a>custom dataset</h2><p>Your custom dataset should inherit <code>Dataset</code> and override the following methods:</p>
 <ul>
-<li><p>可以用<code>with torch.no_grad()</code>将不想被追踪的操作代码块包裹起来。</p>
-<p>stop autograd from tracking history on Tensors with <code>.requires_grad=True</code> either by wrapping the code block in <code>with torch.no_grad():</code></p>
-</li>
+<li><code>__len__</code> so that <code>len(dataset)</code> returns the size of the dataset.</li>
+<li><code>__getitem__</code> to support the indexing such that <code>dataset[i]</code> can be used to get 𝑖\ th sample</li>
 </ul>
-<h2 id="Function类和Tensor类"><a href="#Function类和Tensor类" class="headerlink" title="Function类和Tensor类"></a>Function类和Tensor类</h2><p><code>Tensor</code>和<code>Function</code>互相结合就可以构建一个记录有整个计算过程的有向无环图（DAG）。</p>
-<p>每个<code>Tensor</code>都有一个<code>.grad_fn</code>属性，该属性即创建该<code>Tensor</code>的<code>Function</code>, 就是说该<code>Tensor</code>是不是通过某些运算得到的，若是，则<code>grad_fn</code>返回一个与这些运算相关的对象，否则是None。</p>
-<h2 id="注意点"><a href="#注意点" class="headerlink" title="注意点"></a>注意点</h2><ul>
-<li><p>像x这种直接创建的Tensor称为叶子节点，叶子节点对应的<code>grad_fn</code>是<code>None</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">FakeDataset</span>(<span class="params">Dataset</span>):</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self, x, y</span>):</span></span><br><span class="line">        self.x = x</span><br><span class="line">        self.y = y</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__len__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> len(self.x)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__getitem__</span>(<span class="params">self, idx</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.x[idx], self.y[idx]</span><br></pre></td></tr></table></figure>
+<h1 id="data-loader"><a href="#data-loader" class="headerlink" title="data loader"></a>data loader</h1><p>实现数据批量处理：batch/shuffling/parallel loading。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">dataset = FakeDataset(x, y)</span><br><span class="line">dataloader = DataLoader(dataset, batch_size=<span class="number">4</span>,</span><br><span class="line">                        shuffle=<span class="literal">True</span>, num_workers=<span class="number">4</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="反向传播与自动求梯度"><a href="#反向传播与自动求梯度" class="headerlink" title="反向传播与自动求梯度"></a>反向传播与自动求梯度</h1><h2 id="追踪梯度的步骤"><a href="#追踪梯度的步骤" class="headerlink" title="追踪梯度的步骤"></a>追踪梯度的步骤</h2><ol>
+<li><p>对input tensor x的定义<code>.requires_grad</code>属性设置为<code>True</code></p>
 </li>
-<li><p>不允许张量对张量求导，只允许标量对张量求导，求导结果是和自变量同形的张量。y.backward()<code>时，如果</code>y<code>是标量，则不需要为</code>backward()<code>传入任何参数；否则，需要传入一个与</code>y<code>同形的</code>Tensor。</p>
+<li><p>调用反向传播<code>y.backward()</code>，来完成所有梯度计算。此input的<code>Tensor</code>的梯度将累积到Tensor类的<code>.grad</code>属性中。</p>
 </li>
-<li>如果我们想要修改<code>tensor</code>的数值，但是又不希望被<code>autograd</code>记录（即不会影响反向传播），那么我么可以对<code>tensor.data</code>进行操作。</li>
-</ul>
+<li><p>随后用gradient descent更新x</p>
+</li>
+<li><p>然后需要把每一次反向传播后的梯度清零，因为.grad的数据不会被覆盖只会在前一个基础之上累加。</p>
+<p>We need to zero the grad variable since the backward call accumulates the gradients in .grad instead of overwriting.</p>
+<p>为了方便操作先调用调用<code>.detach()</code>将其从追踪记录中分离出来；再调用<code>x.grad.zero_()</code>清零梯度。</p>
+</li>
+</ol>
+<h2 id="其他自动求梯度的设置"><a href="#其他自动求梯度的设置" class="headerlink" title="其他自动求梯度的设置"></a>其他自动求梯度的设置</h2><p>by using <code>.detach()</code> to get a new Tensor with the same content but that does not require gradients:</p>
+<p> stop autograd from tracking history on Tensors with <code>.requires_grad=True</code> either by wrapping the code block in <code>with torch.no_grad():</code></p>
+<h2 id="构造复杂模块"><a href="#构造复杂模块" class="headerlink" title="构造复杂模块"></a>构造复杂模块</h2><p>Many times, we want to compose Modules together. <code>torch.nn.Sequential</code> provides a good interface for composing simple modules.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">model = torch.nn.Sequential(</span><br><span class="line">                            nn.Linear(d_in, d_hidden),</span><br><span class="line">                            nn.Tanh(),</span><br><span class="line">                            nn.Linear(d_hidden, d_out),</span><br><span class="line">                            nn.Sigmoid()</span><br><span class="line">                           )</span><br></pre></td></tr></table></figure>
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><p>两种常见的loss function。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mse_loss_fn = nn.MSELoss()</span><br><span class="line">loss = nn.CrossEntropyLoss()</span><br></pre></td></tr></table></figure>
+<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><p>训练模型需要用到求梯度的几种方法，比如SGD之类的。<code>torch.optim</code>提供了求梯度的一些方法，至少要传入<strong>模型参数和学习率</strong>。</p>
+<p>PyTorch implements a number of gradient-based optimization methods in <code>torch.optim</code>, including Gradient Descent. At the minimum, it takes in the model parameters and a learning rate.</p>
+<p>在一个关于data_size/batch_size的循环，或者data_size的循环中，首先计算y_hat，其次计算loss，接下来求梯度(<strong>Optimizers do not compute the gradients for you, so you must call <code>backward()</code> yourself. </strong>)，要注意先清空梯度。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">step_size = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">linear_module = nn.Linear(d, <span class="number">1</span>)</span><br><span class="line">loss_func = nn.MSELoss()</span><br><span class="line">optim = torch.optim.SGD(linear_module.parameters(), lr=step_size)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">    <span class="comment"># shuffling data</span></span><br><span class="line">    rand_idx = np.random.choice(n) <span class="comment"># take a random point from the dataset</span></span><br><span class="line">    x = X[rand_idx] </span><br><span class="line">    y_hat = linear_module(x)</span><br><span class="line">    loss = loss_func(y_hat, y)</span><br><span class="line">    <span class="comment"># You also must call the optim.zero_grad() function before calling backward() since by default PyTorch does and inplace add to the .grad member variable rather than overwriting it.</span></span><br><span class="line">    optim.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optim.step()</span><br></pre></td></tr></table></figure>
+<p>在初始化参数的时候可以定一个momentum的初始值，之后当作参数传入<code>torch.optim</code>。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=kQeezFrNoOg&amp;feature=youtu.be">台大李宏毅机器学习助教补充课</a></p>
+<p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/index.html">Pytorch官方文档</a></p>
 
     </div>
 
@@ -368,7 +446,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">深度学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tensor%E5%8C%85"><span class="nav-number">2.</span> <span class="nav-text">Tensor包</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD"><span class="nav-number">3.</span> <span class="nav-text">反向传播</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E5%8A%A8%E6%B1%82%E4%BD%93%E5%BA%A6"><span class="nav-number">4.</span> <span class="nav-text">自动求体度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%A2%AF%E5%BA%A6%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">4.1.</span> <span class="nav-text">追踪梯度的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%8D%E8%BF%BD%E8%B8%AA%E6%A2%AF%E5%BA%A6%E7%9A%84%E6%96%B9%E5%BC%8F"><span class="nav-number">4.2.</span> <span class="nav-text">不追踪梯度的方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Function%E7%B1%BB%E5%92%8CTensor%E7%B1%BB"><span class="nav-number">4.3.</span> <span class="nav-text">Function类和Tensor类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%A8%E6%84%8F%E7%82%B9"><span class="nav-number">4.4.</span> <span class="nav-text">注意点</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0"><span class="nav-number">1.</span> <span class="nav-text">深度学习</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Tensor%E4%B8%8ENumpy"><span class="nav-number">2.</span> <span class="nav-text">Tensor与Numpy</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%8C%85"><span class="nav-number">2.1.</span> <span class="nav-text">导入包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-number">2.2.</span> <span class="nav-text">基本操作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reshape"><span class="nav-number">2.3.</span> <span class="nav-text">Reshape</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Broadcasting"><span class="nav-number">3.</span> <span class="nav-text">Broadcasting</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E5%9B%BE"><span class="nav-number">4.</span> <span class="nav-text">计算图</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link"><span class="nav-number">4.1.</span> <span class="nav-text"> </span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A1%AC%E4%BB%B6%E6%94%AF%E6%8C%81"><span class="nav-number">5.</span> <span class="nav-text">硬件支持</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%89%B9%E9%87%8F%E6%95%B0%E6%8D%AE"><span class="nav-number">6.</span> <span class="nav-text">批量数据</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#custom-dataset"><span class="nav-number">6.1.</span> <span class="nav-text">custom dataset</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#data-loader"><span class="nav-number">7.</span> <span class="nav-text">data loader</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%B8%8E%E8%87%AA%E5%8A%A8%E6%B1%82%E6%A2%AF%E5%BA%A6"><span class="nav-number">8.</span> <span class="nav-text">反向传播与自动求梯度</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%BD%E8%B8%AA%E6%A2%AF%E5%BA%A6%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.1.</span> <span class="nav-text">追踪梯度的步骤</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B6%E4%BB%96%E8%87%AA%E5%8A%A8%E6%B1%82%E6%A2%AF%E5%BA%A6%E7%9A%84%E8%AE%BE%E7%BD%AE"><span class="nav-number">8.2.</span> <span class="nav-text">其他自动求梯度的设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%84%E9%80%A0%E5%A4%8D%E6%9D%82%E6%A8%A1%E5%9D%97"><span class="nav-number">8.3.</span> <span class="nav-text">构造复杂模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-number">8.4.</span> <span class="nav-text">定义损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%A8%A1%E5%9E%8B"><span class="nav-number">8.5.</span> <span class="nav-text">训练模型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">9.</span> <span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -382,18 +460,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">34</span>
+          <span class="site-state-item-count">50</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-count">13</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">53</span>
+        <span class="site-state-item-count">64</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -429,12 +507,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">77k</span>
+    <span title="站点总字数">122k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:21</span>
+    <span title="站点阅读时长">3:42</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

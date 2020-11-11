@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="TA补充课More About Gradient Descent。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="利用梯度下降法最优化损失函数">
+<meta property="og:url" content="http://example.com/2020/11/08/summary-for-loss-function-optimization/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="TA补充课More About Gradient Descent。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/flow.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/sgd.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/SGDM.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/adagrad.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/RMSProp.png">
+<meta property="og:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/Adam.png">
+<meta property="article:published_time" content="2020-11-08T03:08:19.000Z">
+<meta property="article:modified_time" content="2020-11-11T12:57:54.200Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML-Tips">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/Users/drunk99/machacroissant/source/_posts/flow.png">
+
+<link rel="canonical" href="http://example.com/2020/11/08/summary-for-loss-function-optimization/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>利用梯度下降法最优化损失函数 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/08/summary-for-loss-function-optimization/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          利用梯度下降法最优化损失函数
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-08 11:08:19" itemprop="dateCreated datePublished" datetime="2020-11-08T11:08:19+08:00">2020-11-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-11 20:57:54" itemprop="dateModified" datetime="2020-11-11T20:57:54+08:00">2020-11-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/DeepLearning/" itemprop="url" rel="index"><span itemprop="name">DeepLearning</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">TA补充课More About Gradient Descent。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h1><p>$\theta_t$: model parameters at the time step t.</p>
+<p>$\nabla L(\theta_t)$ or $g_t$: gradient of loss function at $\theta_t$, for updating $\theta_{t+1}$.</p>
+<p>$m_{t+1}$: momentum accumulated for time step 0 to time step t, for updating $\theta_{t+1}$.</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/flow.png" alt="flow"></p>
+<h1 id="参数迭代方式"><a href="#参数迭代方式" class="headerlink" title="参数迭代方式"></a>参数迭代方式</h1><p>on-line：一次用一对input&amp;label算损失函数更新参数</p>
+<p>off-line：一次用所有input&amp;label算损失函数更新参数</p>
+<h1 id="SGD"><a href="#SGD" class="headerlink" title="SGD"></a>SGD</h1><p>我们要Minimize Loss Function，梯度代表了增加的方向，往梯度的反方向走，就可以走向最小值。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/sgd.png" alt="sgd" style="zoom:50%;" /></p>
+<h1 id="SGDM"><a href="#SGDM" class="headerlink" title="SGDM"></a>SGDM</h1><p>定义了一个momentum，初始值为0。本次参数的更新是momentum和上一次迭代参数的矢量和。注意momentum的求解也用到了gradient，并且用lambda考虑了上一次迭代的momentum。</p>
+<p> <img src="/Users/drunk99/machacroissant/source/_posts/SGDM.png" alt="SGDM" style="zoom:50%;" /></p>
+<h1 id="Adagrad"><a href="#Adagrad" class="headerlink" title="Adagrad"></a>Adagrad</h1><p>Adagrad就是把SGD的学习率加上了一个分母。如果前几次迭代中gradient值很大的时候，一开始就会一步跨很大，有了分母的约束之后，如果过去的gradient很大的话（代表比较崎岖的地方），就能让每一步走小一点。</p>
+<p>问题在于，分母会越来越大，之后每一步的参数更新会越来越小。要是一开始的gradient就很大，那么没几步就不走了。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/adagrad.png" alt="adagrad" style="zoom:50%;" /></p>
+<h1 id="RMSProp"><a href="#RMSProp" class="headerlink" title="RMSProp"></a>RMSProp</h1><p>和Adagrad的分母的算法有所不同，同时借用了SGDM的思想。既考虑了gradient，有考虑了momentum，这两者的结合就是下面式子中的v，且用一个参数去权衡这两个的比重，解决了Adagrad的短板。</p>
+<p>但是它还是没有办法解决local minima的问题。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/RMSProp.png" alt="RMSProp" style="zoom:50%;" /></p>
+<h1 id="Adam"><a href="#Adam" class="headerlink" title="Adam"></a>Adam</h1><p>Adam就是SGDM+RMSProp。</p>
+<p>$\hat{m}_t$就是SGDM中的momentum除以了一个$1-\beta_1^t$，目的是让整个式子不会随着时间变化越来越大。要注意到$\beta_1$的取值是比较接近1但又小于的，在一开始的time step中，$m^t$的值主要是由$\beta_1m_{t-1}$来决定的，本次更新的$m^t$会比上一次的$m_{t-1}$来的小。通过处以一个$1-\beta_1^t$来让momentum不要那么小。</p>
+<p>类似的，$\hat{v}_t$就是SGDM中的v除以了一个$1-\beta_2^t$。</p>
+<p>一个很小的$\varepsilon$是为了在一开始v为0的时候分母不为0，否则就要无意义且学习率会无穷大。</p>
+<p><img src="/Users/drunk99/machacroissant/source/_posts/Adam.png" alt="Adam" style="zoom:50%;" /></p>
+<h1 id="选择算法"><a href="#选择算法" class="headerlink" title="选择算法"></a>选择算法</h1><p>Adapative Learning Rate/Adam： fast training/unstable/larger generalization gap虽然能自适应学习率但是在训练后期表现不是很好。</p>
+<p>SDGM：stable but slow/better convergence/smaller generalization gap虽然训练起来很慢但是总是很稳定，因为每一步走的都一样长。</p>
+<h1 id="Adam优化"><a href="#Adam优化" class="headerlink" title="Adam优化"></a>Adam优化</h1><h2 id="SWATS"><a href="#SWATS" class="headerlink" title="SWATS"></a>SWATS</h2><p>总的思想：first Adam + After SDGM，结合了Adam和SDGM的长处，追求更好的收敛。</p>
+<h2 id="RAdam"><a href="#RAdam" class="headerlink" title="RAdam"></a>RAdam</h2><p>总的思想：apply warm-up to the first learning-rate</p>
+<p>为什么需要Warm-up？刚开始你去初始化参数的时候并不能知道这个初始化参数是否好，所以一开始做梯度下降，很有可能参数在乱更新，分布的方差很大，更新的大小很乱且方向也很乱 —— distorted gradient。所以一开始就要让走的步</p>
+<p>最简单的warm-up就是给参数更新定一个曲线，直线增加4000个update之后曲线下降。</p>
+<h2 id="Lookahead"><a href="#Lookahead" class="headerlink" title="Lookahead"></a>Lookahead</h2><p>K step forward，1 step back.</p>
+<h2 id="Nadam"><a href="#Nadam" class="headerlink" title="Nadam"></a>Nadam</h2><p>数学中的Nesterov acclerated gradient/NAG应用到Adam中。</p>
+<h1 id="协助优化的技巧"><a href="#协助优化的技巧" class="headerlink" title="协助优化的技巧"></a>协助优化的技巧</h1><h2 id="L2-Regularization"><a href="#L2-Regularization" class="headerlink" title="L2 Regularization"></a>L2 Regularization</h2><p>在定义loss function的时候一般会添加一个L2 Regularization，他也是关于目标参数的一个函数。在做gradient的时候是否要把L2 Regularization当作gradient的一部分放在momentum和gradient中去？</p>
+<p>AdamW&amp;SGDW的方法说做微分求momentum和gradient的时候只考虑没有L2 Regularization的loss function，只在最后更新参数的时候把L2 Regularization的微分结果当作一个weight decay项放在learning rate后面。</p>
+<h2 id="增加数据随机性"><a href="#增加数据随机性" class="headerlink" title="增加数据随机性"></a>增加数据随机性</h2><h3 id="Shuffling"><a href="#Shuffling" class="headerlink" title="Shuffling"></a>Shuffling</h3><p>数据更换顺序，让每一次的gradient都有变化。</p>
+<h3 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h3><p>在训练的时候某一些neuron的输出会被丢掉。</p>
+<h3 id="Gradient-noise"><a href="#Gradient-noise" class="headerlink" title="Gradient noise"></a>Gradient noise</h3><p>在算完gradient之后加上一个gaussian noise。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML-Tips/" rel="tag"># ML-Tips</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/07/svm/" rel="prev" title="支持向量机">
+      <i class="fa fa-chevron-left"></i> 支持向量机
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/08/MLHW2-tips/" rel="next" title="MLHW2-tips">
+      MLHW2-tips <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="nav-number">1.</span> <span class="nav-text">参数说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%BF%AD%E4%BB%A3%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">参数迭代方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SGD"><span class="nav-number">3.</span> <span class="nav-text">SGD</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SGDM"><span class="nav-number">4.</span> <span class="nav-text">SGDM</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adagrad"><span class="nav-number">5.</span> <span class="nav-text">Adagrad</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RMSProp"><span class="nav-number">6.</span> <span class="nav-text">RMSProp</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adam"><span class="nav-number">7.</span> <span class="nav-text">Adam</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%80%89%E6%8B%A9%E7%AE%97%E6%B3%95"><span class="nav-number">8.</span> <span class="nav-text">选择算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Adam%E4%BC%98%E5%8C%96"><span class="nav-number">9.</span> <span class="nav-text">Adam优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#SWATS"><span class="nav-number">9.1.</span> <span class="nav-text">SWATS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RAdam"><span class="nav-number">9.2.</span> <span class="nav-text">RAdam</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lookahead"><span class="nav-number">9.3.</span> <span class="nav-text">Lookahead</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nadam"><span class="nav-number">9.4.</span> <span class="nav-text">Nadam</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8D%8F%E5%8A%A9%E4%BC%98%E5%8C%96%E7%9A%84%E6%8A%80%E5%B7%A7"><span class="nav-number">10.</span> <span class="nav-text">协助优化的技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#L2-Regularization"><span class="nav-number">10.1.</span> <span class="nav-text">L2 Regularization</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A2%9E%E5%8A%A0%E6%95%B0%E6%8D%AE%E9%9A%8F%E6%9C%BA%E6%80%A7"><span class="nav-number">10.2.</span> <span class="nav-text">增加数据随机性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Shuffling"><span class="nav-number">10.2.1.</span> <span class="nav-text">Shuffling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Dropout"><span class="nav-number">10.2.2.</span> <span class="nav-text">Dropout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Gradient-noise"><span class="nav-number">10.2.3.</span> <span class="nav-text">Gradient noise</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">122k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">3:42</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
