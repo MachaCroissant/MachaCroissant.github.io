@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本节内容主要讲了thunk中间件的基本原理，如何使用createAsyncThunk API，以及它和createSlice的extraReducers API如何协同合作完成数据传递。性能优化内容主要涉及prolifier查看渲染次数报告，如何使用createSelector创建能够自动比较从store中获取的数据从而决定是否需要再次渲染组件，如何使用createEntityAdapter在sl">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redux异步数据流与性能优化">
+<meta property="og:url" content="http://example.com/2020/12/08/redux-async-data-flow/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="本节内容主要讲了thunk中间件的基本原理，如何使用createAsyncThunk API，以及它和createSlice的extraReducers API如何协同合作完成数据传递。性能优化内容主要涉及prolifier查看渲染次数报告，如何使用createSelector创建能够自动比较从store中获取的数据从而决定是否需要再次渲染组件，如何使用createEntityAdapter在sl">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/12/08/redux-async-data-flow/ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80.gif">
+<meta property="article:published_time" content="2020-12-08T13:59:11.000Z">
+<meta property="article:modified_time" content="2020-12-09T12:00:14.411Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="redux">
+<meta property="article:tag" content="slice">
+<meta property="article:tag" content="store">
+<meta property="article:tag" content="thunk">
+<meta property="article:tag" content="normalized data">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/12/08/redux-async-data-flow/ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80.gif">
+
+<link rel="canonical" href="http://example.com/2020/12/08/redux-async-data-flow/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Redux异步数据流与性能优化 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/08/redux-async-data-flow/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Redux异步数据流与性能优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-08 21:59:11" itemprop="dateCreated datePublished" datetime="2020-12-08T21:59:11+08:00">2020-12-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-09 20:00:14" itemprop="dateModified" datetime="2020-12-09T20:00:14+08:00">2020-12-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>17k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>31 分钟</span>
+            </span>
+            <div class="post-description">本节内容主要讲了thunk中间件的基本原理，如何使用createAsyncThunk API，以及它和createSlice的extraReducers API如何协同合作完成数据传递。<br>性能优化内容主要涉及prolifier查看渲染次数报告，如何使用createSelector创建能够自动比较从store中获取的数据从而决定是否需要再次渲染组件，如何使用createEntityAdapter在slice中创建normalized data。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="异步逻辑"><a href="#异步逻辑" class="headerlink" title="异步逻辑"></a>异步逻辑</h1><p>Redux store本身是不能处理异步逻辑的。为了使异步逻辑与Redux store产生交互，引入Redux middleware。</p>
+<p>The most common reason to use middleware is to allow different kinds of async logic to interact with the store.</p>
+<p>最常用的异步逻辑中间件就是redux-thunk。</p>
+<h1 id="使用thunk前的准备"><a href="#使用thunk前的准备" class="headerlink" title="使用thunk前的准备"></a>使用thunk前的准备</h1><p>为了使用thunk，首先要让redux store支持thunk middleware。由于Redux Toolkit的configureStore API自动配置好了thunk middleware，所以将thunk作为用redux书写异步逻辑的标准形式。</p>
+<p><img src="/2020/12/08/redux-async-data-flow/ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80.gif" alt="ReduxAsyncDataFlowDiagram-d97ff38a0f4da0f327163170ccc13e80" style="zoom:50%;"></p>
+<h1 id="thunk的特质以及手写thunk"><a href="#thunk的特质以及手写thunk" class="headerlink" title="thunk的特质以及手写thunk"></a>thunk的特质以及手写thunk</h1><h2 id="能够在store中调用thunk"><a href="#能够在store中调用thunk" class="headerlink" title="能够在store中调用thunk"></a>能够在store中调用thunk</h2><p>Once the thunk middleware has been added to the Redux store, it allows you to pass <em>thunk functions</em> directly to <code>store.dispatch</code>.</p>
+<h2 id="能够dispatch-plain-action-creators"><a href="#能够dispatch-plain-action-creators" class="headerlink" title="能够dispatch plain action creators"></a>能够dispatch plain action creators</h2><p>A thunk function will always be called with <code>(dispatch, getState)</code> as its arguments, and you can use them inside the thunk as needed.</p>
+<h2 id="手写thunk-action"><a href="#手写thunk-action" class="headerlink" title="手写thunk action"></a>手写thunk action</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; my-app&#x2F;src&#x2F;app&#x2F;store.js</span><br><span class="line"></span><br><span class="line">const store &#x3D; configureStore(&#123; reducer: counterReducer &#125;)</span><br><span class="line"></span><br><span class="line">const exampleThunkFunction &#x3D; (dispatch, getState) &#x3D;&gt; &#123;</span><br><span class="line">  const stateBefore &#x3D; getState()</span><br><span class="line">  &#x2F;&#x2F; 能够和其他reducer一样读取store中的状态&#x2F;数据</span><br><span class="line">  console.log(&#96;Counter before: $&#123;stateBefore.counter&#125;&#96;)</span><br><span class="line">  dispatch(increment())</span><br><span class="line">  &#x2F;&#x2F; dispatch的是一个action creator</span><br><span class="line">  const stateAfter &#x3D; getState()</span><br><span class="line">  console.log(&#96;Counter after: $&#123;stateAfter.counter&#125;&#96;)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">store.dispatch(exampleThunkFunction)</span><br></pre></td></tr></table></figure>
+<h2 id="手写thunk-action-creators"><a href="#手写thunk-action-creators" class="headerlink" title="手写thunk action creators"></a>手写thunk action creators</h2><p>类比普通的action和action creators，把箭头函数的部分放到return语句中去，并且将参数传入整体creators。这样的一个好处就是可以给thunk action中要dispatch的action传入参数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">const logAndAdd &#x3D; amount &#x3D;&gt; &#123;</span><br><span class="line">  return (dispatch, getState) &#x3D;&gt; &#123;</span><br><span class="line">    const stateBefore &#x3D; getState()</span><br><span class="line">    console.log(&#96;Counter before: $&#123;stateBefore.counter&#125;&#96;)</span><br><span class="line">    dispatch(incrementByAmount(amount))</span><br><span class="line">    const stateAfter &#x3D; getState()</span><br><span class="line">    console.log(&#96;Counter after: $&#123;stateAfter.counter&#125;&#96;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">store.dispatch(logAndAdd(5))</span><br></pre></td></tr></table></figure>
+<p>但在实际写代码的过程中，会把thunk action/thunk action creators放在slice文件中，而我们在书写slice时使用的createSlice本身是不支持定义thunks的，因此他们作为独立的函数和createSlice一同存在于slice文件中。</p>
+<h1 id="使用thunk对server-API进行AJAX-calls"><a href="#使用thunk对server-API进行AJAX-calls" class="headerlink" title="使用thunk对server API进行AJAX calls"></a>使用thunk对server API进行AJAX calls</h1><h2 id="request的阶段与手写thunk"><a href="#request的阶段与手写thunk" class="headerlink" title="request的阶段与手写thunk"></a>request的阶段与手写thunk</h2><p>以下三个步骤不是必须的，但都是commonly used。</p>
+<ul>
+<li>a “start” action is dispatched before the requst, to indicate that the request is in progress.常用于追踪loading状态，然后让UI同时显示在加载中。</li>
+<li>The async request is made</li>
+<li>Depending on the request result, the async logic dispatches either a “success” action containing the result data, or a “failure” action containing error details. </li>
+</ul>
+<hr>
+<p>这三个步骤即相当于三个action，我们如果手写thunk就需要先定义好这三个步骤的type和error，最后用一个含有异步逻辑async/await的函数，以及try catch语句把这些步骤拼接起来。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">const getRepoDetailsStarted &#x3D; () &#x3D;&gt; (&#123;</span><br><span class="line">  type: &#39;repoDetails&#x2F;fetchStarted&#39;</span><br><span class="line">&#125;)</span><br><span class="line">const getRepoDetailsSuccess &#x3D; repoDetails &#x3D;&gt; (&#123;</span><br><span class="line">  type: &#39;repoDetails&#x2F;fetchSucceeded&#39;,</span><br><span class="line">  payload: repoDetails</span><br><span class="line">&#125;)</span><br><span class="line">const getRepoDetailsFailed &#x3D; error &#x3D;&gt; (&#123;</span><br><span class="line">  type: &#39;repoDetails&#x2F;fetchFailed&#39;,</span><br><span class="line">  error</span><br><span class="line">&#125;)</span><br><span class="line">const fetchIssuesCount &#x3D; (org, repo) &#x3D;&gt; async dispatch &#x3D;&gt; &#123;</span><br><span class="line">  dispatch(getRepoDetailsStarted())</span><br><span class="line">  try &#123;</span><br><span class="line">    const repoDetails &#x3D; await getRepoDetails(org, repo)</span><br><span class="line">    dispatch(getRepoDetailsSuccess(repoDetails))</span><br><span class="line">  &#125; catch (err) &#123;</span><br><span class="line">    dispatch(getRepoDetailsFailed(err.toString()))</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么不用Promise.then?而是使用async/await关键字呢？因为阶段的最后我们需要捕捉错误信息，也就是使用try/catch模块，而它不能Promise.then一起使用。</p>
+<hr>
+<h2 id="使用createAsyncThunk定义thunk"><a href="#使用createAsyncThunk定义thunk" class="headerlink" title="使用createAsyncThunk定义thunk"></a>使用createAsyncThunk定义thunk</h2><p>手写fetching data的问题在于每个action都要定义，或者说为每个action都定义action creators很麻烦。所以createAsyncThunk API抽象出了这三个步骤，最终产生了一个能够自动处理这三个步骤的thunk。</p>
+<p>createAsyncThunk接受两个参数：</p>
+<ul>
+<li><p>A <strong>string</strong> that will be used as the <strong>prefix for the generated action types</strong></p>
+<p>本质上thunk function也是action creator，只不过是异步的。</p>
+</li>
+<li><p>A “payload creator” callback function that should return a <code>Promise</code> containing some data, or a rejected <code>Promise</code> with an error</p>
+<p>这部分承担了发出AJAX请求的工作，返回的是Promise from the AJAX call，或者是some data from the API response。</p>
+<p>一般使用JS async/await关键字，而不是一般的somePromise.then()语法，为了能够结合try/catch逻辑一起使用。</p>
+</li>
+</ul>
+<p>使用createAsyncThunk API创建thunk function的实例。在使用createAsyncThunk创建hunk function之后，该函数会返回pending/fulfilled/rejected三种action creators（对应到上一个章节就是request的三个阶段），这个在后续与createSlice中extraReducer的互动中会使用到。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">export const fetchPosts &#x3D; createAsyncThunk(&#39;posts&#x2F;fetchPosts&#39;, async () &#x3D;&gt; &#123;</span><br><span class="line">  const response &#x3D; await client.get(&#39;&#x2F;fakeApi&#x2F;posts&#39;)</span><br><span class="line">  return response.posts</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<hr>
+<h2 id="tracking-request-states"><a href="#tracking-request-states" class="headerlink" title="tracking request states"></a>tracking request states</h2><p>总共有四个可能的请求状态。</p>
+<p>When we make an API call, we can view its progress as a small state machine that can be in one of four possible states:</p>
+<ul>
+<li>The request hasn’t started yet</li>
+<li>The request is in progress</li>
+<li>The request succeeded, and we now have the data we need</li>
+<li>The request failed, and there’s probably an error message</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  status: &#39;idle&#39; | &#39;loading&#39; | &#39;succeeded&#39; | &#39;failed&#39;,</span><br><span class="line">  &#x2F;&#x2F; 名称都是可以自己定义的，例如pending&#x3D;loading&#x2F;complete&#x3D;succeeded。</span><br><span class="line">  error: string | null</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用createAsyncThunk自动产生的三个action creators来显示request的状态。</p>
+<p><code>createAsyncThunk</code> accepts a “payload creator” callback that should return a <code>Promise</code>, and generates <code>pending/fulfilled/rejected</code> action types automatically。</p>
+<p>上面这段话的意思应该是虽然createAsyncThunk会自动产生action type，但是这个action的具体内容，他的行为是需要我们去定义的。当AJAX calls在pending的状态时，我们希望在什么数据区域做出什么样的动作。这个数据区域可能就是某个feature中，也有可能是全局redux store中，更有可能是在UI component中。</p>
+<h3 id="Why-tracking"><a href="#Why-tracking" class="headerlink" title="Why tracking"></a>Why tracking</h3><p>一方面，这些状态信息信息可以背被UI使用，比如在loading的时候可以UI显示转圈圈；另一方面，这些meta data可以是我们的fetch data行为只进行一次，而不是在每一次该UI重新渲染的时候都rerender一下。</p>
+<p>但是问题是request状态信息pending/fulfilled/rejected都是由thunk本身的promise对象保存着的。而这个信息要从slice流通到UI去，需要另外考虑。</p>
+<h3 id="How-tracking"><a href="#How-tracking" class="headerlink" title="How tracking"></a>How tracking</h3><h4 id="Thunk-gt-extraReducers-gt-initialState-gt-store-gt-UI-component"><a href="#Thunk-gt-extraReducers-gt-initialState-gt-store-gt-UI-component" class="headerlink" title="Thunk=&gt;extraReducers=&gt;initialState=&gt;store=&gt;UI component"></a>Thunk=&gt;extraReducers=&gt;initialState=&gt;store=&gt;UI component</h4><p>createAsyncThunk写在slice文件中，同时slice文件中的initialState也需要有一个key status来指示数据从第三方API获得数据进展到了哪一步，这样的话我们就能决定UI在request进行的过程中该如何显示。</p>
+<p>为了追踪dispatch AJAX calls的状态，也就是track AJAX calls states，一个好的模式就是在该slice的数据结构中有一个state section。也就是tracking request states in slices。</p>
+<p>We <em>could</em> track the request status in slice file using a second loading enum if we wanted to.</p>
+<p>定义部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; postsSlice中initialState的定义</span><br><span class="line">const initialState &#x3D; &#123;</span><br><span class="line">  posts: [],</span><br><span class="line">    &#x2F;&#x2F; 数据实体</span><br><span class="line">  status: &#39;idle&#39;,</span><br><span class="line">    &#x2F;&#x2F; 这里的status更像是一个窗口，连通了thunk function和UI component</span><br><span class="line">  error: null</span><br><span class="line">&#125;</span><br><span class="line">export const fetchPosts &#x3D; createAsyncThunk(&#39;posts&#x2F;fetchPosts&#39;, async () &#x3D;&gt; &#123;</span><br><span class="line">  const response &#x3D; await client.get(&#39;&#x2F;fakeApi&#x2F;posts&#39;)</span><br><span class="line">  return response.posts</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    &#x2F;&#x2F; omit existing reducers here</span><br><span class="line">  &#125;,</span><br><span class="line">  extraReducers: &#123;</span><br><span class="line">    &#x2F;&#x2F; 并不是所有的状态都需要考虑，忽略pending就是什么不都不做</span><br><span class="line">    [fetchPosts.pending]: (state, action) &#x3D;&gt; &#123;</span><br><span class="line">      state.status &#x3D; &#39;loading&#39;</span><br><span class="line">    &#125;,</span><br><span class="line">    [fetchPosts.fulfilled]: (state, action) &#x3D;&gt; &#123;</span><br><span class="line">      state.status &#x3D; &#39;succeeded&#39;</span><br><span class="line">      &#x2F;&#x2F; Add any fetched posts to the array</span><br><span class="line">      state.posts &#x3D; state.posts.concat(action.payload)</span><br><span class="line">    &#125;,</span><br><span class="line">    [fetchPosts.rejected]: (state, action) &#x3D;&gt; &#123;</span><br><span class="line">      state.status &#x3D; &#39;failed&#39;</span><br><span class="line">      state.error &#x3D; action.error.message</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>调用部分：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F;postList.js</span><br><span class="line">export const PostsList &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  const dispatch &#x3D; useDispatch()</span><br><span class="line">  const posts &#x3D; useSelector(selectAllPosts)</span><br><span class="line"></span><br><span class="line">  const postStatus &#x3D; useSelector(state &#x3D;&gt; state.posts.status)</span><br><span class="line"></span><br><span class="line">  useEffect(() &#x3D;&gt; &#123;</span><br><span class="line">    if (postStatus &#x3D;&#x3D;&#x3D; &#39;idle&#39;) &#123;</span><br><span class="line">      dispatch(fetchPosts())</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [postStatus, dispatch])</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; omit rendering logic</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Thunk-gt-UI-component-gt-statusEnum-gt-try-catch-disptach"><a href="#Thunk-gt-UI-component-gt-statusEnum-gt-try-catch-disptach" class="headerlink" title="Thunk=&gt;UI component=&gt;statusEnum=&gt;try/catch/disptach"></a>Thunk=&gt;UI component=&gt;statusEnum=&gt;try/catch/disptach</h4><p>首先add a loading status enum field as a React <code>useState</code> hook，这个loading status enum就类似于之前slice中initialState对象中的status field。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; UI component</span><br><span class="line">export const AddPostForm &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; other datas</span><br><span class="line">  const [addRequestStatus, setAddRequestStatus] &#x3D; useState(&#39;idle&#39;)</span><br></pre></td></tr></table></figure>
+<p>在try模块中，先将enum的状态设置为pending，然后开始dispatch thunk function，由于createAsyncThunk在函数内部处理错误，所以我们不能获取rejected message，这不利于catch模块输出错误信息。</p>
+<p><code>createAsyncThunk</code> handles any errors internally, so that we don’t see any messages about “rejected Promises” in our logs. </p>
+<p>为了解决错误信息的问题，Redux Toolkit拥有一个功能函数，名为unwrapResult，他让dispatch后的thunk action creator有两种表现：如果是fulfilled action就返回action.payload，如果是rejected action就报错，这样就能在try/catch模块中使用了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; UI component</span><br><span class="line">const onSavePostClicked &#x3D; async () &#x3D;&gt; &#123;</span><br><span class="line">    if (canSave) &#123;</span><br><span class="line">      try &#123;</span><br><span class="line">        setAddRequestStatus(&#39;pending&#39;)</span><br><span class="line">          </span><br><span class="line">        const resultAction &#x3D; await dispatch(</span><br><span class="line">          addNewPost(&#123; title, content, user: userId &#125;)</span><br><span class="line">        )</span><br><span class="line">        </span><br><span class="line">        unwrapResult(resultAction)</span><br><span class="line">          </span><br><span class="line">        setTitle(&#39;&#39;)</span><br><span class="line">        setContent(&#39;&#39;)</span><br><span class="line">        setUserId(&#39;&#39;)</span><br><span class="line">      &#125; catch (err) &#123;</span><br><span class="line">        console.error(&#39;Failed to save the post: &#39;, err)</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        setAddRequestStatus(&#39;idle&#39;)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="在UI中调用thunk"><a href="#在UI中调用thunk" class="headerlink" title="在UI中调用thunk"></a>在UI中调用thunk</h2><p>首先从对应slice中import thunk至想要使用它的UI component。</p>
+<p>thunk也是属于action creator的一种，我们需要dispatch，因此需要添加useDispatch hook。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">export const PostsList &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  const dispatch &#x3D; useDispatch()</span><br><span class="line">  const posts &#x3D; useSelector(selectAllPosts)</span><br><span class="line"></span><br><span class="line">  const postStatus &#x3D; useSelector(state &#x3D;&gt; state.posts.status)</span><br><span class="line"></span><br><span class="line">  useEffect(() &#x3D;&gt; &#123;</span><br><span class="line">    if (postStatus &#x3D;&#x3D;&#x3D; &#39;idle&#39;) &#123;</span><br><span class="line">        &#x2F;&#x2F; 这样可以避免re-render的时候也重新fetch data</span><br><span class="line">      dispatch(fetchPosts())</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, [postStatus, dispatch])</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; omit rendering logic</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h1 id="createSlice对非createSlice-API定义action的响应"><a href="#createSlice对非createSlice-API定义action的响应" class="headerlink" title="createSlice对非createSlice API定义action的响应"></a>createSlice对非createSlice API定义action的响应</h1><p>There are times when <strong>a slice reducer needs to respond to <em>other</em> actions that weren’t defined as part of this slice’s <code>reducers</code> field</strong>. We can do that using the slice <code>extraReducers</code> field instead.</p>
+<p>a slice reducer可能需要对thunk这个action creator产生的action或者createAction产生的action进行相应，为了实现这个目的在createSlice API中设立了一个extraReducers field。</p>
+<p> <code>extraReducers</code> allows <code>createSlice</code> to respond to other action types besides the types it has generated.  It’s particularly useful for working with actions produced by <code>createAction</code> and <code>createAsyncThunk</code>.</p>
+<h2 id="extraReducers-field的action-type"><a href="#extraReducers-field的action-type" class="headerlink" title="extraReducers field的action type"></a>extraReducers field的action type</h2><p>在extraReducers中定义的action createor产生的action不会被自动地添加到createSliceAPI的action field中去。<code>extraReducers</code> are meant to reference “external” actions, they will not have actions generated in <code>slice.actions</code>.</p>
+<h3 id="方式一：引号内action-type"><a href="#方式一：引号内action-type" class="headerlink" title="方式一：引号内action type"></a>方式一：引号内action type</h3><p>keys in extraReducer Object就是redux action type strings，类似于<code>&#39;counter/increment&#39;</code>，因为key中含有斜杠/，所以要用单引号扩起来。</p>
+<h3 id="方式二：-计算属性"><a href="#方式二：-计算属性" class="headerlink" title="方式二： 计算属性"></a>方式二： 计算属性</h3><p>但是Redux Toolkit有一个性质就是如果调用actionCreator.toString()函数，他会自动返回action type。因此可以可以把action creator用ES6计算属性的方式传入extraReducer object field。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import &#123; increment &#125; from &#39;..&#x2F;features&#x2F;counter&#x2F;counterSlice&#39;</span><br><span class="line"></span><br><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    &#x2F;&#x2F; slice-specific reducers here</span><br><span class="line">  &#125;,</span><br><span class="line">  extraReducers: &#123;&#x2F;&#x2F; 这个extraReducer本质也是一个object</span><br><span class="line">    [increment]: (state, action) &#x3D;&gt; &#123;</span><br><span class="line">      &#x2F;&#x2F; normal reducer logic to update the posts slice</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h3 id="方式三：-builder-callback"><a href="#方式三：-builder-callback" class="headerlink" title="方式三： builder callback"></a>方式三： builder callback</h3><p>将builder callback function传入extraReducers，而不是传入一个对象。builder callback function接受builder作为参数，对builder调用addCase就可以添加action creators。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">import &#123; increment &#125; from &#39;..&#x2F;features&#x2F;counter&#x2F;counterSlice&#39;</span><br><span class="line"></span><br><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    &#x2F;&#x2F; slice-specific reducers here</span><br><span class="line">  &#125;,</span><br><span class="line">  extraReducers: builder &#x3D;&gt; &#123;</span><br><span class="line">    builder.addCase(&#39;counter&#x2F;decrement&#39;, (state, action) &#x3D;&gt; &#123;&#125;)</span><br><span class="line">    builder.addCase(increment, (state, action) &#x3D;&gt; &#123;&#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="extraReducers的action-creator内容"><a href="#extraReducers的action-creator内容" class="headerlink" title="extraReducers的action creator内容"></a>extraReducers的action creator内容</h2><p>也就是(state, action) =&gt; {}箭头函数里面的内容，应当都是对createSlice中的数据域进行操作。描述外部的某个action creator引起的某个action对本slice内部的数据产生了什么影响。</p>
+<h1 id="性能优化"><a href="#性能优化" class="headerlink" title="性能优化"></a>性能优化</h1><p>React DevTools中的Prolifier可以协助查看用户在某个行为前后UI渲染的情况。需要先录制，然后做出行为，然后结束录制。就可以看到在该动作发生前后React各个组件的渲染行为。</p>
+<h2 id="extracting-selectors-from-UI"><a href="#extracting-selectors-from-UI" class="headerlink" title="extracting selectors from UI"></a>extracting selectors from UI</h2><p>在书写代码的过程中，一开始总是建议现在UI中使用useSelector选取希望获得的数据。因为虽然extracting selectors可以在更新slice中数据形式的时候简便一点，但这也意味着更多需要去维护的代码。</p>
+<p>不是每一个UI都必须要写通用的selectors。<strong>Don’t feel like you need to write selectors for every single field of your state</strong>.</p>
+<p>这种抽象适合这个sleectors在多个UI中被多次重复使用。Try <strong>starting without any selectors</strong>, and add some later when you find yourself looking up the <strong>same values in many parts of your application code</strong>。</p>
+<h3 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h3><p>我们一般认为在UI中访问redux store的数据就是要在UI中使用useSelector。这样处理的问题在于如果我们要从redux store中获取的那部分数据变化了，也就是说在slice中定义的数据形式变化了，相应地又要转到使用了该<strong>slice中的数据</strong>的<strong>多个UI</strong>中去进行变动。</p>
+<p>解决该问题的方式就是在slice文件中定义可以被export且可以被重复使用的selector functions。</p>
+<p>One way to avoid this is to <strong>define reusable selector functions in the slice files</strong>, and have the components use those selectors to extract the data they need instead of repeating the selector logic in each component. That way, if we do change our state structure again, we only need to update the code in the slice file.</p>
+<h3 id="定义方式如下"><a href="#定义方式如下" class="headerlink" title="定义方式如下"></a>定义方式如下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; src&#x2F;features&#x2F;posts&#x2F;postsSLice.js</span><br><span class="line">export const selectAllPosts &#x3D; state &#x3D;&gt; state.posts</span><br></pre></td></tr></table></figure>
+<p>注意这里的state时redux store整体的state。 </p>
+<p>The <code>state</code> parameter for these selector functions is the <strong>root Redux state object</strong>, as it was <strong>for the inlined anonymous selectors</strong> we wrote directly inside of <code>useSelector</code>.</p>
+<h3 id="使用方式如下"><a href="#使用方式如下" class="headerlink" title="使用方式如下"></a>使用方式如下</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; src&#x2F;features&#x2F;posts&#x2F;PostList.js</span><br><span class="line">import &#123; selectAllPosts &#125; from &#39;.&#x2F;postsSlice&#39;</span><br><span class="line"></span><br><span class="line">export const PostsList &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  const posts &#x3D; useSelector(selectAllPosts)</span><br><span class="line">  &#x2F;&#x2F; omit component contents</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="create-“memoized”-selectors"><a href="#create-“memoized”-selectors" class="headerlink" title="create “memoized” selectors"></a>create “memoized” selectors</h2><h3 id="问题描述-1"><a href="#问题描述-1" class="headerlink" title="问题描述"></a>问题描述</h3><p>useSelectors的特点就是只要app中一个行为发生了，他就会重新运行，只要他的return value是a new refernce value，那么它迫使组件重新渲染。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; UI component中</span><br><span class="line">const postsForUser &#x3D; useSelector(state &#x3D;&gt; &#123;</span><br><span class="line">    const allPosts &#x3D; selectAllPosts(state)</span><br><span class="line">    return allPosts.filter(post &#x3D;&gt; post.user &#x3D;&#x3D;&#x3D; userId)</span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+<p>如果return value返回的对象总是无条件的是a new refernce value，比如filter函数，就算filter函数的内容都是一样的，reference都是不同，也就是说无论如何都会重新渲染一遍。</p>
+<p>我们希望useSelector函数每重新运行一次，都保存先后两次select出来的value，如果发生了变化，在渲染，如果没有变化，就还是不渲染。这种想法就是memoize。</p>
+<h3 id="Memoizing-Selector-functions"><a href="#Memoizing-Selector-functions" class="headerlink" title="Memoizing Selector functions"></a>Memoizing Selector functions</h3><p>Reselect <strong>is a library for creating memoized selector functions</strong>, and was specifically designed to be used with Redux. It has a <code>createSelector</code> function that generates memoized selectors that will only recalculate results when the inputs change.</p>
+<p>想要使用createSelector，只需要先从Redux Toolkit中import它。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; slice中</span><br><span class="line">import &#123; createSlice, createAsyncThunk, createSelector &#125; from &#39;@reduxjs&#x2F;toolkit&#39;</span><br></pre></td></tr></table></figure>
+<p>createSelector接受多个input selector function，以及一个output selector function作为参数。给createSelector传入的参数是input selector function的参数，而output selector function的参数是input selestor function的return value。如果传递给output selector function的value前后都没有变化，那么output selector function就不会re-run。</p>
+<p>When we call <code>selectPostsByUser(state, userId)</code>, <code>createSelector</code> will pass all of the arguments into each of our input selectors. Whatever those input selectors return becomes the arguments for the output selector.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">export const selectAllPosts &#x3D; state &#x3D;&gt; state.posts.posts</span><br><span class="line"></span><br><span class="line">export const selectPostById &#x3D; (state, postId) &#x3D;&gt;</span><br><span class="line">  state.posts.posts.find(post &#x3D;&gt; post.id &#x3D;&#x3D;&#x3D; postId)</span><br><span class="line"></span><br><span class="line">export const selectPostsByUser &#x3D; createSelector(</span><br><span class="line">  [selectAllPosts, (state, userId) &#x3D;&gt; userId],</span><br><span class="line">  (posts, userId) &#x3D;&gt; posts.filter(post &#x3D;&gt; post.user &#x3D;&#x3D;&#x3D; userId)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>为什么要给input selector functions加括号呢？联系array destructing，这就相当于把input selector function运行并把返回值作为一组array，能够传递给下一个output selector function。</p>
+<h2 id="Solving-cascade-re-render"><a href="#Solving-cascade-re-render" class="headerlink" title="Solving cascade re-render"></a>Solving cascade re-render</h2><h3 id="问题描述-2"><a href="#问题描述-2" class="headerlink" title="问题描述"></a>问题描述</h3><p>React的渲染行为是级联的，只有父亲组件重新渲染了，那么父亲组件内部的所以儿子组件都会重新渲染。</p>
+<p><a target="_blank" rel="noopener" href="https://blog.isquaredsoftware.com/2020/05/blogged-answers-a-mostly-complete-guide-to-react-rendering-behavior/"><strong>React’s default behavior is that when a parent component renders, React will recursively render all child components inside of it!</strong></a>. </p>
+<h3 id="memo"><a href="#memo" class="headerlink" title="memo()"></a>memo()</h3><p>wrap the sub component in <a target="_blank" rel="noopener" href="https://reactjs.org/docs/react-api.html#reactmemo"><code>React.memo()</code></a>, which will ensure that the component inside of it only re-renders if the props have actually changed. </p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let PostExcerpt &#x3D; (&#123; post &#125;) &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; omit logic</span><br><span class="line">&#125;</span><br><span class="line">PostExcerpt &#x3D; React.memo(PostExcerpt)</span><br></pre></td></tr></table></figure>
+<h3 id="条件渲染"><a href="#条件渲染" class="headerlink" title="条件渲染"></a>条件渲染</h3><p>子组件如果要进行条件渲染，那么就要从store中获取更多的信息，储存前后信息，并比较。</p>
+<p>并且组件获取信息尽量不要基于内容本身获取信息，最好每一条信息都有一个识别符id。</p>
+<h3 id="数据ID与Normalized-Data"><a href="#数据ID与Normalized-Data" class="headerlink" title="数据ID与Normalized Data"></a>数据ID与Normalized Data</h3><p>之前一直都是手动维护一个ID field，用array.find来匹配希望获得的ID。其实这本质上就是一个lookup table，如果我们能通过id寻找到一条信息，而不是通过循环数组匹配来实现，那么这个过程就是normalization。能够实现这种模式的数据称为Normalized State Structure。</p>
+<h4 id="Normalized-State-Structure"><a href="#Normalized-State-Structure" class="headerlink" title="Normalized State Structure"></a>Normalized State Structure</h4><p>具有以下特质的数据被称为normalized state structure。</p>
+<ul>
+<li>We only have one copy of each particular piece of data in our state, so there’s <strong>no duplication</strong></li>
+<li>Data that has been normalized is <strong>kept in a lookup table</strong>, where the <strong>item IDs are the keys</strong>, and the <strong>items themselves are the values</strong>.</li>
+<li>There may also be an array of all of the IDs for a particular item type</li>
+</ul>
+<p>JavaScript Objects就可以被表示称lookup table，一个object中有两个field，一个是ids，另一个是entities。ids的组成是一个数组，数组中的每一个值又是entities中的key，也就是数据id对应到数据实体。</p>
+<p>Redux Toolkit提供了一个操作normalized state structure的create EntityAdapter API，它将某个slice中的数据都按照<code>&#123; ids: [], entities: &#123;&#125; &#125;</code> 的形式存放。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">import &#123;</span><br><span class="line">  createEntityAdapter</span><br><span class="line">  &#x2F;&#x2F; omit other imports</span><br><span class="line">&#125; from &#39;@reduxjs&#x2F;toolkit&#39;</span><br></pre></td></tr></table></figure>
+<p>and will only update that array if items are added / removed or the sorting order changes.</p>
+<h4 id="createEntityAdapter"><a href="#createEntityAdapter" class="headerlink" title="createEntityAdapter"></a>createEntityAdapter</h4><h5 id="数据对象创建"><a href="#数据对象创建" class="headerlink" title="数据对象创建"></a>数据对象创建</h5><p><code>createEntityAdapter</code>可以依据内容把ID array排序，它接收an option object that include a <code>sortComparer</code> function，通过比较两个entity的内容，把ID array中的id进行排序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">const postsAdapter &#x3D; createEntityAdapter(&#123;</span><br><span class="line">  sortComparer: (a, b) &#x3D;&gt; b.date.localeCompare(a.date)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h5 id="数据对象初始化"><a href="#数据对象初始化" class="headerlink" title="数据对象初始化"></a>数据对象初始化</h5><p><code>createEntityAdapter.getInitialState()</code>，这个函数自动返回一个空的<code>&#123; ids: [], entities: &#123;&#125; &#125;</code> 对象。还可以通过给getInitialState传入更多的参数，来给让返回的对象有更多的fields。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">const initialState &#x3D; postsAdapter.getInitialState(&#123;</span><br><span class="line">  status: &#39;idle&#39;,</span><br><span class="line">  error: null</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h4 id="数据对象选择"><a href="#数据对象选择" class="headerlink" title="数据对象选择"></a>数据对象选择</h4><p><code>createEntityAdapter.getSelector()</code>，把一个用于从redux store中选择某个特定slice的selector function作为参数传入该函数后，该函数能够自动返回名称总为<code>selectAll</code>和<code>selectById</code>这样的selector function。</p>
+<p>由于自动生成的selectors function总是固定的两个名字，所以利用ES6 array destructing的语法来为selector function重新命名。</p>
+<blockquote>
+<p>The generated selector functions are always called <code>selectAll</code> and <code>selectById</code>, so we can use ES6 destructuring syntax to rename them as we export them and match the old selector names. </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Export the customized selectors for this adapter using &#96;getSelectors&#96;</span><br><span class="line">export const &#123;</span><br><span class="line">  selectAll: selectAllPosts,</span><br><span class="line">  selectById: selectPostById,</span><br><span class="line">  selectIds: selectPostIds</span><br><span class="line">  &#x2F;&#x2F; Pass in a selector that returns the posts slice of state</span><br><span class="line">  &#x2F;&#x2F; Since the selectors are called with the root Redux state object, they need to know where to find our posts data in the Redux state, so we pass in a small selector that returns state.posts.</span><br><span class="line">&#125; &#x3D; postsAdapter.getSelectors(state &#x3D;&gt; state.posts)</span><br></pre></td></tr></table></figure>
+<h4 id="数据对象更新"><a href="#数据对象更新" class="headerlink" title="数据对象更新"></a>数据对象更新</h4><p>它返回一个包含了许多自动生成的reducer function的对象。这个对象中的reducer functions能够实现”add all these items”, “update one item”, or “remove multiple items”这一类的功能。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">extraReducers: &#123;</span><br><span class="line">    &#x2F;&#x2F; omit other reducers</span><br><span class="line"></span><br><span class="line">    [fetchPosts.fulfilled]: (state, action) &#x3D;&gt; &#123;</span><br><span class="line">      state.status &#x3D; &#39;succeeded&#39;</span><br><span class="line">      &#x2F;&#x2F; Add any fetched posts to the array</span><br><span class="line">      &#x2F;&#x2F; Use the &#96;upsertMany&#96; reducer as a mutating update utility</span><br><span class="line">      postsAdapter.upsertMany(state, action.payload)</span><br><span class="line">    &#125;,</span><br><span class="line">    &#x2F;&#x2F; Use the &#96;addOne&#96; reducer for the fulfilled case</span><br><span class="line">    [addNewPost.fulfilled]: postsAdapter.addOne</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/redux/" rel="tag"># redux</a>
+              <a href="/tags/slice/" rel="tag"># slice</a>
+              <a href="/tags/store/" rel="tag"># store</a>
+              <a href="/tags/thunk/" rel="tag"># thunk</a>
+              <a href="/tags/normalized-data/" rel="tag"># normalized data</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/07/my-dec-films/" rel="prev" title="十二月观影记录">
+      <i class="fa fa-chevron-left"></i> 十二月观影记录
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5%E9%80%BB%E8%BE%91"><span class="nav-number">1.</span> <span class="nav-text">异步逻辑</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8thunk%E5%89%8D%E7%9A%84%E5%87%86%E5%A4%87"><span class="nav-number">2.</span> <span class="nav-text">使用thunk前的准备</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#thunk%E7%9A%84%E7%89%B9%E8%B4%A8%E4%BB%A5%E5%8F%8A%E6%89%8B%E5%86%99thunk"><span class="nav-number">3.</span> <span class="nav-text">thunk的特质以及手写thunk</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%BD%E5%A4%9F%E5%9C%A8store%E4%B8%AD%E8%B0%83%E7%94%A8thunk"><span class="nav-number">3.1.</span> <span class="nav-text">能够在store中调用thunk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%83%BD%E5%A4%9Fdispatch-plain-action-creators"><span class="nav-number">3.2.</span> <span class="nav-text">能够dispatch plain action creators</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%86%99thunk-action"><span class="nav-number">3.3.</span> <span class="nav-text">手写thunk action</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%86%99thunk-action-creators"><span class="nav-number">3.4.</span> <span class="nav-text">手写thunk action creators</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8thunk%E5%AF%B9server-API%E8%BF%9B%E8%A1%8CAJAX-calls"><span class="nav-number">4.</span> <span class="nav-text">使用thunk对server API进行AJAX calls</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#request%E7%9A%84%E9%98%B6%E6%AE%B5%E4%B8%8E%E6%89%8B%E5%86%99thunk"><span class="nav-number">4.1.</span> <span class="nav-text">request的阶段与手写thunk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8createAsyncThunk%E5%AE%9A%E4%B9%89thunk"><span class="nav-number">4.2.</span> <span class="nav-text">使用createAsyncThunk定义thunk</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#tracking-request-states"><span class="nav-number">4.3.</span> <span class="nav-text">tracking request states</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Why-tracking"><span class="nav-number">4.3.1.</span> <span class="nav-text">Why tracking</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#How-tracking"><span class="nav-number">4.3.2.</span> <span class="nav-text">How tracking</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Thunk-gt-extraReducers-gt-initialState-gt-store-gt-UI-component"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">Thunk&#x3D;&gt;extraReducers&#x3D;&gt;initialState&#x3D;&gt;store&#x3D;&gt;UI component</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Thunk-gt-UI-component-gt-statusEnum-gt-try-catch-disptach"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">Thunk&#x3D;&gt;UI component&#x3D;&gt;statusEnum&#x3D;&gt;try&#x2F;catch&#x2F;disptach</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8UI%E4%B8%AD%E8%B0%83%E7%94%A8thunk"><span class="nav-number">4.4.</span> <span class="nav-text">在UI中调用thunk</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#createSlice%E5%AF%B9%E9%9D%9EcreateSlice-API%E5%AE%9A%E4%B9%89action%E7%9A%84%E5%93%8D%E5%BA%94"><span class="nav-number">5.</span> <span class="nav-text">createSlice对非createSlice API定义action的响应</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#extraReducers-field%E7%9A%84action-type"><span class="nav-number">5.1.</span> <span class="nav-text">extraReducers field的action type</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E5%BC%95%E5%8F%B7%E5%86%85action-type"><span class="nav-number">5.1.1.</span> <span class="nav-text">方式一：引号内action type</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A-%E8%AE%A1%E7%AE%97%E5%B1%9E%E6%80%A7"><span class="nav-number">5.1.2.</span> <span class="nav-text">方式二： 计算属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%89%EF%BC%9A-builder-callback"><span class="nav-number">5.1.3.</span> <span class="nav-text">方式三： builder callback</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extraReducers%E7%9A%84action-creator%E5%86%85%E5%AE%B9"><span class="nav-number">5.2.</span> <span class="nav-text">extraReducers的action creator内容</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">6.</span> <span class="nav-text">性能优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#extracting-selectors-from-UI"><span class="nav-number">6.1.</span> <span class="nav-text">extracting selectors from UI</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0"><span class="nav-number">6.1.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%96%B9%E5%BC%8F%E5%A6%82%E4%B8%8B"><span class="nav-number">6.1.2.</span> <span class="nav-text">定义方式如下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F%E5%A6%82%E4%B8%8B"><span class="nav-number">6.1.3.</span> <span class="nav-text">使用方式如下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#create-%E2%80%9Cmemoized%E2%80%9D-selectors"><span class="nav-number">6.2.</span> <span class="nav-text">create “memoized” selectors</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-1"><span class="nav-number">6.2.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Memoizing-Selector-functions"><span class="nav-number">6.2.2.</span> <span class="nav-text">Memoizing Selector functions</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Solving-cascade-re-render"><span class="nav-number">6.3.</span> <span class="nav-text">Solving cascade re-render</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98%E6%8F%8F%E8%BF%B0-2"><span class="nav-number">6.3.1.</span> <span class="nav-text">问题描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#memo"><span class="nav-number">6.3.2.</span> <span class="nav-text">memo()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9D%A1%E4%BB%B6%E6%B8%B2%E6%9F%93"><span class="nav-number">6.3.3.</span> <span class="nav-text">条件渲染</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AEID%E4%B8%8ENormalized-Data"><span class="nav-number">6.3.4.</span> <span class="nav-text">数据ID与Normalized Data</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Normalized-State-Structure"><span class="nav-number">6.3.4.1.</span> <span class="nav-text">Normalized State Structure</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#createEntityAdapter"><span class="nav-number">6.3.4.2.</span> <span class="nav-text">createEntityAdapter</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA"><span class="nav-number">6.3.4.2.1.</span> <span class="nav-text">数据对象创建</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E5%88%9D%E5%A7%8B%E5%8C%96"><span class="nav-number">6.3.4.2.2.</span> <span class="nav-text">数据对象初始化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E9%80%89%E6%8B%A9"><span class="nav-number">6.3.4.3.</span> <span class="nav-text">数据对象选择</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%B9%E8%B1%A1%E6%9B%B4%E6%96%B0"><span class="nav-number">6.3.4.4.</span> <span class="nav-text">数据对象更新</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

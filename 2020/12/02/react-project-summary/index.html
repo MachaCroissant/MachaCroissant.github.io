@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="记录一下实际实际复刻网页版简书中遇到的一些问题，目前只涉及HTML和CSS相关。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简书项目复刻问题集合">
+<meta property="og:url" content="http://example.com/2020/12/02/react-project-summary/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="记录一下实际实际复刻网页版简书中遇到的一些问题，目前只涉及HTML和CSS相关。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/12/02/react-project-summary/image-20201202174727098.png">
+<meta property="og:image" content="http://example.com/2020/12/02/react-project-summary/image-20201202223902177.png">
+<meta property="og:image" content="http://example.com/2020/12/02/react-project-summary/image-20201202223931227.png">
+<meta property="og:image" content="http://example.com/2020/12/02/react-project-summary/image-20201202224019977.png">
+<meta property="article:published_time" content="2020-12-02T09:37:55.000Z">
+<meta property="article:modified_time" content="2020-12-03T02:33:10.049Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="iconfont">
+<meta property="article:tag" content="css布局">
+<meta property="article:tag" content="styled-component">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/12/02/react-project-summary/image-20201202174727098.png">
+
+<link rel="canonical" href="http://example.com/2020/12/02/react-project-summary/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>简书项目复刻问题集合 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/02/react-project-summary/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简书项目复刻问题集合
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-02 17:37:55" itemprop="dateCreated datePublished" datetime="2020-12-02T17:37:55+08:00">2020-12-02</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-03 10:33:10" itemprop="dateModified" datetime="2020-12-03T10:33:10+08:00">2020-12-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%89%8D%E7%AB%AF/" itemprop="url" rel="index"><span itemprop="name">前端</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">记录一下实际实际复刻网页版简书中遇到的一些问题，目前只涉及HTML和CSS相关。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="iconfont"><a href="#iconfont" class="headerlink" title="iconfont"></a>iconfont</h1><p>iconfont也就是把icon当font来用，通过自定义font-face实现。线上有许多iconfont库可供使用。</p>
+<p>一般iconfont解压缩后的文件夹都会放在整个项目的静态资源文件夹中，即src文件夹下的statics中，这涉及到了webpack在生产环境下打包静态资源的问题，与其他图片字体的引用一致，具体参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903502720794638">李熠 从React脚手架工具学习React项目的最佳实践（上）：前端基础配置</a>。</p>
+<h2 id="阿里图标库"><a href="#阿里图标库" class="headerlink" title="阿里图标库"></a>阿里图标库</h2><ul>
+<li>在线链接引入</li>
+<li>下载项目到本地</li>
+</ul>
+<p>需要注意的是一次性最好把想要添加的图标全罗列进去，否则以后再添加还需要重新替换本地文件。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>由于历史因素使用i标签容纳无语义图标，但是自己在用的时候使用了span元素。</p>
+<p>iconfont本意是将icon当作font来使用，所以也可以像字体一样设置颜色color，大小font-size。</p>
+<blockquote>
+<p>需要注意的是下载的icon的空白部分是透明的还是有背景白色的；也就是要注意边框与实体。</p>
+<p><img src="/2020/12/02/react-project-summary/image-20201202174727098.png" alt="image-20201202174727098" style="zoom:50%;"></p>
+</blockquote>
+<h2 id="icon-a"><a href="#icon-a" class="headerlink" title="icon+a"></a>icon+a</h2><p>当iconfont和超链接a href一起使用的时候，一定要先给a元素width和height，否则a元素就是个没有宽高的空元素，显示不出来。</p>
+<h1 id="文字对齐"><a href="#文字对齐" class="headerlink" title="文字对齐"></a>文字对齐</h1><p>这里的文字除了一般文字，还包括iconfont。</p>
+<p>以想要对齐的对象为基准。它的父元素，需要设置text-align；它本身，可能需要设置vertical-align。</p>
+<h1 id="盒子性质"><a href="#盒子性质" class="headerlink" title="盒子性质"></a>盒子性质</h1><p>由最基础的inline，block，flex，table衍生出了各种混合属性。这些基本盒子性质都是针对于盒子本身及其内容来说的。比如inline的性质就是内容决定盒子，padding和margin都不可以设置，通过设定内容的大小来决定盒子的大小；block的性质就是盒子就是一整行，通过设定盒子本身的大小以及盒子的margin和padding来决定盒子的大小。</p>
+<p>而混合属性，比如inline-block，这个属性inline性质代表的是这个元素在上下文中是inline的性质，他不会占据一整行，可以和其他元素一起排列在一行；block性质代表的是这个元素对于自己内部的内容是block性质，可以设置padding，margin等属性把盒子撑开来。</p>
+<p>从树的角度来理解，基础属性就只是从父节点出发去审视子节点，但是混合属性就设计了从该节点去向上看父节点，向下看子节点。我们在谈盒子性质，其实是在谈两个元素/标签之间的关系。</p>
+<h1 id="定位方式"><a href="#定位方式" class="headerlink" title="定位方式"></a>定位方式</h1><p>此处视角以我们想要让它的位置从正常文档流中脱离的对象来看。应当涉及元素本身和元素的父元素。</p>
+<h2 id="absolute-float"><a href="#absolute-float" class="headerlink" title="absolute+float"></a>absolute+float</h2><p>第一步： 在父元素上使用position: absolute，同时确定top bottom left right等值。明确盒子性质最基础的inline/block还是较为复杂的inline-block/flex，以及盒子的属性/box-sizing。</p>
+<p>第二步： 在元素上使用float属性。如果该元素和他的相邻的元素之间想要同在一行，那么他们之间是inline的关系；如果该元素和他的相邻元素不想在同一行，那么他们之间是block关系。</p>
+<p>第三步： 如有必要，清除该浮动元素对后续元素的影响，使用clear。</p>
+<h2 id="flex布局"><a href="#flex布局" class="headerlink" title="flex布局"></a>flex布局</h2><p>第一步： 在父元素上使用display: flex，决定是flex-direction是row还是columnn，是wrap还是nowrap，对于给定width和height的子元素使用align-items和vertical-align进行对齐。</p>
+<p>第二步： 在每个子元素上使用flex: XX，这里的单位可以是百分比也可以是数字，用来说明子元素占用父元素的份额。子元素如果有内容的话（其是相对来说该内容也像子元素），还需要自己设置内容居中。</p>
+<blockquote>
+<p>关于flex布局中flex父元素的子元素定位的问题，好像align-items和vertical-align只支持头尾中这些方式，如果想要特定高度的话，依据百分比自动调节的话还是需要传统定位方式。参考react简书项目login页面的下载app这个flex子元素。</p>
+</blockquote>
+<h1 id="0或负"><a href="#0或负" class="headerlink" title="0或负"></a>0或负</h1><p>span的图标想放到block的元素内部去，可以先将span设置为inline/inline-block，然后把margin取负值，至于是左还是右看需要。</p>
+<div align="center">
+<img src="/2020/12/02/react-project-summary/image-20201202223902177.png" alt="image-20201202223902177" style="zoom:30%;"><img src="/2020/12/02/react-project-summary/image-20201202223931227.png" alt="image-20201202223931227" style="zoom:30%;"><img src="/2020/12/02/react-project-summary/image-20201202224019977.png" alt="image-20201202224019977" style="zoom:30%;">
+</div>
+
+
+
+<p>bottom为0似乎也能实现底部效果。</p>
+<h1 id="去除默认样式"><a href="#去除默认样式" class="headerlink" title="去除默认样式"></a>去除默认样式</h1><p>一般会在src下创建一个全局样式表，是为了消除浏览器客户端的user agent style。要将这个样式添加在APP组件中，然后在index.js中去渲染。</p>
+<h1 id="styled-component使用"><a href="#styled-component使用" class="headerlink" title="styled-component使用"></a>styled-component使用</h1><h2 id="教程Reference"><a href="#教程Reference" class="headerlink" title="教程Reference"></a>教程Reference</h2><p><a target="_blank" rel="noopener" href="https://medium.com/simply/2-styled-components-9ded1afa8c18">#2: Why I prefer Styled components to build React apps</a></p>
+<p><a target="_blank" rel="noopener" href="https://styled-components.com/">官方文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/hengg/styled-components-docs-zh">中文文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903589907808269">styled-components：一本通</a></p>
+<h2 id="待解决的问题"><a href="#待解决的问题" class="headerlink" title="待解决的问题"></a>待解决的问题</h2><p>代码优化与简洁。一开始创建主要是styled的基础使用与模版字符串，至于嵌套等高级性质还没有看，代码较为冗长。 </p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/iconfont/" rel="tag"># iconfont</a>
+              <a href="/tags/css%E5%B8%83%E5%B1%80/" rel="tag"># css布局</a>
+              <a href="/tags/styled-component/" rel="tag"># styled-component</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/21/learn-js/" rel="prev" title="JavaScript基础">
+      <i class="fa fa-chevron-left"></i> JavaScript基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/04/redux-hooks/" rel="next" title="React数据管理之Hooks与Redux">
+      React数据管理之Hooks与Redux <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#iconfont"><span class="nav-number">1.</span> <span class="nav-text">iconfont</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BF%E9%87%8C%E5%9B%BE%E6%A0%87%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">阿里图标库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">1.2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#icon-a"><span class="nav-number">1.3.</span> <span class="nav-text">icon+a</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E5%AD%97%E5%AF%B9%E9%BD%90"><span class="nav-number">2.</span> <span class="nav-text">文字对齐</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9B%92%E5%AD%90%E6%80%A7%E8%B4%A8"><span class="nav-number">3.</span> <span class="nav-text">盒子性质</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%BD%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">4.</span> <span class="nav-text">定位方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#absolute-float"><span class="nav-number">4.1.</span> <span class="nav-text">absolute+float</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flex%E5%B8%83%E5%B1%80"><span class="nav-number">4.2.</span> <span class="nav-text">flex布局</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#0%E6%88%96%E8%B4%9F"><span class="nav-number">5.</span> <span class="nav-text">0或负</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%BB%E9%99%A4%E9%BB%98%E8%AE%A4%E6%A0%B7%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">去除默认样式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#styled-component%E4%BD%BF%E7%94%A8"><span class="nav-number">7.</span> <span class="nav-text">styled-component使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%99%E7%A8%8BReference"><span class="nav-number">7.1.</span> <span class="nav-text">教程Reference</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BE%85%E8%A7%A3%E5%86%B3%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">7.2.</span> <span class="nav-text">待解决的问题</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

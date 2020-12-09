@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="官方教程书写React-Redux app的过程记录。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React+Redux App同步数据流">
+<meta property="og:url" content="http://example.com/2020/12/06/redux-react-app-example/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="官方教程书写React-Redux app的过程记录。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-06T11:45:24.000Z">
+<meta property="article:modified_time" content="2020-12-07T02:56:01.187Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Redux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/12/06/redux-react-app-example/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>React+Redux App同步数据流 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/06/redux-react-app-example/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          React+Redux App同步数据流
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-06 19:45:24" itemprop="dateCreated datePublished" datetime="2020-12-06T19:45:24+08:00">2020-12-06</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-07 10:56:01" itemprop="dateModified" datetime="2020-12-07T10:56:01+08:00">2020-12-07</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+            <div class="post-description">官方教程书写React-Redux app的过程记录。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="feature-k-Slice"><a href="#feature-k-Slice" class="headerlink" title="feature-k Slice"></a>feature-k Slice</h1><p>首先从某个feature的Slice定义开始。</p>
+<h2 id="src下创建文件夹"><a href="#src下创建文件夹" class="headerlink" title="src下创建文件夹"></a>src下创建文件夹</h2><p>在src文件夹下新建一个features文件夹，然后再用具体的该特征feature1为名创建一个子文件夹，最后创建feature1slice.js。整个过程就是src =&gt; features =&gt; feature-k =&gt; feature-kSlice.js。</p>
+<p>All of the code related to feature-k should go in the feature-k folder.</p>
+<h2 id="initialState与createSlice的export"><a href="#initialState与createSlice的export" class="headerlink" title="initialState与createSlice的export"></a>initialState与createSlice的export</h2><p>在feature-kSlice.js中，使用createSlice API创建reducer function。reducer function需要一些initial data 传入，因为在初次加载的时候store中的数据才有会值，才方便我们做UI component。</p>
+<ol>
+<li><p>用const和数组创建用来描述这部分数据的fake object，取名为initialState，并把它传入createSlice去。</p>
+</li>
+<li><p>用createSlice创建feature-kSlice变量，主要是name，initialState，reducers。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createSlice &#125; from &#39;@reduxjs&#x2F;toolkit&#39;</span><br><span class="line"></span><br><span class="line">const initialState &#x3D; [</span><br><span class="line">  &#123; id: &#39;1&#39;, title: &#39;First Post!&#39;, content: &#39;Hello!&#39; &#125;,</span><br><span class="line">  &#123; id: &#39;2&#39;, title: &#39;Second Post&#39;, content: &#39;More text&#39; &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;&#125;</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">export default postsSlice.reducer</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol>
+<li><p>在feature-kSlice.js中吧reducer function部分export出去<code>export default postsSlice.reducer</code>，从app/store.js中import这个文件<code>import postsReducer from &#39;../features/posts/postsSlice&#39;</code>，并在configureStore中添加该reducer。</p>
+<hr>
+<p>完成以上几个步骤之后，运行这个程序并用redux devtools检查工具是可以看到state标签中给出的初始化数据initialState的。</p>
+</li>
+</ol>
+<blockquote>
+<p>createSlice的export分为两个部分，第一个是在定义createSlice的reducer时同步生成的action的export，第二个是整体reducer的export到App.js。因为这里最初还没有添加actions和reducers，所以没有export actions。</p>
+</blockquote>
+<h1 id="feature-k-UI-component"><a href="#feature-k-UI-component" class="headerlink" title="feature-k UI component"></a>feature-k UI component</h1><p>因为我们在这个feature中已经有了一些initial state/fake object array，因此在该feature下开始考虑UI component。由于UI component本身也分层级，我们最最顶层的postList.js开始考虑。</p>
+<p>在import完了必要的API之后，export const UI1 = () =&gt; {}会跟一个箭头函数，这个函数内部会涉及store数据取用，html相关UI描述，最后return的内容就是整体UI模块。</p>
+<h2 id="使用selector从redux-store获取data"><a href="#使用selector从redux-store获取data" class="headerlink" title="使用selector从redux store获取data"></a>使用selector从redux store获取data</h2><p>为了从redux store获得data，需要使用useSelector Hook。useSelector Hook会使用Provider包裹起来的所有组件部分都能够访问到作为参数传入进去的全局数据store。在UI组件中调用他，只会返回被该组件需要的特定数据。</p>
+<p> The “selector functions” that you write will be called with the entire Redux <code>state</code> object as a parameter, and should return the specific data that this component needs from the store.</p>
+<h2 id="写UI"><a href="#写UI" class="headerlink" title="写UI"></a>写UI</h2><p>在获取了数据之后就可以使用map等循环语句开始制作html相关代码块。当最终需要的代码块由多个子模块组成的时候，可以先const定义多个子模块，最后在return()内部组装这些模块。</p>
+<h1 id="在顶层APP添加UI"><a href="#在顶层APP添加UI" class="headerlink" title="在顶层APP添加UI"></a>在顶层APP添加UI</h1><p>在结束添加特定UI之后，需要在顶层App.js文件中import该UI，并且修改路由，这个部份涉及路由问题。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">import &#123;</span><br><span class="line">  BrowserRouter as Router,</span><br><span class="line">  Switch,</span><br><span class="line">  Route,</span><br><span class="line">  Redirect</span><br><span class="line">&#125; from &#39;react-router-dom&#39;</span><br><span class="line"></span><br><span class="line">import &#123; PostsList &#125; from &#39;.&#x2F;features&#x2F;posts&#x2F;PostsList&#39;</span><br><span class="line"></span><br><span class="line">function App()&#123;</span><br><span class="line">    &lt;Router&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;Switch&gt;</span><br><span class="line">                &lt;Route </span><br><span class="line">                    exact</span><br><span class="line">            		path&#x3D;&quot;&#x2F;&quot;</span><br><span class="line">            		render&#x3D;&#123;() &#x3D;&gt; (</span><br><span class="line">              		&lt;React.Fragment&gt;</span><br><span class="line">               		&lt;PostsList &#x2F;&gt;</span><br><span class="line">              		&lt;&#x2F;React.Fragment&gt;)&#125;</span><br><span class="line">                &#x2F;&gt;</span><br><span class="line">            &lt;&#x2F;Switch&gt;</span><br><span class="line">        &lt;&#x2F;div&gt;</span><br><span class="line">    &lt;&#x2F;Router&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>以上涉及的知识静态UI的创建，他的数据都是放在store里面的，并且目前为止reducer是空的。</p>
+<p>如果浏览器客户端产生了动态数据该如何处理？比如我们要在原来的postList的UI之上创建一个AddPostForm的UI，这个UI会因为用户的交互产生数据呢？如何做到UI compoennt一方的数据和store一方的数据保持一致呢？</p>
+<h1 id="UI-component内部数据管控"><a href="#UI-component内部数据管控" class="headerlink" title="UI component内部数据管控"></a>UI component内部数据管控</h1><p>这里所说的UI component内部数据管控是什么意思呢？这是因为当用户在客户端浏览器对UI进行输入，修改，点击等操作的时候，作用的对象都是UI component。UI component内部应当有管理这些数据的函数，这就需要用到React Hook中的useState API。在UI component中首先需要启用useState()产生data1和setdata1函数。</p>
+<p>每一次绑定了data1数据的UI发生变更的时候，放在UI component的onClick/onChange属性中的监听函数就会发现这个变更，调用回调函数ondata1Changed，而回调函数函数本身就是由useState hook的setdata1构成。这个监听函数就被放在。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> import React, &#123; useState &#125; from &#39;react&#39;</span><br><span class="line"></span><br><span class="line">export const AddPostForm &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  const [title, setTitle] &#x3D; useState(&#39;&#39;)</span><br><span class="line"></span><br><span class="line">  const onTitleChanged &#x3D; e &#x3D;&gt; setTitle(e.target.value)</span><br><span class="line"></span><br><span class="line">  return (</span><br><span class="line">    &lt;section&gt;</span><br><span class="line">      &lt;h2&gt;Add a New Post&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;form&gt;</span><br><span class="line">        &lt;label htmlFor&#x3D;&quot;postTitle&quot;&gt;Post Title:&lt;&#x2F;label&gt;</span><br><span class="line">        &lt;input</span><br><span class="line">          type&#x3D;&quot;text&quot;</span><br><span class="line">          id&#x3D;&quot;postTitle&quot;</span><br><span class="line">          name&#x3D;&quot;postTitle&quot;</span><br><span class="line">          value&#x3D;&#123;title&#125;</span><br><span class="line">          onChange&#x3D;&#123;onTitleChanged&#125;</span><br><span class="line">        &#x2F;&gt;</span><br><span class="line">        &lt;button type&#x3D;&quot;button&quot;&gt;Save Post&lt;&#x2F;button&gt;</span><br><span class="line">      &lt;&#x2F;form&gt;</span><br><span class="line">    &lt;&#x2F;section&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>过程概述为：</p>
+<p>用户对input UI进行输入</p>
+<p>=&gt; onChange事件监听函数检测到input change </p>
+<p>=&gt; 调用该事件监听函数的回调函数 </p>
+<p>=&gt; 回调函数内部通过e.target/event target对象读取UI的value，配合useState在函数UI组件内部调用setdata1，最终完成data1的更新。</p>
+<h1 id="UI-component与store通信"><a href="#UI-component与store通信" class="headerlink" title="UI component与store通信"></a>UI component与store通信</h1><p>在完成UI组件内部的数据用useState Hook更新储存之后，这些数据要传递到store。有可能UI组件内部储存的数据无条件的同步到store，也有可能用户的某个行为，如保存/确认/发送，出发了UI组件与store的同步。</p>
+<blockquote>
+<p>需要注意的是useState总是动态追踪变化，比如一个input的内容，在用户输入的过程中，useState也会更随着更新；而将数据同步到store的都是最终数据，global的数据，the latest values for the input fields。</p>
+</blockquote>
+<h2 id="useDispatch实现UI向store传递数据"><a href="#useDispatch实现UI向store传递数据" class="headerlink" title="useDispatch实现UI向store传递数据"></a>useDispatch实现UI向store传递数据</h2><p>为了实现UI component和store的通信，首先在方法上需要添加useDispatch()方法，以及store中包含的某个reducer。该reducer作为参数传入useDispatch()方法，而该reducer的参数就是UI component需要传递到store的数据，至于传入是多个参数还是一个payload对象需要看creatSlice中reducer的定义方式。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">export const AddPostForm &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">    const dispatch &#x3D; useDispatch()</span><br><span class="line">    const onSavePostClicked &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">    if (title &amp;&amp; content) &#123;</span><br><span class="line">      dispatch(</span><br><span class="line">        postAdded(&#123;</span><br><span class="line">          id: nanoid(),</span><br><span class="line">          title,</span><br><span class="line">          content</span><br><span class="line">        &#125;)</span><br><span class="line">      &#x2F;&#x2F; 这里传入的顺序就是createSLice方法中reducer的payload</span><br><span class="line">      )</span><br><span class="line"></span><br><span class="line">      setTitle(&#39;&#39;)</span><br><span class="line">      setContent(&#39;&#39;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  return (</span><br><span class="line">    &lt;section&gt;</span><br><span class="line">      &lt;h2&gt;Add a New Post&lt;&#x2F;h2&gt;</span><br><span class="line">      &lt;form&gt;</span><br><span class="line">        &#123;&#x2F;* omit form inputs *&#x2F;&#125;</span><br><span class="line">        &lt;button type&#x3D;&quot;button&quot; onClick&#x3D;&#123;onSavePostClicked&#125;&gt;</span><br><span class="line">          Save Post</span><br><span class="line">        &lt;&#x2F;button&gt;</span><br><span class="line">      &lt;&#x2F;form&gt;</span><br><span class="line">    &lt;&#x2F;section&gt;</span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调用createSlice中actionCreator的postAdded传入的是一个对象，这个对象中包含了UI component利用useState存放的数据。actionCreator内部把这个对象用action.payload来引用。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    postAdded(state, action) &#123;</span><br><span class="line">      state.push(action.payload)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="action-payload的两种写法"><a href="#action-payload的两种写法" class="headerlink" title="action payload的两种写法"></a>action payload的两种写法</h2><h3 id="默认在reducer中使用action-payload"><a href="#默认在reducer中使用action-payload" class="headerlink" title="默认在reducer中使用action.payload"></a>默认在reducer中使用action.payload</h3><p>以上两个代码块的定义与调用是基于默认的把reducer在UI中作为{}包裹的对象传递到slice中去，在slice的reducer中使用action.payload访问。操作的形式都是对象。</p>
+<h3 id="手写action-creator与payload自定义"><a href="#手写action-creator与payload自定义" class="headerlink" title="手写action creator与payload自定义"></a>手写action creator与payload自定义</h3><p>Right now, we’re generating the ID and creating the payload object in our React component, and passing the payload object into <code>postAdded</code>. </p>
+<hr>
+<p>手写actioncreators的一个好处就是可以自定义action的payload。需要注意的是这个id的生成不能在reducer中去生成，不然数据流都是不可预测的。在上面的例子中，id的随机生成是在UI component中完成的。在下面的例子中因为手写了action creator所以能够自定义payload。</p>
+<blockquote>
+<p>If an action needs to contain a unique ID or some other random value, always generate that first and put it in the action object. <strong>Reducers should never calculate random values</strong>, because that makes the results unpredictable.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; hand-written action creator</span><br><span class="line">function postAdded(title, content) &#123;</span><br><span class="line">  const id &#x3D; nanoid()</span><br><span class="line">  return &#123;</span><br><span class="line">    type: &#39;posts&#x2F;postAdded&#39;,</span><br><span class="line">    payload: &#123; id, title, content &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>虽然createSlice只要写了reducer就能自动生成action creator，但是我们如何在给自动生成的action creator定义我们想要的payload呢？玩意需要传递的数据十分复杂呢？</p>
+<h3 id="createSlice中自定义payload的prepare-callback-function"><a href="#createSlice中自定义payload的prepare-callback-function" class="headerlink" title="createSlice中自定义payload的prepare callback function"></a>createSlice中自定义payload的prepare callback function</h3><p>createSlice允许我们在reducer对象的某个特定reducer中给该reducer和action creator定义payload，只需要在定义reducer的同时定义prepare callback function即可，即define a “prepare callback” function when we write a reducer。</p>
+<p>prepare函数的定义时传入的参数就和手写action creator传入的参数是一样的，都是从UI component处获得的。该函数返回一个payload filed对象，里面就是该reducer与action creator的payload。</p>
+<blockquote>
+<p>The “prepare callback” function can take multiple arguments, generate random values like unique IDs, and run whatever other synchronous logic is needed to decide what values go into the action object. It should then return an object with the <code>payload</code> field inside. </p>
+</blockquote>
+<p>当我们在UI component中调用这个action creator的时候，传入reducer函数的参数就是多个组成payload的元素，而不再是一个对象。</p>
+<h3 id="两种定义方式的比较"><a href="#两种定义方式的比较" class="headerlink" title="两种定义方式的比较"></a>两种定义方式的比较</h3><h4 id="默认action-payload"><a href="#默认action-payload" class="headerlink" title="默认action.payload"></a>默认action.payload</h4><p>createSlice定义reducer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">const postsSlice &#x3D; createSlice(&#123;</span><br><span class="line">  name: &#39;posts&#39;,</span><br><span class="line">  initialState,</span><br><span class="line">  reducers: &#123;</span><br><span class="line">    postAdded: &#123;</span><br><span class="line">      reducer(state, action) &#123;</span><br><span class="line">        state.push(action.payload)</span><br><span class="line">      &#125;,</span><br><span class="line">      prepare(title, content, userId) &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          payload: &#123;</span><br><span class="line">            id: nanoid(),</span><br><span class="line">            title,</span><br><span class="line">            content,</span><br><span class="line">            user: userId</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    &#x2F;&#x2F; other reducers</span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>UI组件调用reducer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">const onSavePostClicked &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">    if (title &amp;&amp; content) &#123;</span><br><span class="line">      dispatch(postAdded(title, content, userId))</span><br><span class="line">      setTitle(&#39;&#39;)</span><br><span class="line">      setContent(&#39;&#39;)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="prepare-callbackfunction"><a href="#prepare-callbackfunction" class="headerlink" title="prepare callbackfunction"></a>prepare callbackfunction</h4><p>createSlice定义reducer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; 这部分内容包裹在postSlice中</span><br><span class="line">postUpdated(state, action)&#123;</span><br><span class="line">            const &#123; id, title, content &#125; &#x3D; action.payload</span><br><span class="line">            const existingPost &#x3D; state.find(post &#x3D;&gt; post.id &#x3D;&#x3D;&#x3D; id)</span><br><span class="line">            if(existingPost)&#123;</span><br><span class="line">                existingPost.title &#x3D; title</span><br><span class="line">                existingPost.content &#x3D; content</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br></pre></td></tr></table></figure>
+<p>UI组件调用reducer</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const onSavePostClicked &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">        if(title &amp;&amp; content)&#123;</span><br><span class="line">            dispatch(postUpdated(&#123;id: postId, title, content&#125;))</span><br><span class="line">            history.push(&#96;&#x2F;posts&#x2F;$&#123;postId&#125;&#96;)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h1 id="多个单页UI-component与路由"><a href="#多个单页UI-component与路由" class="headerlink" title="多个单页UI component与路由"></a>多个单页UI component与路由</h1><p>在完成了某个具备单独成页性质的UI component之后，需要在顶层文件App.js中将它import并使用Route API添加。</p>
+<p>其次需要查看页面间路由，比如从列表页到详情页，需要在列表页添加到详情页的Link API。感觉Link API就有点像href。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/06/redux-sync-data-flow/" rel="prev" title="Redux的同步数据流">
+      <i class="fa fa-chevron-left"></i> Redux的同步数据流
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/07/my-dec-films/" rel="next" title="十二月观影记录">
+      十二月观影记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#feature-k-Slice"><span class="nav-number">1.</span> <span class="nav-text">feature-k Slice</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#src%E4%B8%8B%E5%88%9B%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">1.1.</span> <span class="nav-text">src下创建文件夹</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#initialState%E4%B8%8EcreateSlice%E7%9A%84export"><span class="nav-number">1.2.</span> <span class="nav-text">initialState与createSlice的export</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#feature-k-UI-component"><span class="nav-number">2.</span> <span class="nav-text">feature-k UI component</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8selector%E4%BB%8Eredux-store%E8%8E%B7%E5%8F%96data"><span class="nav-number">2.1.</span> <span class="nav-text">使用selector从redux store获取data</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99UI"><span class="nav-number">2.2.</span> <span class="nav-text">写UI</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E9%A1%B6%E5%B1%82APP%E6%B7%BB%E5%8A%A0UI"><span class="nav-number">3.</span> <span class="nav-text">在顶层APP添加UI</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UI-component%E5%86%85%E9%83%A8%E6%95%B0%E6%8D%AE%E7%AE%A1%E6%8E%A7"><span class="nav-number">4.</span> <span class="nav-text">UI component内部数据管控</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UI-component%E4%B8%8Estore%E9%80%9A%E4%BF%A1"><span class="nav-number">5.</span> <span class="nav-text">UI component与store通信</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#useDispatch%E5%AE%9E%E7%8E%B0UI%E5%90%91store%E4%BC%A0%E9%80%92%E6%95%B0%E6%8D%AE"><span class="nav-number">5.1.</span> <span class="nav-text">useDispatch实现UI向store传递数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#action-payload%E7%9A%84%E4%B8%A4%E7%A7%8D%E5%86%99%E6%B3%95"><span class="nav-number">5.2.</span> <span class="nav-text">action payload的两种写法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4%E5%9C%A8reducer%E4%B8%AD%E4%BD%BF%E7%94%A8action-payload"><span class="nav-number">5.2.1.</span> <span class="nav-text">默认在reducer中使用action.payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%86%99action-creator%E4%B8%8Epayload%E8%87%AA%E5%AE%9A%E4%B9%89"><span class="nav-number">5.2.2.</span> <span class="nav-text">手写action creator与payload自定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#createSlice%E4%B8%AD%E8%87%AA%E5%AE%9A%E4%B9%89payload%E7%9A%84prepare-callback-function"><span class="nav-number">5.2.3.</span> <span class="nav-text">createSlice中自定义payload的prepare callback function</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E7%A7%8D%E5%AE%9A%E4%B9%89%E6%96%B9%E5%BC%8F%E7%9A%84%E6%AF%94%E8%BE%83"><span class="nav-number">5.2.4.</span> <span class="nav-text">两种定义方式的比较</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4action-payload"><span class="nav-number">5.2.4.1.</span> <span class="nav-text">默认action.payload</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#prepare-callbackfunction"><span class="nav-number">5.2.4.2.</span> <span class="nav-text">prepare callbackfunction</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AA%E5%8D%95%E9%A1%B5UI-component%E4%B8%8E%E8%B7%AF%E7%94%B1"><span class="nav-number">6.</span> <span class="nav-text">多个单页UI component与路由</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

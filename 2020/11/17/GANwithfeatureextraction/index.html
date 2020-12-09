@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="GAN与Auto-Encoder相结合的具体例子，涉及InfoGAN&#x2F;VAE-GAN&#x2F;BiGAN。另外，还讲了一下GAN在Domain Adversarial Training中discriminate domain的实现。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Feature Extraction with GAN">
+<meta property="og:url" content="http://example.com/2020/11/17/GANwithfeatureextraction/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="GAN与Auto-Encoder相结合的具体例子，涉及InfoGAN&#x2F;VAE-GAN&#x2F;BiGAN。另外，还讲了一下GAN在Domain Adversarial Training中discriminate domain的实现。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118084308113.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118110058575.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118110212780.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118085429788.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118093923976.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118095142014.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118100926623.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118101225140.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118103718044.png">
+<meta property="og:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118103955694.png">
+<meta property="article:published_time" content="2020-11-17T08:25:35.000Z">
+<meta property="article:modified_time" content="2020-11-18T03:17:35.724Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="GAN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/11/17/GANwithfeatureextraction/image-20201118084308113.png">
+
+<link rel="canonical" href="http://example.com/2020/11/17/GANwithfeatureextraction/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Feature Extraction with GAN | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/17/GANwithfeatureextraction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Feature Extraction with GAN
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-17 16:25:35" itemprop="dateCreated datePublished" datetime="2020-11-17T16:25:35+08:00">2020-11-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-18 11:17:35" itemprop="dateModified" datetime="2020-11-18T11:17:35+08:00">2020-11-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">GAN与Auto-Encoder相结合的具体例子，涉及InfoGAN/VAE-GAN/BiGAN。另外，还讲了一下GAN在Domain Adversarial Training中discriminate domain的实现。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="InfoGAN"><a href="#InfoGAN" class="headerlink" title="InfoGAN"></a>InfoGAN</h1><p>InfoGAN希望输入数据的每一个维度代表着输出图像的某个特定特征，改变输入数据的某个维度，输出图像会同时有某一特征的改变，即解决input feature对output影响不明显的问题。</p>
+<h2 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h2><p>和普通的GAN主要由两个地方的不同。</p>
+<p>第一，input vector被分成了两个部分，第一个部分c代表了输出图像的特征的集合，z‘代表了纯粹随机的无法解释的部分。</p>
+<p>第二，generator的输出被添加到两个路径，一个是到discriminator，一个是到classifier。classifier的作用是能根据generator的output x反推获得generator的input中代表特征的那个部分。但是如果没有discriminator，generator可能就偷懒直接把input c的部分直接放到output x，然后让classifier很方便就读出来。discriminator要让generator去创造。</p>
+<p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118084308113.png" alt="image-20201118084308113" style="zoom:40%;"></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>input characteristic c must have a clear influence on x; The classifier can recover c from x.</p>
+<h1 id="GAN-AutoEncoder"><a href="#GAN-AutoEncoder" class="headerlink" title="GAN + AutoEncoder"></a>GAN + AutoEncoder</h1><p>应用在Interactive Photo Enditing中。</p>
+<p>第一步，对于给一张image，投射到image embedding space中，变成一个code。</p>
+<p>第二步，在这个code的向量空间内稍作移动就可以实现更改了某一特征（user给的constraint），但总体与原来的image相似的图片。</p>
+<h2 id="image-back-to-vector"><a href="#image-back-to-vector" class="headerlink" title="image back to vector"></a>image back to vector</h2><p>有三种实现方式。</p>
+<p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118110058575.png" alt="image-20201118110058575" style="zoom:50%;"></p>
+<h2 id="Editing-photos"><a href="#Editing-photos" class="headerlink" title="Editing photos"></a>Editing photos</h2><p>要找一个满足三个条件的图片。</p>
+<p>第一个是user constraint，即要改变图片的某个feature。</p>
+<p>第二个是要求计算两个图片的距离相近，即与原图片类似。</p>
+<p>第三个是用discriminator来判断图片是否足够real。</p>
+<p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118110212780.png" alt="image-20201118110212780" style="zoom:50%;"></p>
+<h1 id="VAE-GAN"><a href="#VAE-GAN" class="headerlink" title="VAE-GAN"></a>VAE-GAN</h1><h2 id="架构-1"><a href="#架构-1" class="headerlink" title="架构"></a>架构</h2><p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118085429788.png" alt="image-20201118085429788" style="zoom:40%;"></p>
+<p>Encoder的任务就是Minimize reconstruction error，并且让output z close to normal(Variational Auto-Encoder)。</p>
+<p>Generator as Decoder的任务也是Minimize reconstruction error，并且cheat discriminator。</p>
+<p>Discriminator的任务是Discriminate real, generated and reconstructed images。</p>
+<blockquote>
+<p>注意这里有三种image，一个是real image，一个是generator as decoder的generated image，另一个是decoder as generator的reconstrcuted image。</p>
+</blockquote>
+<h2 id="WHY-VAE-GAN"><a href="#WHY-VAE-GAN" class="headerlink" title="WHY VAE-GAN"></a>WHY VAE-GAN</h2><p>一方面，从VAE考虑。VAE希望reconstruction error越小越好，也就是希望input x of encoder和output x of decoder as generator越接近越好，但问题是VAE的output不一定会realistic，会很模糊，因为无法衡量loss。</p>
+<p>另一方面，从GAN考虑。原来在train GAN，Generator没有看过真正的image长什么样，需要很多时间去调参数。但是加上encoder，他知道真正的image长什么样。</p>
+<h2 id="Algorithm"><a href="#Algorithm" class="headerlink" title="Algorithm"></a>Algorithm</h2><ul>
+<li><p>Initialize En, De, Dis</p>
+</li>
+<li><p>In each iteration:</p>
+<ul>
+<li><p>Sample M images $x^1, x^2, \cdots, x^M$ from database</p>
+</li>
+<li><p>Generate M codes $\tilde{z}^1, \tilde{z}^2, \cdots, \tilde{z}^M$ from encoder $\tilde{z}^i = En(x^i)$</p>
+<p>此处是encoder从real image输出的code</p>
+</li>
+<li><p>Generate M images $\tilde{x}^1, \tilde{x}^2, \cdots, \tilde{x}^M$ from decoder $\tilde{x}^i = De(\tilde{z}^i)$</p>
+<p>此处是decoder从encoder的code输出的reconstructed image</p>
+<p>以上是auto-encoder的操作流程。</p>
+<hr>
+</li>
+<li><p>Sample M codes $ z^1,z^2, \cdots ,z^M$ from prior $P(z)$</p>
+</li>
+<li><p>Generate M images $\hat{x}^1, \hat{x}^2, \cdots, \hat{x}^M$ from decoder/generator $\hat{x}^i = De(z^i)$</p>
+<p>此处是用从normal distribution中sample出得随机的一个vector当作generator的输入。</p>
+<p>以上是GAN的generator部分的操作流程。</p>
+<hr>
+</li>
+<li><p>Update En to decrease $|\tilde{x}^i-x^i|$, decrease $KL(P(\tilde{z}^i|x^i)|P(z))$</p>
+</li>
+<li><p>Update De to decrease $|\tilde{x}^i-x^i|$, increase $Dis(\tilde{x}^i)$ and $Dis(\hat{x}^i)$</p>
+</li>
+<li><p>Update Dis to increase $Dis(x^i)$, decrease $Dis(\tilde{x}^i)$ and $Dis(\hat{x}^i)$</p>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="BiGAN"><a href="#BiGAN" class="headerlink" title="BiGAN"></a>BiGAN</h1><p>BiGAN也是VAE-GAN的一种变形，还是建立在Encoder/Decoder/Discriminator这三者之上。只不过这些基本单元的连接方式有所不同。</p>
+<h2 id="架构-2"><a href="#架构-2" class="headerlink" title="架构"></a>架构</h2><p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118093923976.png" alt="image-20201118093923976" style="zoom:40%;"></p>
+<p>和VAE-GAN不同，BiGAN的Encoder和Decoder不再有一个real image和generated image的比较。Encoder和Decoder互相独立。</p>
+<p>那如何训练这两者？这个任务在于Discriminator。对于每一对image x和code z的pair，discriminator要判断他来自encoder还是decoder。</p>
+<h2 id="解读"><a href="#解读" class="headerlink" title="解读"></a>解读</h2><p>Encoder的输入和输出构成一个disribution，记做$P(x,z)$</p>
+<p>Decoder的输入和输出构成一个disribution，记做$Q(x,z)$</p>
+<p>Discriminator的作用是evaluate the difference between P and Q</p>
+<p>到最后P和Q会是一样的。</p>
+<p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118095142014.png" alt="image-20201118095142014" style="zoom:40%;"></p>
+<h2 id="Alogorithm"><a href="#Alogorithm" class="headerlink" title="Alogorithm"></a>Alogorithm</h2><ul>
+<li><p>Initialize En, De, Dis</p>
+</li>
+<li><p>In each iteration:</p>
+<ul>
+<li><p>Sample M images $x^1, x^2, \cdots, x^M$ from database</p>
+</li>
+<li><p>Generate M codes $\tilde{z}^1, \tilde{z}^2, \cdots, \tilde{z}^M$ from encoder $\tilde{z}^i = En(x^i)$</p>
+<p>Encoder生成一个pair</p>
+<hr>
+</li>
+<li><p>Sample M codes $ z^1,z^2, \cdots ,z^M$ from prior $P(z)$</p>
+</li>
+<li><p>Generate M images $\tilde{x}^1, \tilde{x}^2, \cdots, \tilde{x}^M$ from decoder/generator $\tilde{x}^i = De(z^i)$</p>
+<p>Decoder/generater生成一个pair</p>
+<hr>
+</li>
+<li><p>Update Dis to increase $Dis(x^i, \tilde{z}^i)$, decrease $Dis(\tilde{x}^i,  \tilde{z}^i)$ </p>
+</li>
+<li><p>Update En and De to decrease $Dis(x^i, \tilde{z}^i)$, increase $Dis(\tilde{x}^i,  \tilde{z}^i)$ </p>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>同样的还有Triple GAN</p>
+</blockquote>
+<h1 id="Domain-adversarial-training"><a href="#Domain-adversarial-training" class="headerlink" title="Domain-adversarial training"></a>Domain-adversarial training</h1><p>Testing data and training data are in different domains. How to extract feature of the same distribution via generator.</p>
+<p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118100926623.png" alt="image-20201118100926623" style="zoom:40%;"></p>
+<h2 id="架构-3"><a href="#架构-3" class="headerlink" title="架构"></a>架构</h2><p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118101225140.png" alt="image-20201118101225140" style="zoom:40%;"></p>
+<p>主要由三个部分组成，generator的作用是domain extractor，discriminator的作用是domain classifier，判断feature来自哪个domain。同时需要另外一个class label classifier。</p>
+<p>这三个部分可以一起learn，也可以不一起learn。</p>
+<blockquote>
+<p>simultaneous training还是iterative training？其实fGAN中提出了一种将GAN simultaneous training的方法，但是会不太稳；原始GAN中还是iterative training。</p>
+</blockquote>
+<h2 id="Feature-Disentangle"><a href="#Feature-Disentangle" class="headerlink" title="Feature Disentangle"></a>Feature Disentangle</h2><h3 id="WHY"><a href="#WHY" class="headerlink" title="WHY"></a>WHY</h3><p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118103718044.png" alt="image-20201118103718044" style="zoom:40%;"></p>
+<p>在encoder的时候单纯的把input segment输出成一个code，那么这个code可能包含了很多信息，例如phonetic information, speaker information.</p>
+<p>如果我们一开始就把code利用feature分开来，细化每一个encoder的任务，那么结果丢进encoder去test的时候reconstruct的效果会更好。</p>
+<h3 id="HOW"><a href="#HOW" class="headerlink" title="HOW"></a>HOW</h3><p><img src="/2020/11/17/GANwithfeatureextraction/image-20201118103955694.png" alt="image-20201118103955694" style="zoom:40%;"></p>
+<p>利用一个speaker classifier当作discriminator来训练前面两个不同“domain”的encoder。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/17/fGAN-WGAN-EBGAN/" rel="prev" title="fGAN+WGAN+EBGAN">
+      <i class="fa fa-chevron-left"></i> fGAN+WGAN+EBGAN
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/19/sequence-generation/" rel="next" title="Improve Sequence Generation by GAN">
+      Improve Sequence Generation by GAN <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#InfoGAN"><span class="nav-number">1.</span> <span class="nav-text">InfoGAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84"><span class="nav-number">1.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">1.2.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GAN-AutoEncoder"><span class="nav-number">2.</span> <span class="nav-text">GAN + AutoEncoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#image-back-to-vector"><span class="nav-number">2.1.</span> <span class="nav-text">image back to vector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Editing-photos"><span class="nav-number">2.2.</span> <span class="nav-text">Editing photos</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VAE-GAN"><span class="nav-number">3.</span> <span class="nav-text">VAE-GAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84-1"><span class="nav-number">3.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WHY-VAE-GAN"><span class="nav-number">3.2.</span> <span class="nav-text">WHY VAE-GAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Algorithm"><span class="nav-number">3.3.</span> <span class="nav-text">Algorithm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#BiGAN"><span class="nav-number">4.</span> <span class="nav-text">BiGAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84-2"><span class="nav-number">4.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E8%AF%BB"><span class="nav-number">4.2.</span> <span class="nav-text">解读</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Alogorithm"><span class="nav-number">4.3.</span> <span class="nav-text">Alogorithm</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Domain-adversarial-training"><span class="nav-number">5.</span> <span class="nav-text">Domain-adversarial training</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%B6%E6%9E%84-3"><span class="nav-number">5.1.</span> <span class="nav-text">架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Feature-Disentangle"><span class="nav-number">5.2.</span> <span class="nav-text">Feature Disentangle</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#WHY"><span class="nav-number">5.2.1.</span> <span class="nav-text">WHY</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HOW"><span class="nav-number">5.2.2.</span> <span class="nav-text">HOW</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

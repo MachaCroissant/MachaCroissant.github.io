@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="首先，讲解原始GAN的算法，解读各个部分。其次，讲解GAN与结构化学习的关系。然后，讲解Generator与Encoder&#x2F;VAE的关系，如何训练Discriminator。最后，讲解了Conditional GAN和Unsupervised Conditional Generation(也就是不同Domain之间相似图片的产生实现image&#x2F;voice style transfer)。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GAN Introduction">
+<meta property="og:url" content="http://example.com/2020/11/12/GAN-tutorial/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="首先，讲解原始GAN的算法，解读各个部分。其次，讲解GAN与结构化学习的关系。然后，讲解Generator与Encoder&#x2F;VAE的关系，如何训练Discriminator。最后，讲解了Conditional GAN和Unsupervised Conditional Generation(也就是不同Domain之间相似图片的产生实现image&#x2F;voice style transfer)。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112114319500.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112114621970.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112172703765.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112191503388.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112200052845.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112200554189.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112201047739.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112202530838.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112202648604.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112203116517.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/drunk99/machacroissant/source/_posts/2020-11-12-GAN-tutorial/image-20201112203451877.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112203706067.png">
+<meta property="og:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112203847559.png">
+<meta property="article:published_time" content="2020-11-12T03:16:01.000Z">
+<meta property="article:modified_time" content="2020-11-18T03:18:50.978Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="GAN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/11/12/GAN-tutorial/image-20201112114319500.png">
+
+<link rel="canonical" href="http://example.com/2020/11/12/GAN-tutorial/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>GAN Introduction | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/12/GAN-tutorial/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          GAN Introduction
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-12 11:16:01" itemprop="dateCreated datePublished" datetime="2020-11-12T11:16:01+08:00">2020-11-12</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-18 11:18:50" itemprop="dateModified" datetime="2020-11-18T11:18:50+08:00">2020-11-18</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/GAN/" itemprop="url" rel="index"><span itemprop="name">GAN</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>9 分钟</span>
+            </span>
+            <div class="post-description">首先，讲解原始GAN的算法，解读各个部分。其次，讲解GAN与结构化学习的关系。然后，讲解Generator与Encoder/VAE的关系，如何训练Discriminator。最后，讲解了Conditional GAN和Unsupervised Conditional Generation(也就是不同Domain之间相似图片的产生实现image/voice style transfer)。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="GAN基础算法"><a href="#GAN基础算法" class="headerlink" title="GAN基础算法"></a>GAN基础算法</h1><ul>
+<li><p>Initialize $\theta_g$ for Generator and $\theta_d$ for Discriminator</p>
+</li>
+<li><p>In each training iteration:</p>
+<p><strong>Learning D</strong> Repeat K times</p>
+<hr>
+<ul>
+<li><p>Sample m examples $\{x^1, x^2, \cdots x^m\}$ from database $P_{data}(x)$</p>
+</li>
+<li><p>Sample m noise examples $\{z^1, z^2, \cdots z^m\}$ from a distribution(Uniform Distribution or Guassion Distribution) $P_{prior}(x)$</p>
+</li>
+</ul>
+<p>这些example用多少维度的vector来表示是需要自己调的。</p>
+<hr>
+<ul>
+<li><p>Obataining generated dara $\tilde{x}^1, \tilde{x}^2, \cdots, \tilde{x}^m$, $\tilde{x}^i = G(z^i)$</p>
+</li>
+<li><p>Update discriminator parameters  $\theta_d$ to maximize</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112114319500.png" alt="image-20201112114319500" style="zoom:40%;"></p>
+</li>
+</ul>
+<p>利用gradient ascent求最大值，本质上和gradient descent一样，只不过function符号正负或者update的时候方向和梯度同向还是反向。</p>
+<p>这里用到的function并不是表现最好的，只是最早提出GAN的研究者当时采用的算法。</p>
+<p>解读第一项就是把从database中sample出来的real image vector经过Dsicriminator之后评分要越高越好。</p>
+<p>解读第二项就是把从某个分布随机生成的vector经过discriminator之后评分要越低越好。</p>
+<p>算出两个分布之间的JS Divergence，本质上就是一个binary classifier，can only find lower bound of $\max\limits_{D} V(G, D)$。</p>
+<hr>
+<p><strong>Learning G</strong> Only Once</p>
+<hr>
+<ul>
+<li><p>Sample another m noise samples  $\{z’^1, z’^2, \cdots z’^m\}$ from a distribution</p>
+</li>
+<li><p>Update generator parameters  $\theta_g$ to maximize</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112114621970.png" alt="image-20201112114621970" style="zoom:40%;"></p>
+<p>最里层是random noise的vector，外面套了一个Generator就变成了一个image，利用Discriminator去评判这个Generator是否做得够好，希望评分越高越好。</p>
+</li>
+</ul>
+<hr>
+</li>
+</ul>
+<h1 id="GAN-as-structured-Learning"><a href="#GAN-as-structured-Learning" class="headerlink" title="GAN as structured Learning"></a>GAN as structured Learning</h1><h2 id="结构化学习特征"><a href="#结构化学习特征" class="headerlink" title="结构化学习特征"></a>结构化学习特征</h2><p>机器学习就是：input — function — output。</p>
+<p>当output不再是一个简单的scalar/class(one-hot vector)，而要求是sequence(MachineTranslation/Vhat-bot/SpeechRecognition)/tree/graph/matrix(ImageToImage/TextToImage)，那么就是结构化学习。</p>
+<p>Structured learning’s output is composed of components with dependency.</p>
+<p>结构化学习可以看作极端的one-shot/zero-shot learning，机器在学习如何输出在训练时完全没有见到过的东西。</p>
+<h2 id="GAN与结构化学习"><a href="#GAN与结构化学习" class="headerlink" title="GAN与结构化学习"></a>GAN与结构化学习</h2><p>GAN其实就是结构化学习的一种解决方案。</p>
+<p>传统的结构化学习方式有两种。一是Bootom-Up — Learn to generate the object at the component level，一个一个组件单独产生问题是没有大局观念；二是Top-Down — Evaluating the whole object, and find the best one，问题是很难做generation.</p>
+<p>以上两种方法结合在一起，bottom-up对应generator，top-down对应discriminator就是GAN。</p>
+<h1 id="Generator详解"><a href="#Generator详解" class="headerlink" title="Generator详解"></a>Generator详解</h1><p>目标：vectors — NN Generator — image。</p>
+<p>要让Generator理解每一层output的component之间的关系，即pixel to pixel relationship，要让网络够深。</p>
+<h2 id="NN-Generator-amp-Auto-Decoder"><a href="#NN-Generator-amp-Auto-Decoder" class="headerlink" title="NN Generator &amp; Auto-Decoder"></a>NN Generator &amp; Auto-Decoder</h2><p>在supervised learning中，都给一对vectors/image，但是如何产生这么一对vectors/image，要求我们input vectors和output的特征有某些关系。</p>
+<p>由此联想到image — NN Encoder — low-dimension code，但是Encoder不能自己训练，必须要和coder — NN Decoder — image一起训练。可以看出Decoder其实就是Generator。</p>
+<h2 id="Auto-Encoder-amp-VAE"><a href="#Auto-Encoder-amp-VAE" class="headerlink" title="Auto-Encoder &amp; VAE"></a>Auto-Encoder &amp; VAE</h2><p>但是用decoder做的generator再遇到自己没有遇到的coder的时候产生的结果不可控，就算是vector a和vector b的线性组合通过decoder这个非线性系统之后产生的结果也是不可控的。</p>
+<p>如何解决这个问题？采用VAE — Variational Auto Encoder，给encoder的输出做一个偏移，让Auto-Encoder的输出更稳定一点。</p>
+<h2 id="困难点"><a href="#困难点" class="headerlink" title="困难点"></a>困难点</h2><p>Auto-Encoder没有办法考虑每一层input的每个component之间的关系，即pixel-to-pixel relationship，对应的就是structure learning中boottom-up approach的问题，没有全局观念。</p>
+<h1 id="Discriminator详解"><a href="#Discriminator详解" class="headerlink" title="Discriminator详解"></a>Discriminator详解</h1><p>Discriminator = Evaluation function = Potential Function = Energy Function</p>
+<p>Discriminator更容易去检查pixel-to-pixel relationship，因为它对应的就是structure learning中的top-down approach的优势。</p>
+<h2 id="训练方法"><a href="#训练方法" class="headerlink" title="训练方法"></a>训练方法</h2><p>real image就是positive example，但是如何产生比较好的十分接近real image的negative example，让discriminator的评分更严格？</p>
+<p>采用iterative training。让discriminator的评分从松散到严格。</p>
+<p>第一个周期，由初始discriminator parameter决定了discirminator，该discriminator学习给real image distribution的区域高分，给generated image distribution的区域低分。也就是找到了第一个周期的Discriminator。</p>
+<p>第2-n的周期，先用第一个/前一个周期的Discriminator产生negative example（如何找，要解一个argmax problem，要做一些假设），重新学习real image distribution/positive example distribution的区域高分，给generated image distribution/generated image distribution的区域低分。</p>
+<p>直到discriminator自己产生的neagtive example distribution和实际的真是的positive example distribution重合，discriminator才会停止迭代。</p>
+<h2 id="困难点-1"><a href="#困难点-1" class="headerlink" title="困难点"></a>困难点</h2><p>如何让前一个周期的Discriminator产生negative example？如何找，要解一个argmax problem，要做一些假设，因此效果多少有些差。</p>
+<p>把Generator和Discriminator联合起来考虑，用generator来解argmax problem，解决了discriminator的痛点；用discriminator去给generator一个global view。</p>
+<h1 id="Advantage"><a href="#Advantage" class="headerlink" title="Advantage"></a>Advantage</h1><p><img src="/2020/11/12/GAN-tutorial/image-20201112172703765.png" alt="image-20201112172703765" style="zoom:30%;"></p>
+<h1 id="Conditional-GAN"><a href="#Conditional-GAN" class="headerlink" title="Conditional GAN"></a>Conditional GAN</h1><h2 id="WHY-CGAN"><a href="#WHY-CGAN" class="headerlink" title="WHY CGAN"></a>WHY CGAN</h2><p>可操控输出结果。</p>
+<hr>
+<p>例如Text-to-Image，可以当成Traditional supervised learning来做。input data对应NN output要和input data label尽可能相近。</p>
+<p>问题在于input data/text和input data label/image很有可能是一对多的关系，从而导致模型产生的结果是多张input data label的平均，也就是多张image的平均，所以会特别模糊。</p>
+<hr>
+<p>同样Image-to-Image的问题，同样一张几何图形要转换成对应的房子，很有可能一张几何图形可以对应到多个房子。</p>
+<h2 id="HOW-CGAN"><a href="#HOW-CGAN" class="headerlink" title="HOW CGAN"></a>HOW CGAN</h2><p><img src="/2020/11/12/GAN-tutorial/image-20201112191503388.png" alt="image-20201112191503388" style="zoom:30%;"></p>
+<p>generator的input是condtion和从normal distribution中sample出得z，output是image。</p>
+<p>discriminator的input是condition和generator的output image，要求判断output image真假的同时，还要判断这个image的内容和condition是否匹配，output是判断real pair or fake pair的scalar。</p>
+<blockquote>
+<p>为什么discriminator需要也有condition？</p>
+<p>假如没有condition作为输入，generator为了骗过discriminator，只要产生real image就行了，根本不用管input condition。</p>
+</blockquote>
+<h2 id="TIPS-CGAN"><a href="#TIPS-CGAN" class="headerlink" title="TIPS CGAN"></a>TIPS CGAN</h2><p>Stack GAN</p>
+<p>Patch GAN</p>
+<h1 id="Unsupervised-Conditional-Generation"><a href="#Unsupervised-Conditional-Generation" class="headerlink" title="Unsupervised Conditional Generation"></a>Unsupervised Conditional Generation</h1><p>Transfer an object from one domain to another without paired data(e.g. style transfer)</p>
+<h2 id="Direct-Transform"><a href="#Direct-Transform" class="headerlink" title="Direct Transform"></a>Direct Transform</h2><p>Domain X — G{X-&gt;Y} — Domain Y</p>
+<h2 id="要求1"><a href="#要求1" class="headerlink" title="要求1"></a>要求1</h2><p>因为没有Domain X 和 Domain Y之间的link，需要用discriminator协助，让generator产生像是Y Domain的图像。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112200052845.png" alt="image-20201112200052845" style="zoom:30%;"></p>
+<h2 id="要求2"><a href="#要求2" class="headerlink" title="要求2"></a>要求2</h2><p>问题是如果generator直接产生和Domain X没有关系怎么办？我们必须要求generator的输入和输出必须配对。</p>
+<hr>
+<p>可以直接无视这个问题，当generator较简单shallow的时候，该generator倾向于不去更改input，那么就不需要做额外的constraint。</p>
+<hr>
+<p>或者使用一个pre-trained Encoder Network对generator的输入输出的embedding output越相近越好。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112200554189.png" alt="image-20201112200554189" style="zoom:30%;"></p>
+<hr>
+<p>使用CycleGAN。</p>
+<p>Domain X — G{X-&gt;Y} — Domain Y — G{Y -&gt; X} — Domain X，要让经过了两次generator转换前后的Domain X越相近越好，这就是Domain Consistency。</p>
+<p>同样可以做双向的CycleGAN。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112201047739.png" alt="image-20201112201047739" style="zoom:30%;"></p>
+<hr>
+<p>StarGAN</p>
+<h2 id="Projection-to-Common-Space"><a href="#Projection-to-Common-Space" class="headerlink" title="Projection to Common Space"></a>Projection to Common Space</h2><p>Domain X — Encoder of domain X —Common Attribute at latent space— Decoder of domain Y — Domian Y</p>
+<h3 id="Target"><a href="#Target" class="headerlink" title="Target"></a>Target</h3><p><img src="/2020/11/12/GAN-tutorial/image-20201112202530838.png" alt="image-20201112202530838" style="zoom:30%;"></p>
+<h3 id="Training"><a href="#Training" class="headerlink" title="Training"></a>Training</h3><h4 id="基本方法"><a href="#基本方法" class="headerlink" title="基本方法"></a>基本方法</h4><p><img src="/2020/11/12/GAN-tutorial/image-20201112202648604.png" alt="image-20201112202648604" style="zoom:30%;"></p>
+<p>训练Encoder和Decoder就是要Minimizing Reconstruction Error，可以在Decoder的output之后接一个Discriminator of X domain/ Y domain，让Decoder的output不那么模糊。</p>
+<p>EncoderX — DecoderX — DiscriminatorX = VAE GAN1</p>
+<p>EncoderY — DecoderY — DiscriminatorY = VAE GAN2</p>
+<h4 id="存在问题"><a href="#存在问题" class="headerlink" title="存在问题"></a>存在问题</h4><p>问题是红色的training和蓝色的training是两个没有交集的训练路径，完全独立的，训练完之后你发现images with the same attribute may not project to the same position in the latent space。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112203116517.png" alt="image-20201112203116517" style="zoom:30%;"></p>
+<hr>
+<p>解决办法1</p>
+<p>sharing the parameters of encoders and decoders. Encoder共享最后几层的参数，Decoder共享前面几层的参数。</p>
+<hr>
+<p>解决办法2</p>
+<p>给latent space加一个Domain Discriminator去判断这个code vector是来自EncoderX还是EncoderY。</p>
+<p><img src="/2020/11/12/GAN-tutorial/drunk99/machacroissant/source/_posts/2020-11-12-GAN-tutorial/image-20201112203451877.png" alt="image-20201112203451877" style="zoom:30%;"></p>
+<hr>
+<p>解决办法3</p>
+<p>Cycle Consistency，类似于CycleGAN，算Image和Image之间的consistency。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112203706067.png" alt="image-20201112203706067" style="zoom:30%;"></p>
+<hr>
+<p>解决办法4</p>
+<p>Semantic Consistency考虑在latent space上的consistency。</p>
+<p><img src="/2020/11/12/GAN-tutorial/image-20201112203847559.png" alt="image-20201112203847559" style="zoom:30%;"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/GAN/" rel="tag"># GAN</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/11/reinforcement-learning/" rel="prev" title="强化学习">
+      <i class="fa fa-chevron-left"></i> 强化学习
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/11/12/GAN-theory/" rel="next" title="GAN-theory">
+      GAN-theory <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#GAN%E5%9F%BA%E7%A1%80%E7%AE%97%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">GAN基础算法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#GAN-as-structured-Learning"><span class="nav-number">2.</span> <span class="nav-text">GAN as structured Learning</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E5%8C%96%E5%AD%A6%E4%B9%A0%E7%89%B9%E5%BE%81"><span class="nav-number">2.1.</span> <span class="nav-text">结构化学习特征</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#GAN%E4%B8%8E%E7%BB%93%E6%9E%84%E5%8C%96%E5%AD%A6%E4%B9%A0"><span class="nav-number">2.2.</span> <span class="nav-text">GAN与结构化学习</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Generator%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">Generator详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#NN-Generator-amp-Auto-Decoder"><span class="nav-number">3.1.</span> <span class="nav-text">NN Generator &amp; Auto-Decoder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Auto-Encoder-amp-VAE"><span class="nav-number">3.2.</span> <span class="nav-text">Auto-Encoder &amp; VAE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%B0%E9%9A%BE%E7%82%B9"><span class="nav-number">3.3.</span> <span class="nav-text">困难点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Discriminator%E8%AF%A6%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">Discriminator详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">训练方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%B0%E9%9A%BE%E7%82%B9-1"><span class="nav-number">4.2.</span> <span class="nav-text">困难点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Advantage"><span class="nav-number">5.</span> <span class="nav-text">Advantage</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Conditional-GAN"><span class="nav-number">6.</span> <span class="nav-text">Conditional GAN</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WHY-CGAN"><span class="nav-number">6.1.</span> <span class="nav-text">WHY CGAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HOW-CGAN"><span class="nav-number">6.2.</span> <span class="nav-text">HOW CGAN</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#TIPS-CGAN"><span class="nav-number">6.3.</span> <span class="nav-text">TIPS CGAN</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Unsupervised-Conditional-Generation"><span class="nav-number">7.</span> <span class="nav-text">Unsupervised Conditional Generation</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Direct-Transform"><span class="nav-number">7.1.</span> <span class="nav-text">Direct Transform</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E6%B1%821"><span class="nav-number">7.2.</span> <span class="nav-text">要求1</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A6%81%E6%B1%822"><span class="nav-number">7.3.</span> <span class="nav-text">要求2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Projection-to-Common-Space"><span class="nav-number">7.4.</span> <span class="nav-text">Projection to Common Space</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Target"><span class="nav-number">7.4.1.</span> <span class="nav-text">Target</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Training"><span class="nav-number">7.4.2.</span> <span class="nav-text">Training</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%96%B9%E6%B3%95"><span class="nav-number">7.4.2.1.</span> <span class="nav-text">基本方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%9C%A8%E9%97%AE%E9%A2%98"><span class="nav-number">7.4.2.2.</span> <span class="nav-text">存在问题</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

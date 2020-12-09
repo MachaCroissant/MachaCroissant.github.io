@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="主要记录一下在MDN上学习JavaScript的笔记。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript基础">
+<meta property="og:url" content="http://example.com/2020/11/21/learn-js/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="主要记录一下在MDN上学习JavaScript的笔记。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-11-21T05:34:05.000Z">
+<meta property="article:modified_time" content="2020-12-09T12:16:20.096Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/11/21/learn-js/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>JavaScript基础 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/21/learn-js/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          JavaScript基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-11-21 13:34:05" itemprop="dateCreated datePublished" datetime="2020-11-21T13:34:05+08:00">2020-11-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-09 20:16:20" itemprop="dateModified" datetime="2020-12-09T20:16:20+08:00">2020-12-09</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>22k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>40 分钟</span>
+            </span>
+            <div class="post-description">主要记录一下在MDN上学习JavaScript的笔记。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>变量就是一个用来存储数据类型的容器。</p>
+<h2 id="声明var-amp-let"><a href="#声明var-amp-let" class="headerlink" title="声明var&amp;let"></a>声明<code>var</code>&amp;<code>let</code></h2><p><code>var</code>会被变量提升，但是<code>let</code>没有。因此使用<code>var</code>时，可以根据需要多次声明相同名称的变量，但是<code>let</code>不能。</p>
+<h2 id="声明的意义"><a href="#声明的意义" class="headerlink" title="声明的意义"></a>声明的意义</h2><p>声明但不初始化变量就相当于让容器存在于执行环境中，但里面是“空”的，什么也不放，因而在控制台会返回undefined。</p>
+<p>没有声明也没有初始化的变量相当于执行环境中没有该变量，不存在容器，因而控制台直接会返回报错信息。</p>
+<h2 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h2><ul>
+<li>Number</li>
+</ul>
+<p>数值的数据分类有哪些，基本运算符有哪些，变量自增自减在控制台中的表现。</p>
+<ul>
+<li>String需要单引号或者双引号包围</li>
+</ul>
+<p>字符串中转义字符的使用：<code>\&#39;</code> </p>
+<p>字符串拼接：<code>myString1+myString2</code> </p>
+<p>利用字符串长度索引：<code>myString1[0]</code>&amp;<code>string1[string1.length-1]</code> </p>
+<p>查找子串： <code>myString1.indexOf(&#39;mySubstring1&#39;)</code></p>
+<p>切割子串： <code>myString1.slice(i,j)</code>第二个参数可选，如果没有传入那么一直切割到末尾，不会改变<code>myString1</code></p>
+<p>替换子串：<code>myString1.replace(&#39;mySubstring1&#39;, &#39;mySubstring2&#39;)</code>，返回更新后的字符串。</p>
+<blockquote>
+<p>如果要用新的字符串替换原来的字符串，一定不可以只有<code>newStory.replace(&#39;130&#39;, pound);</code>，这对原字符串并不会有任何影响，一定要<code>newStory = newStory.replace(&#39;130&#39;, pound);</code>才会修改原字符串。</p>
+</blockquote>
+<p>大小写：<code>myString1.toLowerCase()/toUpperCase()</code></p>
+<hr>
+<p>Number &amp; String类型互相转换</p>
+<p>Number(myString)可以将String类型转换为Number类型</p>
+<p>myNum.toString()可以讲Number类型转换为String类型</p>
+<hr>
+<ul>
+<li><p>Boolean可以取值true/false</p>
+</li>
+<li><p>Array是单个对象，用方括号包含很多元素，元素之间用逗号分隔，元素索引从0开始。</p>
+</li>
+</ul>
+<p>获取长度：<code>sequence.length</code></p>
+<p>添加末尾元素：<code>let length = sequence.push(element1)</code>返回新数组的长度</p>
+<p>删除末尾元素：<code>let removedItem = sequence.pop()</code>返回已删除的项目</p>
+<p>添加头部元素：<code>let length = sequence.unshift(element1)</code></p>
+<p>删除头部元素：<code>let removedItem = sequence.shift()</code>返回已删除的项目</p>
+<hr>
+<p>Array &amp; String类型互相转换</p>
+<p>当String中存在重复出现的分隔符时，可以将String分成许多元素放入Array中，如<code>let myArray = myString.split(&#39;,&#39;);</code></p>
+<p>当Array中的元素想通过某种方式连接起来变成String时，可以使用<code>let myString = myArray.join(&#39;,&#39;);</code>，也可以使用<code>let myString = myArray.toString();</code>。二者区别是join可以指定分隔符。</p>
+<hr>
+<ul>
+<li>Object</li>
+</ul>
+<p>JavaScript时一种动态类型语言，不需要人为指定变量包含什么类型的数据。你赋什么类型的值，变量就会是什么类型。可以利用<code>typeof</code>操作符检查传递给改操作符的变量的数据类型。</p>
+<h1 id="循环"><a href="#循环" class="headerlink" title="循环"></a>循环</h1><h2 id="for-loop"><a href="#for-loop" class="headerlink" title="for-loop"></a><code>for-loop</code></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (initializer; exit-condition; final-expression) &#123;</span><br><span class="line">  <span class="comment">// code to run</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="while-loop"><a href="#while-loop" class="headerlink" title="while loop"></a><code>while loop</code></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">initializer</span><br><span class="line"><span class="keyword">while</span> (exit-condition) &#123;</span><br><span class="line">  <span class="comment">// code to run</span></span><br><span class="line"></span><br><span class="line">  final-expression</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="do-while-loop"><a href="#do-while-loop" class="headerlink" title="do-while loop"></a><code>do-while loop</code></h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">initializer</span><br><span class="line"><span class="keyword">do</span> &#123;</span><br><span class="line">  <span class="comment">// code to run</span></span><br><span class="line"></span><br><span class="line">  final-expression</span><br><span class="line">&#125; <span class="keyword">while</span> (exit-condition)</span><br></pre></td></tr></table></figure>
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><p>函数是对象方法的一部分。</p>
+<p>内置浏览器函数基于浏览器API，并不是核心JavaScript语言的一部分，他们是方法。方法是在对象哪定义的函数，浏览器内置函数（方法）和变量（属性）储存在结构化对象里，使得代码管理更高效，易于处理。</p>
+<h2 id="声明与调用"><a href="#声明与调用" class="headerlink" title="声明与调用"></a>声明与调用</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myFunction</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;<span class="comment">//声明</span></span><br><span class="line">myFunction()<span class="comment">//调用</span></span><br></pre></td></tr></table></figure>
+<p>怎么样才算调用一个函数呢？函数名后面的括号叫做函数调用运算符(function invocation operator)。</p>
+<p>注意以下两种写法。</p>
+<p><code>btn.onclick = displayMessage;</code>的意思是当按钮被点击就运行该名称的函数。</p>
+<p><code>btn.onclick = displayMessage();</code>的意思是不需要点击按钮该函数就会被调用。</p>
+<p>为了改变第二种结果，最适合的写法应该是将要调用的函数包裹在匿名函数中</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">btn.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  displayMessage();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="匿名函数"><a href="#匿名函数" class="headerlink" title="匿名函数"></a>匿名函数</h2><p>一个没有名称的函数就是匿名函数，它本身不会做任何事情，一般将匿名函数和事件处理程序一起使用。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">myButton.onclick = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>还可以把匿名函数分配为多个变量值。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> myGreeting = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br><span class="line">myGreeting()<span class="comment">//调用</span></span><br></pre></td></tr></table></figure>
+<p>匿名函数也叫匿名表达式。函数声明会declaration hoisting，而函数表达式不会。</p>
+<h2 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h2><p>参数值放在函数括号内，可以叫做参数arguments，也被叫做属性properties/attributes。</p>
+<h2 id="函数作用域scope和冲突"><a href="#函数作用域scope和冲突" class="headerlink" title="函数作用域scope和冲突"></a>函数作用域scope和冲突</h2><p>所有函数的最外层被称为全局作用域。 在全局作用域内定义的值可以在任意地方访问。</p>
+<p>当你创建一个函数时，函数内定义的变量和其他东西都在它们自己的单独的范围内, 意味着它们被锁在自己独立的隔间中, 不能被函数外的代码访问。</p>
+<p>参数的存在就相当于把属于一个作用域的变量传递另一个作用域。</p>
+<h2 id="返回值"><a href="#返回值" class="headerlink" title="返回值"></a>返回值</h2><p>一些没有返回值的函数调用后在控制台输出就是空值void或未定义值undefined。</p>
+<p>通常函数返回值是用作中间步骤的计算结果，该结果可以用于计算的下一阶段。</p>
+<h1 id="事件"><a href="#事件" class="headerlink" title="事件"></a>事件</h1><p>每个可用的事件都会有一个<strong>事件处理器</strong>，也就是事件触发时会运行的代码块。当我们定义了一个用来回应事件被激发的代码块的时候，我们说我们<strong>注册了一个事件处理器</strong>。</p>
+<p>监听器留意事件是否发生，然后处理器就是对事件发生做出的回应。</p>
+<h2 id="响应网页事件的几种机制"><a href="#响应网页事件的几种机制" class="headerlink" title="响应网页事件的几种机制"></a>响应网页事件的几种机制</h2><h3 id="事件处理器属性"><a href="#事件处理器属性" class="headerlink" title="事件处理器属性"></a>事件处理器属性</h3><p>比如对于几乎所有HTML元素，都有<code>onclick</code>属性，和其他<code>.style,.textContent</code>一样。</p>
+<h3 id="行内事件处理器-不要使用"><a href="#行内事件处理器-不要使用" class="headerlink" title="行内事件处理器-不要使用"></a>行内事件处理器-不要使用</h3><p>也叫事件处理程序HTML属性，会混用HTML和JavaScript。</p>
+<h3 id="addEventListener"><a href="#addEventListener" class="headerlink" title="addEventListener()"></a>addEventListener()</h3><p>定义在DOM Level2 Events中的函数addEventListener()，接受两个参数。第一个参数是我们想要将处理器函数应用上去的时间名称，第二个是用来回应事件的函数，可以是一个匿名函数。</p>
+<p>相较于事件处理器属性被覆盖，addEventListener()可以实现一个监听器注册多个处理器。</p>
+<h2 id="事件对象"><a href="#事件对象" class="headerlink" title="事件对象"></a>事件对象</h2><p>有时候在处理函数内部，可一个固定指定名称的参数，如<code>event,evt,e</code>，这是事件对象，它被自动传递给事件处理函数。</p>
+<p>事件对象 <code>e</code> 的<code>target</code>属性始终是事件刚刚发生的元素的引用。</p>
+<h2 id="阻止默认行为"><a href="#阻止默认行为" class="headerlink" title="阻止默认行为"></a>阻止默认行为</h2><p>自定义注册表单。，当你填写详细信息并按提交按钮时，自然行为by default是将数据提交到服务器上的指定页面进行处理，并将浏览器重定向到某种“成功消息”页面（或 相同的页面，如果另一个没有指定。）</p>
+<p>但是当用户提交的数据并不正确时，开发人员希望停止提交信息到服务器，并给用户错误提示，需要在事件对象上调用<code>preventDefault()</code>函数，这样就停止了表单提交。</p>
+<h2 id="事件冒泡及捕获"><a href="#事件冒泡及捕获" class="headerlink" title="事件冒泡及捕获"></a>事件冒泡及捕获</h2><p>事件冒泡和捕捉是两种机制，主要描述当在一个元素上有两个相同类型的事件处理器被激活会发生什么。</p>
+<p>当一个事件发生在具有父元素的元素上时，现代浏览器运行两个不同的阶段：捕获阶段和冒泡阶段。</p>
+<p>在现代浏览器中，默认情况下，所有事件处理程序都在冒泡阶段进行注册。</p>
+<h3 id="捕获阶段："><a href="#捕获阶段：" class="headerlink" title="捕获阶段："></a>捕获阶段：</h3><ul>
+<li>浏览器检查元素的最外层祖先<code>&lt;html&gt;</code>，是否在捕获阶段中注册了一个<code>onclick</code>事件处理程序，如果是，则运行它。</li>
+<li>然后，它移动到<code>&lt;html&gt;</code>中单击元素的下一个祖先元素，并执行相同的操作，然后是单击元素再下一个祖先元素，依此类推，直到到达实际点击的元素。</li>
+</ul>
+<h3 id="冒泡阶段："><a href="#冒泡阶段：" class="headerlink" title="冒泡阶段："></a>冒泡阶段：</h3><ul>
+<li>浏览器检查实际点击的元素是否在冒泡阶段中注册了一个<code>onclick</code>事件处理程序，如果是，则运行它</li>
+<li>然后它移动到下一个直接的祖先元素，并做同样的事情，然后是下一个，等等，直到它到达<code>&lt;html&gt;</code>元素。</li>
+</ul>
+<h3 id="修复"><a href="#修复" class="headerlink" title="修复"></a>修复</h3><p>标准事件对象具有可用的名为 <code>stopPropagation()</code>的函数，当在事件对象上调用该函数时，它只会让当前事件处理程序运行，但事件不会在<strong>冒泡</strong>链上进一步扩大，因此将不会有更多事件处理器被运行(不会向上冒泡)。</p>
+<h3 id="事件委托"><a href="#事件委托" class="headerlink" title="事件委托"></a>事件委托</h3><blockquote>
+<p>Event delegation allows you to avoid adding event listeners to specific nodes;  instead, the event listener is added to one parent.  That event listener analyzes bubbled events to find a match on child elements.</p>
+</blockquote>
+<p>check the event object’s target property to gain a reference to the actual clicked node.</p>
+<p>虽然事件处理函数添加在父元素上，但通过if语句对事件对象进行条件判断，可以访问父元素及其内部子元素，从而实现特定的相应操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(e.target &amp;&amp; e.target.nodeName == <span class="string">&quot;LI&quot;</span>)</span><br></pre></td></tr></table></figure>
+<p>Using the <a target="_blank" rel="noopener" href="https://davidwalsh.name/element-matches-selector">Element.matches API</a>, we can see if the element matches our desired target.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (e.target &amp;&amp; e.target.matches(<span class="string">&quot;a.classA&quot;</span>)) </span><br></pre></td></tr></table></figure>
+<p><a target="_blank" rel="noopener" href="https://davidwalsh.name/event-delegate">参考</a></p>
+<h2 id="一些实作的易错点"><a href="#一些实作的易错点" class="headerlink" title="一些实作的易错点"></a>一些实作的易错点</h2><p>关于单引号的双引号的区分。规定自己对于html元素名称或者属性的引用都使用单引号，但对字符串统一使用双引号。如<code>if(btn.getAttribute(&#39;class&#39;) === &quot;dark&quot;)</code>。</p>
+<p>对属性赋值都是赋值字符串，如<code>overlay.style.backgroundColor = &quot;rgba(0, 0, 0, 0.5)&quot;;</code>，如果rgba没有加双引号，那最后javascript编译器会把它当作一个函数，从而报错。</p>
+<h1 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h1><p>对象是一个包含相关数据和方法的集合（通常由一些变量和函数组成，我们称之为对象里面的属性和方法）。</p>
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><p>对象包（object package，或者叫命名空间 namespace）存储（官方用语：<strong>封装</strong>）着对象的数据（常常还包括函数），使数据的组织和访问变得更容易了；对象也常用作数据存储体（data stores），用于在网络上运输数据，十分便捷 —— 也就是JSON(JavaScript对象表示法)。</p>
+<h2 id="对象字面量"><a href="#对象字面量" class="headerlink" title="对象字面量"></a>对象字面量</h2><p>一个对象由许多的成员组成，每一个成员都拥有一个名字（像上面的name、age），和一个值（如[‘Bob’, ‘Smith’]、32）。每一个名字/值（name/value）对被逗号分隔开，并且名字和值之间由冒号（:）分隔。</p>
+<p>对象成员的值可以是任意的，可以是字符串(string)，数字(number)，数组(array)，函数(function)。前三种属于资料项目，被称为对象的属性(property)；最后一个函数，允许对象对资料做一些操作，被称为对象的方法(method)。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> objectName = &#123;</span><br><span class="line">  member1Name : member1Value,</span><br><span class="line">  member2Name : member2Value,</span><br><span class="line">  member3Name : member3Value</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个如上所示的对象被称之为对象的字面量(literal)——手动的写出对象的内容来创建一个对象。</p>
+<h2 id="访问对象属性"><a href="#访问对象属性" class="headerlink" title="访问对象属性"></a>访问对象属性</h2><h3 id="点表示法"><a href="#点表示法" class="headerlink" title="点表示法"></a>点表示法</h3><p>使用点表示法(dot notation)来访问对象的属性和方法。</p>
+<p>对象的名字表现为一个命名空间(namespace)，它必须写在第一位。</p>
+<blockquote>
+<p>子命名空间</p>
+<p>可以用一个对象来做另一个对象成员的值。访问对象内的对象成员就相当于要用两次点表示法。</p>
+</blockquote>
+<p>紧接着是你想要访问的项目，标识可以是简单属性的名字，或者是数组属性的一个子元素，又或者是对象的方法调用。</p>
+<h3 id="括号表示法"><a href="#括号表示法" class="headerlink" title="括号表示法"></a>括号表示法</h3><p>另外一种访问属性的方式是使用括号表示法(bracket notation)，例如<code>person[&#39;age&#39;]</code>。</p>
+<p>对象有时被称之为关联数组(associative array)了——对象做了字符串到值的映射，而数组做的是数字到值的映射。</p>
+<h3 id="括号表示法与点表示法的区别"><a href="#括号表示法与点表示法的区别" class="headerlink" title="括号表示法与点表示法的区别"></a>括号表示法与点表示法的区别</h3><p>括号表示法能接受一个变量作为成员名字；点表示法只能接受字面量的成员的名字，不接受变量作为名字。</p>
+<h2 id="设置成员对象"><a href="#设置成员对象" class="headerlink" title="设置成员对象"></a>设置成员对象</h2><p>既可以对已有的成员的值进行改变，也可以创建新的成员并赋值。</p>
+<h2 id="this"><a href="#this" class="headerlink" title="this"></a><code>this</code></h2><p>关键字”this”指向了当前代码运行时的对象( 原文：the current object the code is being written inside )，它保证了当代码的上下文(context)改变时变量的值的正确性。</p>
+<p>在字面量的对象里this看起来不是很有用，但是当你动态创建一个对象（例如使用构造器）时它是非常有用的。</p>
+<h2 id="对象与类的关系"><a href="#对象与类的关系" class="headerlink" title="对象与类的关系"></a>对象与类的关系</h2><p>用类（class）的概念去描述一个对象。</p>
+<p>类并不完全是一个对象，它更像是一个定义对象特质的模板。 我们能够基于类创建出一些拥有class中属性及方法的对象。</p>
+<p>当一个对象需要从类中创建出来时，类的<strong>构造函数</strong>就会运行来创建这个实例。</p>
+<h2 id="创建对象的方式总结"><a href="#创建对象的方式总结" class="headerlink" title="创建对象的方式总结"></a>创建对象的方式总结</h2><h3 id="声明一个对象去创建对象"><a href="#声明一个对象去创建对象" class="headerlink" title="声明一个对象去创建对象"></a>声明一个对象去创建对象</h3><h3 id="使用构造函数创建对象"><a href="#使用构造函数创建对象" class="headerlink" title="使用构造函数创建对象"></a>使用构造函数创建对象</h3><h3 id="使用Object-构造函数创建对象"><a href="#使用Object-构造函数创建对象" class="headerlink" title="使用Object()构造函数创建对象"></a>使用<code>Object()</code>构造函数创建对象</h3><p>首先使用<code>var person1 = new Object();</code>创建一个空的对象。</p>
+<p>其次根据需要使用点或括号表示法向此对象添加属性和方法。</p>
+<hr>
+<p>也可以将对象文本传递给<code>Object()</code>构造函数作为参数。<code>var person1 = new Object(&#123;name: &#39;Chris&#39;, age: 38, greeting: function()&#123;&#125; &#125;);</code>。</p>
+<h3 id="基于现有对象创建新对象"><a href="#基于现有对象创建新对象" class="headerlink" title="基于现有对象创建新对象"></a>基于现有对象创建新对象</h3><p>使用<code>Object2.create(Object1)</code>，基于现有对象创建新的对象， 它们具有相同的属性和方法。</p>
+<p>结合原谅来看，这个函数做的就是从指定原型对象<code>Object1</code>创建一个新的对象<code>Object2</code>，在控制台输入<code>Object2.__prooto__</code>返回的就是对象<code>Object1</code>。</p>
+<h1 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h1><p>JavaScript 常被描述为一种<strong>基于原型的语言 (prototype-based language)</strong>。</p>
+<p>每个对象拥有一个<strong>原型对象</strong>，对象以其原型为模板、从原型继承方法和属性。原型对象也可能拥有原型，并从中继承方法和属性，一层一层、以此类推。这种关系常被称为<strong>原型链 (prototype chain)</strong>，它解释了为何一个对象会拥有定义在其他对象中的属性和方法。</p>
+<h2 id="prototype属性"><a href="#prototype属性" class="headerlink" title="prototype属性"></a><code>prototype</code>属性</h2><p>如果某一对象把属性定义在<code>prototype</code>属性之中，那就意味着这个对象允许其他对象继承这些方法。也就是说该对象可继承的内容都放在了该对象的<code>prototype</code>这个子命名空间中，其实这个子命名空间也是一个对象。</p>
+<p>其他不位于<code>prototype</code> 对象内的成员，不会被“对象实例”或“继承自 <code>Object()</code> 的对象类型”所继承。这些方法/属性仅能被 <code>Object()</code> 构造器自身使用。</p>
+<h2 id="constructor属性"><a href="#constructor属性" class="headerlink" title="constructor属性"></a><code>constructor</code>属性</h2><p>每个实例对象都从原型中继承了一个constructor属性，该属性指向了用于构造此实例对象的构造函数。</p>
+<p>某个对象的<code>constructor</code>属性可以告诉我们该对象从什么对象继承而来。可以获取作为构造器的对象的属性。</p>
+<p>在对象的<code>constructor</code>属性末尾添加一对圆括号（括号中包含所需的参数），并在前面添加 <code>new</code> 关键字，从而用这个构造器创建另一个对象实例。</p>
+<h2 id="原型存在的意义"><a href="#原型存在的意义" class="headerlink" title="原型存在的意义"></a>原型存在的意义</h2><p>如果某个对象的原型更新了方法，该对象可以通过上溯圆形链调用原型的方法，而不必把上游对象的方法复制到该对象中。</p>
+<h2 id="利用原型定义对象"><a href="#利用原型定义对象" class="headerlink" title="利用原型定义对象"></a>利用原型定义对象</h2><p>一种极其常见的对象定义模式是，在构造器（函数体）中定义属性、在 <code>prototype</code> 属性上定义方法（也就是将方法都放在构造器的<code>prototype</code> 属性中）。如此，构造器只包含属性定义，而方法则分装在不同的代码块，代码更具可读性。</p>
+<h2 id="实际操作中的一些问题"><a href="#实际操作中的一些问题" class="headerlink" title="实际操作中的一些问题"></a>实际操作中的一些问题</h2><p>实现继承</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Shape</span>(<span class="params">x, y, velX, velY, exist</span>)</span>&#123;</span><br><span class="line">    <span class="comment">// 将属性值当作构造函数的参数传入，使用this指向对象</span></span><br><span class="line">    <span class="comment">// 注意对象要大写</span></span><br><span class="line">    <span class="built_in">this</span>.x = x;</span><br><span class="line">    <span class="built_in">this</span>.y = y;</span><br><span class="line">    <span class="built_in">this</span>.velX = velX;</span><br><span class="line">    <span class="built_in">this</span>.velY = velY;</span><br><span class="line">    <span class="built_in">this</span>.exist = exist;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ball</span>(<span class="params">x, y, velX, velY, exist, size, color</span>)</span>&#123;</span><br><span class="line">  Shape.call(<span class="built_in">this</span>, x, y, velX, velY, exist); </span><br><span class="line">  <span class="comment">// 继承属性</span></span><br><span class="line">  <span class="comment">// 需要注意的是传入call函数的参数一定也要出现在构造函数的参数中</span></span><br><span class="line">  <span class="built_in">this</span>.size = size;</span><br><span class="line">  <span class="built_in">this</span>.color = color;</span><br><span class="line">  <span class="built_in">this</span>.exist = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构造函数的参数与确定属性值的关系</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">EvilCircle</span>(<span class="params"> x, y,exist, color, size</span>)</span>&#123;</span><br><span class="line">  Shape.call(<span class="built_in">this</span>, x, y, exist);</span><br><span class="line">  <span class="built_in">this</span>.color = color;</span><br><span class="line">  <span class="built_in">this</span>.size = size;</span><br><span class="line">  <span class="built_in">this</span>.velX = <span class="number">20</span>;</span><br><span class="line">  <span class="built_in">this</span>.velY = <span class="number">20</span>;</span><br><span class="line">  <span class="comment">// 这里确定值的velX和velY就没有作为参数传入</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构造函数和原型之间的关系</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 这是构造函数，需要大写</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Ball</span>(<span class="params">x, y, velX, velY, exist, size, color</span>)</span>&#123;</span><br><span class="line">  Shape.call(<span class="built_in">this</span>, x, y, velX, velY, exist); </span><br><span class="line">  <span class="comment">// 继承属性</span></span><br><span class="line">  <span class="comment">// 需要注意的是传入call函数的参数一定也要出现在构造函数的参数中</span></span><br><span class="line">  <span class="built_in">this</span>.size = size;</span><br><span class="line">  <span class="built_in">this</span>.color = color;</span><br><span class="line">  <span class="built_in">this</span>.exist = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 这是原型对象，用于定义方法，可以通过this访问构造函数的属性</span></span><br><span class="line">Ball.prototype.draw = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  ctx.beginPath();</span><br><span class="line">  ctx.fillStyle = <span class="built_in">this</span>.color;</span><br><span class="line">  ctx.arc(<span class="built_in">this</span>.x, <span class="built_in">this</span>.y, <span class="built_in">this</span>.size, <span class="number">0</span>, <span class="number">2</span>*<span class="built_in">Math</span>.PI);</span><br><span class="line">  ctx.fill();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="异步"><a href="#异步" class="headerlink" title="异步"></a>异步</h1><p>一个线程是一个基本的处理过程，程序用它来完成任务。每个线程一次只能执行一个任务。</p>
+<p>JavaScript 传统上是单线程的。即使有多个内核，也只能在单一线程上运行多个任务，此线程称为主线程（<strong>main thread</strong>）。</p>
+<h2 id="Web-workers"><a href="#Web-workers" class="headerlink" title="Web workers"></a>Web workers</h2><p>借助web workers把一些任务交给一个名为worker的单独的线程。一般来说，用一个worker来运行一个耗时的任务，主线程就可以处理用户的交互（避免了阻塞）。</p>
+<h2 id="异步callbacks"><a href="#异步callbacks" class="headerlink" title="异步callbacks"></a>异步callbacks</h2><p><strong>异步callbacks函数</strong>只不过是作为<strong>参数</strong>传递给那些在后台执行的<strong>其他函数</strong>。</p>
+<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>涉及两个函数，他们的关系是函数和参数，回调函数和调用回调函数的函数（包含函数）。</p>
+<p>当我们把<strong>回调函数作为一个参数传递给另一个函数</strong>时，仅仅是把<strong>回调函数定义作为参数传递</strong>过去——回调函数并没有立刻执行，回调函数会在包含它的函数的某个地方异步执行，<strong>包含函数负责在合适的时候（例如触发了某个事件）执行回调函数</strong>。</p>
+<p><code>addEventListener()</code>的第二个参数就是异步callback函数。第一个参数是侦听的事件类型，第二个就是事件发生时调用的回调函数。</p>
+<h3 id="回调函数和异步的关系"><a href="#回调函数和异步的关系" class="headerlink" title="回调函数和异步的关系"></a>回调函数和异步的关系</h3><p>不是所有的回调函数都是异步的。</p>
+<p>当遍历数组时使用的<code>Array.prototype.forEach()</code>函数需要的参数就是一个回调函数，它无需等待立刻运行。</p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>回调地狱与每层嵌套都需要调用一个失败回调。</p>
+<h2 id="Promises"><a href="#Promises" class="headerlink" title="Promises"></a><code>Promises</code></h2><h3 id="基本流程"><a href="#基本流程" class="headerlink" title="基本流程"></a>基本流程</h3><h4 id="创建最初的promise"><a href="#创建最初的promise" class="headerlink" title="创建最初的promise"></a>创建最初的promise</h4><p>首先，为<code>fectch()</code>传入网络资源的URL作为参数。该函数返回一个<code>promise</code>对象，代表了异步操作完成或失败的对象。</p>
+<hr>
+<p>这个最初既不成功也不失败的中间状态下的promise的官方术语叫作<strong>pending</strong>。</p>
+<hr>
+<h4 id="返回promise"><a href="#返回promise" class="headerlink" title="返回promise"></a>返回promise</h4><p>其次，使用<code>then()</code>块，传入回调函数作为参数。如果前一个操作成功，该函数将运行，并且<strong>每个回调都接收前一个成功操作的结果作为输入</strong>，因此您可以继续对它执行其他操作。</p>
+<p>每个<code>.then()</code>块返回另一个promise，这意味着可以将多个<code>.then()</code>块链接到另一个块上，这样就可以依次执行多个异步操作。</p>
+<p>如果任何一个<code>.then()</code>块返回失败，就运行末尾的<code>catch()</code>块，也是传入一个回调函数作为参数，提供了一个错误对象，可用来报告发生的错误类型。</p>
+<hr>
+<p>当promise返回时，称为 <strong>resolved</strong>（已解决）.</p>
+<ol>
+<li>一个成功<strong>resolved</strong>的promise称为<strong>fullfilled</strong>（<strong>实现</strong>）。它返回一个值，可以通过将<code>.then()</code>块链接到promise链的末尾来访问该值。<code>.then()</code>块中的执行程序函数将包含promise的返回值。</li>
+<li>一个不成功<strong>resolved</strong>的promise被称为<strong>rejected</strong>（<strong>拒绝</strong>）了。它返回一个原因（<strong>reason</strong>），一条错误消息，说明为什么拒绝promise。可以通过将<code>.catch()</code>块链接到promise链的末尾来访问此原因。</li>
+</ol>
+<hr>
+<h3 id="promise完成后运行一段代码"><a href="#promise完成后运行一段代码" class="headerlink" title="promise完成后运行一段代码"></a>promise完成后运行一段代码</h3><p>在promise完成后，你可能希望运行最后一段代码，无论它是否已实现（fullfilled）或被拒绝（rejected）。</p>
+<h3 id="then-块与AddEventListener"><a href="#then-块与AddEventListener" class="headerlink" title=".then()块与AddEventListener()"></a><code>.then()</code>块与<code>AddEventListener()</code></h3><p><code>.then()</code>块的工作方式类似于使用<code>AddEventListener()</code>向对象添加事件侦听器时的方式。</p>
+<blockquote>
+<p>最显着的区别是<code>.then()</code>每次使用时只运行一次，而事件监听器可以多次调用。</p>
+</blockquote>
+<h3 id="流程合并"><a href="#流程合并" class="headerlink" title="流程合并"></a>流程合并</h3><p>请记住，履行的promise所返回的值将成为传递给下一个 <code>.then()</code> 块的executor函数的参数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">fetch(<span class="string">&#x27;coffee.jpg&#x27;</span>)</span><br><span class="line">.then(<span class="function"><span class="params">response</span> =&gt;</span> response.blob())</span><br><span class="line">.then(<span class="function"><span class="params">myBlob</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> objectURL = URL.createObjectURL(myBlob);</span><br><span class="line">  <span class="keyword">let</span> image = <span class="built_in">document</span>.createElement(<span class="string">&#x27;img&#x27;</span>);</span><br><span class="line">  image.src = objectURL;</span><br><span class="line">  <span class="built_in">document</span>.body.appendChild(image);</span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="function"><span class="params">e</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;There has been a problem with your fetch operation: &#x27;</span> + e.message);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="多个promise协同工作"><a href="#多个promise协同工作" class="headerlink" title="多个promise协同工作"></a>多个promise协同工作</h3><p><code>Promise.all()</code>函数将一个promises数组，也就是多个pending，作为输入参数，并返回一个新的Promise对象，只有当数组中的所有promise都满足时才会满足。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Promise</span>.all([a, b, c]).then(<span class="function"><span class="params">values</span> =&gt;</span> &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>只要一个被拒绝了，该函数整体就不会返回promise。需要逐个检查promise返回了什么。</p>
+<h3 id="自定义Promise"><a href="#自定义Promise" class="headerlink" title="自定义Promise"></a>自定义Promise</h3><p>使用<code>Promise()</code>构造函数构建自己的promise。</p>
+<p><code>resolve()</code>和<code>reject()</code>是用来<strong>实现</strong>和<strong>拒绝</strong>新创建的promise的函数。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> timeoutPromise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    resolve();<span class="comment">//这个函数表明了调用该promise成功后，作为参数传递给后面的then块的值</span></span><br><span class="line">    reject();<span class="comment">//这个函数表明了调用该promise失败后，作为参数传递给最后的catch块的值，一般是要和条件判断一起写的。</span></span><br><span class="line">    </span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 上面的写法也可以写成一个函数，函数返回的return是new Promise</span></span><br></pre></td></tr></table></figure>
+<h2 id="async-await"><a href="#async-await" class="headerlink" title="async/await"></a>async/await</h2><p>这两个关键字async/await是基于promises的语法糖，使异步代码更易于编写和阅读。</p>
+<h3 id="async"><a href="#async" class="headerlink" title="async"></a>async</h3><p>在函数声明前使用<code>async</code>关键字，使该函数称为异步函数。函数声明，函数表达式，箭头函数都可以。</p>
+<p>例如，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">hello</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="string">&quot;Hello&quot;</span> &#125;; <span class="comment">//异步函数</span></span><br><span class="line"><span class="keyword">let</span> hello = <span class="keyword">async</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="string">&quot;Hello&quot;</span> &#125;; <span class="comment">// 异步函数表达式</span></span><br><span class="line"><span class="keyword">let</span> hello = <span class="keyword">async</span> () =&gt; &#123; <span class="keyword">return</span> <span class="string">&quot;Hello&quot;</span> &#125;; <span class="comment">//箭头函数</span></span><br></pre></td></tr></table></figure>
+<p>异步函数是一个知道怎么使用<code>await</code>关键字调用异步代码的函数。调用异步函数会返回一个<code>promise</code>。</p>
+<h3 id="await"><a href="#await" class="headerlink" title="await"></a>await</h3><p>await关键字与异步函数一起使用，且 <strong>await只在异步函数里面才起作用</strong>。</p>
+<h4 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h4><p>可以在调用任何返回Promise的函数前使用 <strong>await</strong>，包括Web API函数，然后将这个返回的量赋值到一个变量去。</p>
+<h4 id="WHY"><a href="#WHY" class="headerlink" title="WHY"></a>WHY</h4><p>await作为 <code>.then()</code> 代码块的替代存在，可以让我们用更少的<code>.then()</code>。这让代码的形式看起来更像同步代码，能够将结果返回到中间变量去，而不是像链条一样把一个输出连到另一个的输入。</p>
+<p>await关键字使JavaScript运行时暂停于此行，允许其他代码在此期间执行，直到异步函数调用返回其结果。一旦完成，您的代码将继续从下一行开始执行。</p>
+<h2 id="超时和间隔"><a href="#超时和间隔" class="headerlink" title="超时和间隔"></a>超时和间隔</h2><p>以下介绍的三个异步函数都是在主线程上运行的。在给定的时间间隔之前和重复调用之间可以在主线程上运行其他代码。</p>
+<h3 id="setTimeout"><a href="#setTimeout" class="headerlink" title="setTimeout()"></a><code>setTimeout()</code></h3><p>在指定的时间后执行一段代码。</p>
+<h4 id="传入参数"><a href="#传入参数" class="headerlink" title="传入参数"></a>传入参数</h4><ul>
+<li>回调函数/函数引用</li>
+<li>以毫秒为单位的时间间隔：如果指定为0，函数将尽快运行，而不是立即运行。因为需要主线程的堆栈为空才能运行回调函数</li>
+<li>希望传递给回调函数的参数值，在参数列表后面添加即可。</li>
+</ul>
+<h4 id="取消任务"><a href="#取消任务" class="headerlink" title="取消任务"></a>取消任务</h4><p><code>setTimeout()</code> 返回一个标志符变量用来引用这个间隔。取消该超时任务使用函数<code>clearTimeout(setTimeout(params))</code>。</p>
+<h3 id="setInterval"><a href="#setInterval" class="headerlink" title="setInterval()"></a><code>setInterval()</code></h3><p>以固定的时间间隔重复运行一段代码，例如动画。这与<code>setTimeout()</code>的工作方式非常相似。</p>
+<h4 id="传入参数-1"><a href="#传入参数-1" class="headerlink" title="传入参数"></a>传入参数</h4><p>作为第一个参数传递给它的函数，<strong>重复</strong>执行的时间不少于第二个参数给出的毫秒数，<strong>而不是一次执行</strong>。</p>
+<p>可以将正在执行的函数所需的任何参数作为 <code>setInterval()</code> 调用的后续参数传递。</p>
+<h4 id="取消任务-1"><a href="#取消任务-1" class="headerlink" title="取消任务"></a>取消任务</h4><p><code>setInterval()</code> 返回一个确定的值，稍后你可以用它来取消间隔任务。</p>
+<p>通过将<code>setInterval</code>()调用返回的标识符传递给<code>clearInterval</code>()函数来取消间隔任务。</p>
+<blockquote>
+<p>递归调用<code>setTimeout()</code>和调用<code>setInterval()</code>效果类似。</p>
+<p>二者微妙区别在于：</p>
+<p><code>setInterval()</code>的执行时间包括了我们想要运行的代码所花费的时间。</p>
+<p><code>setTimeout()</code>每次都等代码运行完了之后，开始计算等待的时间，时间间隔总是相同。</p>
+</blockquote>
+<h3 id="requestAnimationFrame"><a href="#requestAnimationFrame" class="headerlink" title="requestAnimationFrame()"></a><code>requestAnimationFrame()</code></h3><p><code>setInterval()</code>的现代版本，在浏览器下一次重新绘制显示之前执行指定的代码块，因此该方法将重新加载页面之前要调用的回调函数作为参数。</p>
+<h4 id="WHY-1"><a href="#WHY-1" class="headerlink" title="WHY"></a>WHY</h4><p><strong>动画的平滑度直接取决于动画的帧速率，并以每秒帧数（fps）为单位进行测量。</strong>由于大多数屏幕的刷新率为60Hz，因此在使用web浏览器时，可以达到的最快帧速率是每秒60帧（FPS）。</p>
+<p><code>requestAnimationFrame()</code> 总是试图<strong>尽可能接近60帧/秒的值</strong>。</p>
+<p>当然有时这是不可能的如果你有一个非常复杂的动画，你是在一个缓慢的计算机上运行它，你的帧速率将更少。<code>requestAnimationFrame()</code> 会<strong>尽其所能利用现有资源提升帧速率。</strong></p>
+<h4 id="使用-1"><a href="#使用-1" class="headerlink" title="使用"></a>使用</h4><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">draw</span>(<span class="params">timestamp</span>) </span>&#123;</span><br><span class="line">   <span class="comment">// Drawing code goes here</span></span><br><span class="line">    <span class="keyword">if</span>(!startTime) &#123;</span><br><span class="line">      startTime = timestamp;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">   currentTime = timestamp - startTime;</span><br><span class="line"></span><br><span class="line">   <span class="comment">// Do something based on current time</span></span><br><span class="line">    </span><br><span class="line">   requestAnimationFrame(draw);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">draw();</span><br></pre></td></tr></table></figure>
+<p>传递给 <code>requestAnimationFrame()</code> 函数的实际回调也可以被赋予一个参数（一个时间戳值），表示自 <code>requestAnimationFrame()</code> 开始运行以来的时间。</p>
+<blockquote>
+<p>模版字符串</p>
+<p><code>$&#123;var&#125;</code>是变量的占位符，常用语字符串拼接。在实际开发中一般在ajax请求中用<code>不变的html$&#123;变量&#125;html标签</code>代替以前传统复杂的单引号双引号与+的拼接。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">spinner.style.transform = <span class="string">&#x27;rotate(&#x27;</span> + rotateCount +<span class="string">&#x27;deg)&#x27;</span>;</span><br><span class="line"></span><br><span class="line">spinner.style.transform = <span class="string">`rotate(<span class="subst">$&#123;rotateCount&#125;</span>deg)`</span>;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h4 id="问题-1"><a href="#问题-1" class="headerlink" title="问题"></a>问题</h4><p>requestAnimationFrame() 的限制之一是无法选择帧率。他总是尽可能地逼近60fps。</p>
+<p>有的时候反而需要限制帧率，比如老式动画。如果需要以较慢的帧速率运行动画，则需要使用<code>setInterval（）</code>或递归的<code>setTimeout（）</code>。</p>
+<h1 id="API"><a href="#API" class="headerlink" title="API"></a>API</h1><h2 id="共性"><a href="#共性" class="headerlink" title="共性"></a>共性</h2><h3 id="基于对象"><a href="#基于对象" class="headerlink" title="基于对象"></a>基于对象</h3><p>API使用一个或多个对象来与JavaScript的代码交互，这些对象的功能是：API使用的数据容器（包含在对象属性中），API提供的功能（包含在对象方法中）。</p>
+<h3 id="可识别的入口点"><a href="#可识别的入口点" class="headerlink" title="可识别的入口点"></a>可识别的入口点</h3><p>文档对象模型 (DOM) API的入口点就是Document对象。</p>
+<p>Canvas API需要为要编写的API代码创建特定的上下文。例如</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> canvas = <span class="built_in">document</span>.querySelector(<span class="string">&#x27;canvas&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> ctx = canvas.getContext(<span class="string">&#x27;2d&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="使用事件来处理状态的变化"><a href="#使用事件来处理状态的变化" class="headerlink" title="使用事件来处理状态的变化"></a>使用事件来处理状态的变化</h3><p>一些Web API不包含事件，但有些包含一些事件。当事件触发时，允许我们运行函数的处理程序属性通常在单独的 “Event handlers”(事件处理程序) 部分的参考资料中列出。</p>
+<h2 id="文档操作的API"><a href="#文档操作的API" class="headerlink" title="文档操作的API"></a>文档操作的API</h2><h3 id="web页面构成"><a href="#web页面构成" class="headerlink" title="web页面构成"></a>web页面构成</h3><p>window是载入浏览器的标签，用<code>window</code>对象来表示。通过调用该对象的方法，可以返回窗口的大小，操作载入窗口的文档等等。</p>
+<p>navigator是浏览器存在于web上的状态和标识（即用户代理），用<code>navigator</code>对象来表示，通过调用该对象的方法，可以获取用户摄像头的地理信息、偏好语言、多媒体流等。</p>
+<p>document是载入窗口的实际页面，用<code>document</code>对象表示，可以返回、操作文档中HTML和CSS上的信息。</p>
+<h3 id="DOM树"><a href="#DOM树" class="headerlink" title="DOM树"></a>DOM树</h3><p>元素节点、根节点、子节点、后代节点、父节点、兄弟节点、文本节点等。</p>
+<p>主要需要弄清楚子节点和后代节点的关系。子节点是<strong>直接</strong>位于另一个节点内的节点，后代节点是位于另一个节点内<strong>任意</strong>位置的节点。</p>
+<blockquote>
+<p>依据DOM元素存在的各种事件，考虑的角度应该是在创建这个对象的时候就为它添加对应的事件，而不是说在这个事件要发生的时候去考虑该怎么做。</p>
+<p>input输入框的内容是通过value属性获取的，<code>let content = input.value;</code>。对input输入框的操作还涉及了自动对焦，<code>input.focus();</code>。</p>
+<p>span这种行内元素的内容是通过innerHTML确定的，<code>span.innerHTML = content;</code>。</p>
+</blockquote>
+<h3 id="操作DOM元素"><a href="#操作DOM元素" class="headerlink" title="操作DOM元素"></a>操作DOM元素</h3><h4 id="获取"><a href="#获取" class="headerlink" title="获取"></a>获取</h4><p><code>Document.querySelector()</code>允许使用CSS选择器选择元素，它调用会匹配它在文档中遇到的第一个匹配的元素。</p>
+<p>如果需要选择多个元素，可以使用<code>Document.querySelectorAll()</code>。会返回一个存放了这些元素的array。</p>
+<p>一般来说<strong>对DOM元素的引用全部创建为常量</strong>，因为这些引用在应用程序的生命周期中不需要更改。</p>
+<blockquote>
+<p>也有其他方法比如，<code>document.getElementById()/getElementByTagName()</code>，分别传入id属性值和html元素标签名。</p>
+</blockquote>
+<h4 id="新建-放置"><a href="#新建-放置" class="headerlink" title="新建/放置"></a>新建/放置</h4><p>新建元素使用<code>Document.vreateElement()</code>，放置使用<code>Node.appendChild()</code>。</p>
+<p>新建文本节点要用<code>Document.createTextNode()</code>，放置使用<code>Node.appendChild()</code>。</p>
+<h4 id="移动-删除"><a href="#移动-删除" class="headerlink" title="移动/删除"></a>移动/删除</h4><p>基于现有元素做一个副本，然后把副本移动到其他节点，需要使用<code>Node.cloneNode()</code>。</p>
+<p>删除节点需要知道父亲节点的引用和要删除节点的引用，<code>Node.removeChild()</code>；但是不知道父亲节点的引用，需要问询父亲节点<code>linkPara.parentNode.removeChild(linkPara);</code>。</p>
+<h3 id="操作样式"><a href="#操作样式" class="headerlink" title="操作样式"></a>操作样式</h3><p>有两种方式。</p>
+<p>第一种是直接想要动态设置样式的内部元素添加内联样式。通过<code>HTMLElement.style</code>属性来实现，这个属性包含了文档中每一个元素的内联样式的信息。载入页面后会直接看到样式应用到HTML文件对应的元素。</p>
+<p>第二种是使用<code>Element.setAttribute(attribute, value)</code>。</p>
+<h2 id="从服务器获取数据的API"><a href="#从服务器获取数据的API" class="headerlink" title="从服务器获取数据的API"></a>从服务器获取数据的API</h2><p>主要涉及两个常用API，一个是<code>XMLHttpRequest</code>，另一个是<code>Fetch</code>。这些API允许网页直接对服务器上可用的特定资源进行HTTP请求，并在显示之前根据需要对数据进行格式化。</p>
+<blockquote>
+<p><strong>在早期，这种通用技术被称为</strong>Asynchronous JavaScript and XML<strong>（Ajax）</strong></p>
+</blockquote>
+<p>第三方API根植于第三方浏览器，要通过JavaScript获取，首先要连接到它的功能接口上并使其在页面上生效。</p>
+<h3 id="使用第三方API"><a href="#使用第三方API" class="headerlink" title="使用第三方API"></a>使用第三方API</h3><p>首先就是要阅读第三方API的官方文档了解应该如何使用。</p>
+<p>其次需要向第三方API的提供者申请使用密钥。</p>
+<p>浏览器API通常有一个安全性提示，在第三方API中，使用<strong>API KEY</strong>来允许开发人员访问API功能，但是如果开发者恶意使用API来侵犯用户隐私，API的提供者可以根据密钥撤销该开发者的API使用权。</p>
+<h4 id="引入第三方库"><a href="#引入第三方库" class="headerlink" title="引入第三方库"></a>引入第三方库</h4><p>需要引入一个<code>&lt;script&gt;&lt;/script&gt;</code>元素连接到第三方服务器所开放的JavaScript库。</p>
+<p>谷歌地图的API如下。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script type=<span class="string">&quot;text/javascript&quot;</span> src=<span class="string">&quot;https://maps.google.com/maps/api/js?key=AIzaSyDDuGt0E5IEGkcE6ZfrKfUtE9Ko_de66pA&quot;</span>&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="基于URL请求"><a href="#基于URL请求" class="headerlink" title="基于URL请求"></a>基于URL请求</h4><p>一般此类API都遵循RESTful API的设计指南，遵循域名、API版本、Endpoint、Filtering过滤信息参数、状态码、错误处理等相关规定。</p>
+<ul>
+<li><p>利用字符串操作等方式创建相应的URL</p>
+<ul>
+<li><p>首先应当有一个baseURL</p>
+</li>
+<li><p>建立API和本地应用的链接<code>?api-key=$&#123;key&#125;</code></p>
+<p>每次向服务器对应的 URL 发起 get 请求，都需要把 API key 作为 get 请求的参数。</p>
+</li>
+<li><p>个性化请求参数<code>&amp;page=$&#123;pageNumber&#125;</code></p>
+</li>
+</ul>
+</li>
+<li><p>利用URL从API请求数据，结合Fetch方法/XMLHTTPRequest方法。</p>
+</li>
+<li><p>对接收到的JSON数据进行解析，拆分显示到当前HTML的各个元素。</p>
+</li>
+</ul>
+<h2 id="用于绘制和操作图形的API"><a href="#用于绘制和操作图形的API" class="headerlink" title="用于绘制和操作图形的API"></a>用于绘制和操作图形的API</h2><p>主要基于<code>&lt;canvas&gt;</code>讲解。</p>
+<h3 id="基本准备"><a href="#基本准备" class="headerlink" title="基本准备"></a>基本准备</h3><ul>
+<li>在<code>body</code>中添加带class的<code>canvas</code>元素并在JS中选择该canvas元素</li>
+<li>获取该画布上下文canvas context并完成设置<code>var ctx = canvas.getContext(&#39;2d&#39;);</code>，还可以选择wbgl1和webgl2。这里的<code>ctx</code>是一个<code>CanvasRenderingContext2D</code>对象。</li>
+<li>画布原点默认是在<code>(0,0)</code>，如需改变，使用<code>ctx.translate()</code>函数，将画布原点移动到指定坐标。</li>
+</ul>
+<h3 id="绘制基本形状"><a href="#绘制基本形状" class="headerlink" title="绘制基本形状"></a>绘制基本形状</h3><ul>
+<li><p>内容填充与描绘边</p>
+<p><code>ctx.fillStyle = &#39;&#39;; ctx.fillRect()</code></p>
+<p> <code>ctx.storkeStyle = &#39;&#39;; ctx.lineWidth = ; ctx.strokeRect();</code></p>
+</li>
+<li><p>路径绘制与画线自定义形状</p>
+<p>前期准备确定一下<code>ctx.fillStyle = &#39;&#39;</code>，即要画什么颜色。</p>
+<ul>
+<li><p>第一步：产生钢笔，并移动钢笔，这个步骤不会绘制任何内容<code>ctx.beginPath(); ctx.moveTo();</code></p>
+</li>
+<li><p>第二步：移动钢笔到多个计算好坐标的位置，形成闭合路径 <code>ctx.lineTo();</code></p>
+</li>
+<li><p>第三步：选择填充还是描边这两种行为 <code>ctx.fill(); ctx.stroke();</code></p>
+</li>
+</ul>
+</li>
+<li><p>画圆/画弧</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ctx.fillStyle = <span class="string">&#x27;yellow&#x27;</span>;</span><br><span class="line">ctx.beginPath();</span><br><span class="line">ctx.arc(<span class="number">200</span>, <span class="number">106</span>, <span class="number">50</span>, degToRad(<span class="number">-45</span>), degToRad(<span class="number">45</span>), <span class="literal">true</span>);</span><br><span class="line">ctx.lineTo(<span class="number">200</span>, <span class="number">106</span>);</span><br><span class="line">ctx.fill();</span><br></pre></td></tr></table></figure>
+<ul>
+<li>填充文字</li>
+</ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">ctx.fillStyle = <span class="string">&#x27;red&#x27;</span>; </span><br><span class="line"><span class="comment">// ctx.strokeStyle = &#x27;white&#x27;; </span></span><br><span class="line"><span class="comment">// ctx.lineWidth = 1;</span></span><br><span class="line"></span><br><span class="line">ctx.font = <span class="string">&#x27;48px georgia&#x27;</span>;</span><br><span class="line">ctx.fillText(<span class="string">&#x27;Canvas text&#x27;</span>, <span class="number">50</span>, <span class="number">150</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ul>
+<li>图片嵌入</li>
+</ul>
+<p>首先，使用<code>Image()</code>构造器创建一个新的<code>HTMLImageElement</code>对象，返回对象的类型与非空<code>&lt;img&gt;</code>元素的引用一致，设置改图片的src属性</p>
+<p>其次使用<code>ctx.drawImage()</code>函数来嵌入图片。由于需要事先确保图片已经载入完毕，要在图片的<code>onload</code>事件处理器中调用嵌入图片的函数。</p>
+<h3 id="动画"><a href="#动画" class="headerlink" title="动画"></a>动画</h3><p><code>window.requestAnimationFrame()</code>只接受一个参数，这个参数是<strong>一个每帧都要运行的函数名</strong>，因为请注意每一帧我们都整体清除画布并重新渲染所有内容。</p>
+<p>这个函数传入该方法后就会在一秒内被重复运行多次。下一次浏览器准备好更新屏幕时，将会调用你的函数。如果你的函数向动画中绘制了更新内容，则在函数结束前再次调用 <code>requestAnimationFrame()</code>，动画循环得以保留。</p>
+<p>只有在停止调用 <code>requestAnimationFrame()</code> 时，或 <code>requestAnimationFrame()</code> 调用后、帧调用前调用了 <code>window.cancelAnimationFrame()</code>时，循环才会停止。</p>
+<h4 id="实现步骤"><a href="#实现步骤" class="headerlink" title="实现步骤"></a>实现步骤</h4><ol>
+<li>清除画布内容（可用 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/fillRect"><code>fillRect()</code></a> 或 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/clearRect"><code>clearRect()</code></a>）。</li>
+<li>（在需要时）用 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/save"><code>save()</code></a> 保存状态。（在进行下一步前保存所更新的设置，一般在复杂环境中用到）</li>
+<li>绘制动画图形。</li>
+<li>使用 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasRenderingContext2D/restore"><code>restore()</code></a> 恢复第 2 步中保存的状态。</li>
+<li>调用 <code>requestAnimationFrame()</code> 准备下一帧动画</li>
+</ol>
+<hr>
+<p>3D画布内容通过WebGL API实现，WebGL基于Open GL图形编程语言实现，可以直接与GPU通信，更类似C++的底层语言。</p>
+<p>常用的第三方API有<code>three.js/PlayCanvas</code>等。</p>
+<p>使用three.js的基本步骤如下：</p>
+<ul>
+<li>构造一个新的3D场景</li>
+<li>为该3D场景添加摄影机，代表绘图语境中观察着视角</li>
+<li>指定渲染器，并将3D画布与DOM对象关联</li>
+<li>创建基于纹理的画布内容</li>
+</ul>
+<p>首先要创建一个TextureLoader对象，把作为纹理的图片在图片载入成功后（通过事件监听实现）传入一个回调函数。</p>
+<p>其次该纹理图可能会经过一系列复制旋转等操作。</p>
+<ul>
+<li>为场景打光，分柔光和硬光，分别创建对象。</li>
+</ul>
+<h2 id="视频和音频API"><a href="#视频和音频API" class="headerlink" title="视频和音频API"></a>视频和音频API</h2><h3 id="HTML5中的播放器"><a href="#HTML5中的播放器" class="headerlink" title="HTML5中的播放器"></a>HTML5中的播放器</h3><p>HTML5中<code>&lt;video&gt;</code>和<code>&lt;audio&gt;</code>元素允许我们把视频和音频嵌入到网页当中。</p>
+<p>构成HTML视频播放器的主要由两个部分，这两个部分都被包裹在名为<code>&lt;div class=&quot;player&quot;&gt;</code>的div块中。</p>
+<h4 id="HTML部分"><a href="#HTML部分" class="headerlink" title="HTML部分"></a>HTML部分</h4><hr>
+<p>首先是video元素层，包含多个视频source，可以根据浏览器来加载其所支持的不同视频格式。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">controls</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- 注意上面的controls是浏览器默认控件 --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;video/sintel-short.mp4&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/mp4&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;video/sintel-short.mp4&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/webm&quot;</span>&gt;</span></span><br><span class="line">    <span class="comment">&lt;!-- fallback content here --&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>其次是自定义控件层，涉及多个button以及div。</p>
+<p>四个 <code>&lt;button&gt;</code>涉及play/pause, stop, rewind, and fast forward，分别带有属性一个<code>class名</code> ，一个<code>data-icon</code> 属性来决定在每个按钮上显示什么图标 (在下一节讲述它是如何工作的)，和一个<code>aria-label</code> 属性为每一个按钮提供容易理解的描述, 即使我们没有在tags内提供可读的标签。</p>
+<p>有一个设定的计时器 <code>&lt;div&gt;</code>用来报告已经播放的时长。由两部分组成， 一个<code>&lt;span&gt;</code> 包含了流逝时间的分钟和秒；一个额外的<code>&lt;div&gt;</code> 用来创建一个水平的随着时间增加而增长的进度条。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;controls&quot;</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;play&quot;</span> <span class="attr">data-icon</span>=<span class="string">&quot;P&quot;</span> <span class="attr">aria-label</span>=<span class="string">&quot;play pause toggle&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;stop&quot;</span> <span class="attr">data-icon</span>=<span class="string">&quot;S&quot;</span> <span class="attr">aria-label</span>=<span class="string">&quot;stop&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">&quot;timer&quot;</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">div</span>&gt;</span><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">span</span> <span class="attr">aria-label</span>=<span class="string">&quot;timer&quot;</span>&gt;</span>00:00<span class="tag">&lt;/<span class="name">span</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;rwd&quot;</span> <span class="attr">data-icon</span>=<span class="string">&quot;B&quot;</span> <span class="attr">aria-label</span>=<span class="string">&quot;rewind&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;fwd&quot;</span> <span class="attr">data-icon</span>=<span class="string">&quot;F&quot;</span> <span class="attr">aria-label</span>=<span class="string">&quot;fast forward&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="CSS部分"><a href="#CSS部分" class="headerlink" title="CSS部分"></a>CSS部分</h4><p>关于播放器的CSS设置有如下几个要点。</p>
+<ul>
+<li>默认情况下，我们将控件的<code>opacity</code>设置为0.5 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/opacity"><code>opacity</code></a>，这样当您尝试观看视频时，它们就不会分散注意力。 只有当您将鼠标悬停/聚焦在播放器上时，控件才会完全不透明。</li>
+<li>使用flexbox控制各个按钮</li>
+<li>CSS中设置我们的自定义控件的visible属性为hidden；video元素中默认使用浏览器自带的控件。这样的好处是，一旦JavaScript由于某种原因没有加载, 用户依然可以使用原生的控件播放视频。</li>
+<li>我们使用 <code>::before</code>状态选择器显示在每个button被点击之前显示内容。</li>
+</ul>
+<h4 id="使用API"><a href="#使用API" class="headerlink" title="使用API"></a>使用API</h4><p>HTMLMediaElement API允许开发者用编程的方式控制视频和音频播放的相关功能，如例如 <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLMediaElement/play"><code>HTMLMediaElement.play()</code></a>, <a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/API/HTMLMediaElement/pause"><code>HTMLMediaElement.pause()</code></a>。</p>
+<h2 id="客户端储存"><a href="#客户端储存" class="headerlink" title="客户端储存"></a>客户端储存</h2><p>现代web浏览器提供了很多在用户电脑的web客户端存放数据的方法。</p>
+<p>它是由 JavaScript APIs 组成的因此允许你在客户端存储数据 (比如在用户的机器上)，而且可以在需要的时候重新取得需要的数据。例如个性化网站偏好，站点行为如是否记住登录状态，本地化数据的静态资源可以加速访问等。</p>
+<p>传统上使用cookies，现代浏览器使用Web Storage和Indexed DB这两个API。</p>
+<h3 id="Web-Storage-API"><a href="#Web-Storage-API" class="headerlink" title="Web Storage API"></a>Web Storage API</h3><p>只需存储简单的键名/键值对数据 (限制为字符串、数字等类型) 并在需要的时候检索其值。</p>
+<h4 id="存储对象sessionStorage和localStorage"><a href="#存储对象sessionStorage和localStorage" class="headerlink" title="存储对象sessionStorage和localStorage"></a>存储对象sessionStorage和localStorage</h4><p>一般所有web storage的数据都包含在浏览器内的两个对象中，他们都属于Storage类的对象。对这两个对象调用方法就能实现客户端数据存储。</p>
+<p>第一个是sessionStorage，只要浏览器开着，数据就会一直保存 (关闭浏览器时数据会丢失)。</p>
+<p>第二个是localStorage，会一直保存数据，甚至到浏览器关闭又开启后也是这样。</p>
+<p>web storage 的一个关键特性是，数据在不同页面加载时都存在（甚至是当浏览器关闭后，对localStorage的而言）。</p>
+<h4 id="方法调用"><a href="#方法调用" class="headerlink" title="方法调用"></a>方法调用</h4><p><code>Storage.setItem()</code>允许在客户端储存中保存一个数据项，接受两个参数：数据项的名字和其值。</p>
+<p>例如<code>localStorage.setItem(&#39;name&#39;,&#39;Chris&#39;);</code></p>
+<p><code>Storage.getItem()</code>接受一个参数：想要检索的数据项的名称，返回数据项的值。</p>
+<p>例如<code>localStorage.getItem(&#39;name&#39;);</code></p>
+<p><code>Storage.removeItem()</code>接受一个参数：想要删除的数据项的名称，并从web stroage中删除该数据项。</p>
+<p>例如<code>localStorage.removeItem(&#39;name&#39;);</code> </p>
+<h4 id="数据库的使用"><a href="#数据库的使用" class="headerlink" title="数据库的使用"></a>数据库的使用</h4><p>首先，需要<strong>打开数据库并存放在常量</strong>中，第一个参数是名字，第二个参数是版本号。如果不存在该数据库，会自动创建。</p>
+<p>我们需要在页面载入成功，也就是<code>window.onload</code>完成之后打开一下数据库并把它放在，而不是在需要用数据库的时候再去调用他，如果数据库很大的话，这个加载需要很久的时间，会导致阻塞。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = <span class="built_in">window</span>.indexedDB.open(<span class="string">&#x27;notes&#x27;</span>, <span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<hr>
+<p>其次，由于数据库操作是异步的，需要给打开后的<strong>数据库添加各种状态监听函数</strong>。</p>
+<p>监听函数需要包括<strong>是否成功打开</strong>数据库的后台消息onerror/onsuccess；<strong>设置初始数据库</strong>onupgradeneeded。</p>
+<p>如何从监听函数内部获取对现有数据库的引用<code>let db = e.target.result;</code></p>
+<p>如何在数据库中建立一个新的table/对象库<code>let objectStore = db.createObjectStore(&#39;notes&#39;, &#123;keyPath:&#39;id&#39;, autoIncrement: true&#125;);</code> </p>
+<p>如何在数据库的某个对象库中创建数据项<code>objectStore.createIndex(&#39;title&#39;, &#39;title&#39;, &#123;unique: false&#125;);</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">request.onerror = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">request.onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">request.onupgradeneeded = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">        <span class="comment">// 从事件目标e.target中获取对现有数据库的引用，即request对象</span></span><br><span class="line">        <span class="keyword">let</span> db = e.target.result;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 这个objectStore就像一个table一样存放记录</span></span><br><span class="line">        <span class="comment">// 在我们打开的数据库中新建一个对象库，类似于传统数据库系统中的单个表</span></span><br><span class="line">        <span class="comment">// id用于唯一标志一条记录</span></span><br><span class="line">        <span class="keyword">let</span> objectStore = db.createObjectStore(<span class="string">&#x27;notes&#x27;</span>, &#123;<span class="attr">keyPath</span>:<span class="string">&#x27;id&#x27;</span>, <span class="attr">autoIncrement</span>: <span class="literal">true</span>&#125;);</span><br><span class="line">        <span class="comment">// 定义这个table中会存放什么样的数据项，创建了两个索引</span></span><br><span class="line">        objectStore.createIndex(<span class="string">&#x27;title&#x27;</span>, <span class="string">&#x27;title&#x27;</span>, &#123;<span class="attr">unique</span>: <span class="literal">false</span>&#125;);</span><br><span class="line">        objectStore.createIndex(<span class="string">&#x27;body&#x27;</span>, <span class="string">&#x27;body&#x27;</span>, &#123;<span class="attr">unique</span>: <span class="literal">false</span>&#125;);</span><br><span class="line"></span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">&#x27;Database setup complete&#x27;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p>对数据库进行<strong>增加数据项</strong>的操作</p>
+<p>首先，明确要增加进去的数据项<code>newItem</code>。</p>
+<p>需要引入一个读写数据库的方法的引用<code>let transaction = db.transaction([&#39;notes&#39;], &#39;readwrite&#39;);</code>。</p>
+<p>然后，锁定目标到数据库内的某一个table/对象库。</p>
+<p>最后，基于该对象库调用<code>obJectStore.add(newItem)</code>对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> newItem = &#123;<span class="attr">title</span>: titleInput.value, <span class="attr">body</span>: bodyInput.value&#125;;</span><br><span class="line"><span class="keyword">let</span> transaction = db.transaction([<span class="string">&#x27;notes&#x27;</span>], <span class="string">&#x27;readwrite&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> objectStore = transaction.objectStore(<span class="string">&#x27;notes&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> request = objectStore.add(newItem);</span><br></pre></td></tr></table></figure>
+<p>该引用成功完成后应当增加<code>transaction.oncomplete</code>监听函数。该引用失败后应当增加<code>transaction.onerror</code>监听函数。</p>
+<hr>
+<p>将<strong>数据库更新同步到客户端</strong>网页DOM中</p>
+<p>首先，需要明确原网页DOM中所有数据库的原先内容都要被移除，否则会出现叠加。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(list.firstChild)&#123;</span><br><span class="line">    list.removeChild(list.firstChild);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其次，获得对数据库中的特定对象库table的引用。<code>let objectStore = db.transaction(&#39;notes&#39;).objectStore(&#39;notes&#39;);</code></p>
+<p>最后，最重要的是获得对对象库中的所有条目的引用。条目的各项index都可以通过<code>cursor.value</code>的属性获得，但是需要注意<code>cursor.value.id</code>是连接DOM中的条目和数据库中条目的通道。删除了的DOM中条目如何对应到数据库中去删除？这就需要id来分辨。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">objectStore.openCursor().onsuccess = <span class="function"><span class="keyword">function</span>(<span class="params">e</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> cursor = e.target.result;</span><br><span class="line"><span class="comment">// cursor.value就相当于一个table中的一个条目</span></span><br><span class="line"><span class="comment">// cursor.value.title/bod就相当于一个条目中的一个index</span></span><br><span class="line">    </span><br><span class="line"><span class="comment">// 当用户操作删除这个的时候，便于我们在数据库中寻找对应的条目删除</span></span><br><span class="line">	listItem.setAttribute(<span class="string">&#x27;data-note-id&#x27;</span>, cursor.value.id);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<p><strong>DOM树的数据项删除同步到客户端</strong>数据库</p>
+<p>首先，需要获得删除数据项在数据库中的唯一id。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> noteId = <span class="built_in">Number</span>(e.target.parentNode.getAttribute(<span class="string">&#x27;data-note-id&#x27;</span>));</span><br></pre></td></tr></table></figure>
+<p>其次，打开数据库的特定对象库。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> transaction = db.transaction([<span class="string">&#x27;notes&#x27;</span>], <span class="string">&#x27;readwrite&#x27;</span>);</span><br><span class="line"><span class="keyword">let</span> objectStore = transaction.objectStore(<span class="string">&#x27;notes&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<p>最后，在对象库上传入id参数执行delte操作。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> request = objectStore.delete(noteId);</span><br></pre></td></tr></table></figure>
+<p>对该请求设置一个事件监听操作，一旦在数据库中删除成功，这种变化需要反映到DOM树中去。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">request.oncomplete = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            e.target.parentNode.parentNode.removeChild(e.target.parentNode);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;Note $&#123;noteId&#125; deleted.&#x27;</span>);</span><br><span class="line">	<span class="comment">// 如是删除到最后都是空列表该怎么做</span></span><br><span class="line">    <span class="comment">// 这是没有listitem的默认显示</span></span><br><span class="line">    <span class="keyword">if</span>(!list.firstChild)&#123;</span><br><span class="line">        <span class="keyword">let</span> listItem = <span class="built_in">document</span>.createElement(<span class="string">&#x27;li&#x27;</span>);</span><br><span class="line">        listItem.textContent = <span class="string">&#x27;No notes stored.&#x27;</span>;</span><br><span class="line">        list.appendChild(listItem);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/11/19/outputGANevaluation/" rel="prev" title="衡量Generator的好坏的方法">
+      <i class="fa fa-chevron-left"></i> 衡量Generator的好坏的方法
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/02/react-project-summary/" rel="next" title="简书项目复刻问题集合">
+      简书项目复刻问题集合 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8Evar-amp-let"><span class="nav-number">1.1.</span> <span class="nav-text">声明var&amp;let</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">声明的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">变量类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.</span> <span class="nav-text">循环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#for-loop"><span class="nav-number">2.1.</span> <span class="nav-text">for-loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while-loop"><span class="nav-number">2.2.</span> <span class="nav-text">while loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#do-while-loop"><span class="nav-number">2.3.</span> <span class="nav-text">do-while loop</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%8E%E8%B0%83%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">声明与调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">匿名函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BD%9C%E7%94%A8%E5%9F%9Fscope%E5%92%8C%E5%86%B2%E7%AA%81"><span class="nav-number">3.4.</span> <span class="nav-text">函数作用域scope和冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">3.5.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E7%BD%91%E9%A1%B5%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">响应网页事件的几种机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8%E5%B1%9E%E6%80%A7"><span class="nav-number">4.1.1.</span> <span class="nav-text">事件处理器属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E5%86%85%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8-%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.2.</span> <span class="nav-text">行内事件处理器-不要使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#addEventListener"><span class="nav-number">4.1.3.</span> <span class="nav-text">addEventListener()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.2.</span> <span class="nav-text">事件对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E6%AD%A2%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA"><span class="nav-number">4.3.</span> <span class="nav-text">阻止默认行为</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1%E5%8F%8A%E6%8D%95%E8%8E%B7"><span class="nav-number">4.4.</span> <span class="nav-text">事件冒泡及捕获</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.1.</span> <span class="nav-text">捕获阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.2.</span> <span class="nav-text">冒泡阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.4.3.</span> <span class="nav-text">修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98"><span class="nav-number">4.4.4.</span> <span class="nav-text">事件委托</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9E%E4%BD%9C%E7%9A%84%E6%98%93%E9%94%99%E7%82%B9"><span class="nav-number">4.5.</span> <span class="nav-text">一些实作的易错点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.</span> <span class="nav-text">对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.1.</span> <span class="nav-text">面向对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">5.2.</span> <span class="nav-text">对象字面量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7"><span class="nav-number">5.3.</span> <span class="nav-text">访问对象属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.1.</span> <span class="nav-text">点表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.2.</span> <span class="nav-text">括号表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95%E4%B8%8E%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.3.3.</span> <span class="nav-text">括号表示法与点表示法的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%88%90%E5%91%98%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.4.</span> <span class="nav-text">设置成员对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this"><span class="nav-number">5.5.</span> <span class="nav-text">this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.6.</span> <span class="nav-text">对象与类的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">5.7.</span> <span class="nav-text">创建对象的方式总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%8E%BB%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.1.</span> <span class="nav-text">声明一个对象去创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.2.</span> <span class="nav-text">使用构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Object-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.3.</span> <span class="nav-text">使用Object()构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%8E%B0%E6%9C%89%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.4.</span> <span class="nav-text">基于现有对象创建新对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">原型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype%E5%B1%9E%E6%80%A7"><span class="nav-number">6.1.</span> <span class="nav-text">prototype属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor%E5%B1%9E%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">constructor属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%AD%98%E5%9C%A8%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">6.3.</span> <span class="nav-text">原型存在的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1"><span class="nav-number">6.4.</span> <span class="nav-text">利用原型定义对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E6%93%8D%E4%BD%9C%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">6.5.</span> <span class="nav-text">实际操作中的一些问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5"><span class="nav-number">7.</span> <span class="nav-text">异步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-workers"><span class="nav-number">7.1.</span> <span class="nav-text">Web workers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5callbacks"><span class="nav-number">7.2.</span> <span class="nav-text">异步callbacks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">7.3.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%92%8C%E5%BC%82%E6%AD%A5%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">7.3.1.</span> <span class="nav-text">回调函数和异步的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">7.3.2.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Promises"><span class="nav-number">7.4.</span> <span class="nav-text">Promises</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">7.4.1.</span> <span class="nav-text">基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%80%E5%88%9D%E7%9A%84promise"><span class="nav-number">7.4.1.1.</span> <span class="nav-text">创建最初的promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9Epromise"><span class="nav-number">7.4.1.2.</span> <span class="nav-text">返回promise</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promise%E5%AE%8C%E6%88%90%E5%90%8E%E8%BF%90%E8%A1%8C%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81"><span class="nav-number">7.4.2.</span> <span class="nav-text">promise完成后运行一段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#then-%E5%9D%97%E4%B8%8EAddEventListener"><span class="nav-number">7.4.3.</span> <span class="nav-text">.then()块与AddEventListener()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%90%88%E5%B9%B6"><span class="nav-number">7.4.4.</span> <span class="nav-text">流程合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AApromise%E5%8D%8F%E5%90%8C%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.4.5.</span> <span class="nav-text">多个promise协同工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Promise"><span class="nav-number">7.4.6.</span> <span class="nav-text">自定义Promise</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-await"><span class="nav-number">7.5.</span> <span class="nav-text">async&#x2F;await</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">7.5.1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">7.5.2.</span> <span class="nav-text">await</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">7.5.2.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY"><span class="nav-number">7.5.2.2.</span> <span class="nav-text">WHY</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E6%97%B6%E5%92%8C%E9%97%B4%E9%9A%94"><span class="nav-number">7.6.</span> <span class="nav-text">超时和间隔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setTimeout"><span class="nav-number">7.6.1.</span> <span class="nav-text">setTimeout()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0"><span class="nav-number">7.6.1.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1"><span class="nav-number">7.6.1.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setInterval"><span class="nav-number">7.6.2.</span> <span class="nav-text">setInterval()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0-1"><span class="nav-number">7.6.2.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1-1"><span class="nav-number">7.6.2.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#requestAnimationFrame"><span class="nav-number">7.6.3.</span> <span class="nav-text">requestAnimationFrame()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY-1"><span class="nav-number">7.6.3.1.</span> <span class="nav-text">WHY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-1"><span class="nav-number">7.6.3.2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">7.6.3.3.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API"><span class="nav-number">8.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E6%80%A7"><span class="nav-number">8.1.</span> <span class="nav-text">共性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1"><span class="nav-number">8.1.1.</span> <span class="nav-text">基于对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%AF%86%E5%88%AB%E7%9A%84%E5%85%A5%E5%8F%A3%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">可识别的入口点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%8B%E4%BB%B6%E6%9D%A5%E5%A4%84%E7%90%86%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96"><span class="nav-number">8.1.3.</span> <span class="nav-text">使用事件来处理状态的变化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C%E7%9A%84API"><span class="nav-number">8.2.</span> <span class="nav-text">文档操作的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web%E9%A1%B5%E9%9D%A2%E6%9E%84%E6%88%90"><span class="nav-number">8.2.1.</span> <span class="nav-text">web页面构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM%E6%A0%91"><span class="nav-number">8.2.2.</span> <span class="nav-text">DOM树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9CDOM%E5%85%83%E7%B4%A0"><span class="nav-number">8.2.3.</span> <span class="nav-text">操作DOM元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96"><span class="nav-number">8.2.3.1.</span> <span class="nav-text">获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA-%E6%94%BE%E7%BD%AE"><span class="nav-number">8.2.3.2.</span> <span class="nav-text">新建&#x2F;放置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8-%E5%88%A0%E9%99%A4"><span class="nav-number">8.2.3.3.</span> <span class="nav-text">移动&#x2F;删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%A0%B7%E5%BC%8F"><span class="nav-number">8.2.4.</span> <span class="nav-text">操作样式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84API"><span class="nav-number">8.3.</span> <span class="nav-text">从服务器获取数据的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9API"><span class="nav-number">8.3.1.</span> <span class="nav-text">使用第三方API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-number">8.3.1.1.</span> <span class="nav-text">引入第三方库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EURL%E8%AF%B7%E6%B1%82"><span class="nav-number">8.3.1.2.</span> <span class="nav-text">基于URL请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E7%BB%98%E5%88%B6%E5%92%8C%E6%93%8D%E4%BD%9C%E5%9B%BE%E5%BD%A2%E7%9A%84API"><span class="nav-number">8.4.</span> <span class="nav-text">用于绘制和操作图形的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%87%86%E5%A4%87"><span class="nav-number">8.4.1.</span> <span class="nav-text">基本准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%98%E5%88%B6%E5%9F%BA%E6%9C%AC%E5%BD%A2%E7%8A%B6"><span class="nav-number">8.4.2.</span> <span class="nav-text">绘制基本形状</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB"><span class="nav-number">8.4.3.</span> <span class="nav-text">动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.4.3.1.</span> <span class="nav-text">实现步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%92%8C%E9%9F%B3%E9%A2%91API"><span class="nav-number">8.5.</span> <span class="nav-text">视频和音频API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML5%E4%B8%AD%E7%9A%84%E6%92%AD%E6%94%BE%E5%99%A8"><span class="nav-number">8.5.1.</span> <span class="nav-text">HTML5中的播放器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTML%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.1.</span> <span class="nav-text">HTML部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.2.</span> <span class="nav-text">CSS部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8API"><span class="nav-number">8.5.1.3.</span> <span class="nav-text">使用API</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%82%A8%E5%AD%98"><span class="nav-number">8.6.</span> <span class="nav-text">客户端储存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-Storage-API"><span class="nav-number">8.6.1.</span> <span class="nav-text">Web Storage API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1sessionStorage%E5%92%8ClocalStorage"><span class="nav-number">8.6.1.1.</span> <span class="nav-text">存储对象sessionStorage和localStorage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">8.6.1.2.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">8.6.1.3.</span> <span class="nav-text">数据库的使用</span></a></li></ol></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">215k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">6:31</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

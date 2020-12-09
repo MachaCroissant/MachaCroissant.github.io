@@ -19,12 +19,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="李宏毅机器学习，SVM &#x3D; Hinge Loss + Kernel Method。">
+  <meta name="description" content="李宏毅机器学习，SVM就是Hinge Loss结合Kernel Method。先考虑了线性SVM模型做机器学习三步骤的过程，然后什么事Kernel Method，Kernel Trick的适用范围，什么是support vector。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="支持向量机">
 <meta property="og:url" content="http://example.com/2020/11/07/svm/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="李宏毅机器学习，SVM &#x3D; Hinge Loss + Kernel Method。">
+<meta property="og:description" content="李宏毅机器学习，SVM就是Hinge Loss结合Kernel Method。先考虑了线性SVM模型做机器学习三步骤的过程，然后什么事Kernel Method，Kernel Trick的适用范围，什么是support vector。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/11/07/svm/diff.png">
 <meta property="og:image" content="http://example.com/2020/11/07/svm/lossfunctionequal.png">
@@ -33,7 +33,7 @@
 <meta property="og:image" content="http://example.com/2020/11/07/svm/modeloutput.png">
 <meta property="og:image" content="http://example.com/2020/11/07/svm/sigmoidkernel.png">
 <meta property="article:published_time" content="2020-11-07T07:10:53.000Z">
-<meta property="article:modified_time" content="2020-11-11T14:24:00.803Z">
+<meta property="article:modified_time" content="2020-11-13T05:47:51.635Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="SVM">
@@ -198,7 +198,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-11 22:24:00" itemprop="dateModified" datetime="2020-11-11T22:24:00+08:00">2020-11-11</time>
+                <time title="修改时间：2020-11-13 13:47:51" itemprop="dateModified" datetime="2020-11-13T13:47:51+08:00">2020-11-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -225,7 +225,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>4 分钟</span>
             </span>
-            <div class="post-description">李宏毅机器学习，SVM = Hinge Loss + Kernel Method。</div>
+            <div class="post-description">李宏毅机器学习，SVM就是Hinge Loss结合Kernel Method。先考虑了线性SVM模型做机器学习三步骤的过程，然后什么事Kernel Method，Kernel Trick的适用范围，什么是support vector。</div>
 
         </div>
       </header>
@@ -243,14 +243,14 @@ l(f(x^n, \hat{y}^n)) = max(0, 1-\hat{y}^nf(x))</script><p>Loss function的第一
 <p>第一项中的$\hat{y}^n$是代表属于哪一个class的label，$f(x)$是预测后的分类结果。</p>
 <h2 id="Step3-Gradient-Descent"><a href="#Step3-Gradient-Descent" class="headerlink" title="Step3: Gradient Descent"></a>Step3: Gradient Descent</h2><h3 id="第一种理解"><a href="#第一种理解" class="headerlink" title="第一种理解"></a>第一种理解</h3><p>做微分，先不考虑第二项。</p>
 <script type="math/tex; mode=display">
-\begin{split}
+\begin{array}{ll}
 \frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial w_i} &= \frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial{f(x^n)}}\cdot\frac{\partial{f(x^n)}}{\partial w_i}\\
 &=\frac{\partial{l(f(x^n, \hat{y}^n))}}{\partial{f(x^n)}}\cdot x_i^n \\
 &= c^n(w) \cdot x_i^n
-\end{split}</script><p><img src="/2020/11/07/svm/diff.png" alt="diff" style="zoom:60%;"></p>
+\end{array}</script><p><img src="/2020/11/07/svm/diff.png" alt="diff" style="zoom:60%;"></p>
 <h3 id="第二种理解"><a href="#第二种理解" class="headerlink" title="第二种理解"></a>第二种理解</h3><p>用一个极小项$\varepsilon^n$取代损失函数L中的$l(f(x^n, \hat{y}^n))$，我们叫这个极小项是一个slack variable。</p>
 <p><img src="/2020/11/07/svm/lossfunctionequal.png" alt="lossfunctionequal" style="zoom:50%;"></p>
-<h1 id="Kernel-Method"><a href="#Kernel-Method" class="headerlink" title="Kernel Method"></a>Kernel Method</h1><h2 id="Dual-Representation-对偶性"><a href="#Dual-Representation-对偶性" class="headerlink" title="Dual Representation 对偶性"></a>Dual Representation 对偶性</h2><p><img src="/2020/11/07/svm/hingeloss.png" alt="hingeloss" style="zoom:50%;"></p>
+<h1 id="Kernel-Method"><a href="#Kernel-Method" class="headerlink" title="Kernel Method"></a>Kernel Method</h1><h2 id="Dual-Representation"><a href="#Dual-Representation" class="headerlink" title="Dual Representation"></a>Dual Representation</h2><p><img src="/2020/11/07/svm/hingeloss.png" alt="hingeloss" style="zoom:50%;"></p>
 <p>如果对于之前求出的迭代更新的式子，把$w$初始化为0，式子变成所有数据的线性组合。</p>
 <p>线性参数$\alpha_n^{*}$可能是0，因为结合前面在定义Loss function的时候选择了Hinge Loss。也就是$\sum_nc^{n}(w)$有可能就是取0（在fit很好的情况下），有可能不是0（在fit不好的情况下），到最后模型越fit，线性参数线性参数取0越多，越sparse。</p>
 <p>support vectors就是那些线性参数$\alpha_n^{*}$不为0的$x^n$。</p>
@@ -260,7 +260,7 @@ l(f(x^n, \hat{y}^n)) = max(0, 1-\hat{y}^nf(x))</script><p>Loss function的第一
 <p>重新表示模型函数集为</p>
 <script type="math/tex; mode=display">
 f(x) = w^Tx = \boldsymbol{\alpha}^TX^Tx=\sum_na_n(x^n\cdot x)</script><p><img src="/2020/11/07/svm/modeloutput.png" alt="modeloutput" style="zoom:50%;"></p>
-<p>把内积$(x^n\cdot x)$写成核方法$K(x^n,x)$就是核函数，称为核技巧。写成这样的好处就是，不用具体的知道每一个data的向量表示求出内积，我们只需要知道Kernel Function的输出就可以了。</p>
+<p><strong>把内积$(x^n\cdot x)$写成核方法$K(x^n,x)$就是核函数，称为核技巧。</strong>写成这样的好处就是，不用具体的知道每一个data的向量表示求出内积，我们只需要知道Kernel Function的输出就可以了。</p>
 <p>接下来最小化损失函数，也就是训练目的：找一组$\alpha_n$，是loss function最小。好处是只需要知道input data vector之间的内积。</p>
 <blockquote>
 <p>什么时候用Kernel Trick？</p>
@@ -361,7 +361,7 @@ f(x) = \sum{\alpha_nK(x^n,x)} = \sum{\alpha_n tanh(x^n \cdot z)}</script><p>每�
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linear-SVM-model"><span class="nav-number">1.</span> <span class="nav-text">Linear SVM model</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Step1-Function-Model"><span class="nav-number">1.1.</span> <span class="nav-text">Step1: Function Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step2-Loss-Function"><span class="nav-number">1.2.</span> <span class="nav-text">Step2: Loss Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step3-Gradient-Descent"><span class="nav-number">1.3.</span> <span class="nav-text">Step3: Gradient Descent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">第一种理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.2.</span> <span class="nav-text">第二种理解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kernel-Method"><span class="nav-number">2.</span> <span class="nav-text">Kernel Method</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dual-Representation-%E5%AF%B9%E5%81%B6%E6%80%A7"><span class="nav-number">2.1.</span> <span class="nav-text">Dual Representation 对偶性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kernel-Trick"><span class="nav-number">2.2.</span> <span class="nav-text">Kernel Trick</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%86%99%E5%87%BD%E6%95%B0%E9%9B%86%E4%B8%BAKernel-Function"><span class="nav-number">2.2.1.</span> <span class="nav-text">改写函数集为Kernel Function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Radial-Basis-Function-Kernel"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Radial Basis Function Kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sigmoid-Kernel"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">Sigmoid Kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E7%9A%84%E5%90%AF%E5%8F%91"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">更多的启发</span></a></li></ol></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Linear-SVM-model"><span class="nav-number">1.</span> <span class="nav-text">Linear SVM model</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Step1-Function-Model"><span class="nav-number">1.1.</span> <span class="nav-text">Step1: Function Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step2-Loss-Function"><span class="nav-number">1.2.</span> <span class="nav-text">Step2: Loss Function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Step3-Gradient-Descent"><span class="nav-number">1.3.</span> <span class="nav-text">Step3: Gradient Descent</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E7%A7%8D%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.1.</span> <span class="nav-text">第一种理解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E7%A7%8D%E7%90%86%E8%A7%A3"><span class="nav-number">1.3.2.</span> <span class="nav-text">第二种理解</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Kernel-Method"><span class="nav-number">2.</span> <span class="nav-text">Kernel Method</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Dual-Representation"><span class="nav-number">2.1.</span> <span class="nav-text">Dual Representation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Kernel-Trick"><span class="nav-number">2.2.</span> <span class="nav-text">Kernel Trick</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E5%86%99%E5%87%BD%E6%95%B0%E9%9B%86%E4%B8%BAKernel-Function"><span class="nav-number">2.2.1.</span> <span class="nav-text">改写函数集为Kernel Function</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Radial-Basis-Function-Kernel"><span class="nav-number">2.2.1.1.</span> <span class="nav-text">Radial Basis Function Kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Sigmoid-Kernel"><span class="nav-number">2.2.1.2.</span> <span class="nav-text">Sigmoid Kernel</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9B%B4%E5%A4%9A%E7%9A%84%E5%90%AF%E5%8F%91"><span class="nav-number">2.2.1.3.</span> <span class="nav-text">更多的启发</span></a></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -375,18 +375,18 @@ f(x) = \sum{\alpha_nK(x^n,x)} = \sum{\alpha_n tanh(x^n \cdot z)}</script><p>每�
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">76</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -422,12 +422,12 @@ f(x) = \sum{\alpha_nK(x^n,x)} = \sum{\alpha_n tanh(x^n \cdot z)}</script><p>每�
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">122k</span>
+    <span title="站点总字数">215k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">6:31</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

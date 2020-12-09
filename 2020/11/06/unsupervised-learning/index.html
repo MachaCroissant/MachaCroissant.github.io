@@ -19,15 +19,15 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="李宏毅机器学习。">
+  <meta name="description" content="李宏毅机器学习无监督学习，聚类部分。降维方法涉及特征选择、主成分分析、矩阵分解、word-embedding、Neighbour Embedding(LLE&#x2F;T-SNE&#x2F;LE)、Auto-Encoder。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="无监督学习">
 <meta property="og:url" content="http://example.com/2020/11/06/unsupervised-learning/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="李宏毅机器学习。">
+<meta property="og:description" content="李宏毅机器学习无监督学习，聚类部分。降维方法涉及特征选择、主成分分析、矩阵分解、word-embedding、Neighbour Embedding(LLE&#x2F;T-SNE&#x2F;LE)、Auto-Encoder。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-11-06T01:13:07.000Z">
-<meta property="article:modified_time" content="2020-11-11T13:07:01.815Z">
+<meta property="article:modified_time" content="2020-11-13T05:41:05.824Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="无监督学习">
@@ -191,7 +191,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-11-11 21:07:01" itemprop="dateModified" datetime="2020-11-11T21:07:01+08:00">2020-11-11</time>
+                <time title="修改时间：2020-11-13 13:41:05" itemprop="dateModified" datetime="2020-11-13T13:41:05+08:00">2020-11-13</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -218,7 +218,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>13 分钟</span>
             </span>
-            <div class="post-description">李宏毅机器学习。</div>
+            <div class="post-description">李宏毅机器学习无监督学习，聚类部分。降维方法涉及特征选择、主成分分析、矩阵分解、word-embedding、Neighbour Embedding(LLE/T-SNE/LE)、Auto-Encoder。</div>
 
         </div>
       </header>
@@ -275,10 +275,10 @@ Sw^2=\alpha w^2</script><p>意思就是$w^2$是协方差矩阵$S$的第二大的
 <h3 id="投影后数据的特征"><a href="#投影后数据的特征" class="headerlink" title="投影后数据的特征"></a>投影后数据的特征</h3><p>投影和的数据在新的坐标的各个维度之间是不相关的，在数学上的表示就是投影后的$\boldsymbol{z} = \boldsymbol{W}\boldsymbol{x}$的协方差矩阵是一个对角矩阵diagonal matrix。好处是实现模型的时候可以减少参数。</p>
 <h3 id="从另一个角度理解PCA"><a href="#从另一个角度理解PCA" class="headerlink" title="从另一个角度理解PCA"></a>从另一个角度理解PCA</h3><p>一个输入input可以看作是有限个component的线性叠加加上所有input的平均值。</p>
 <script type="math/tex; mode=display">
-\begin{aligned}
+\begin{array}{ll}
 x = \bar{x} + \hat{x} \\
 \hat{x} = c_1u^1+c_2u^2+ \cdots+c_Ku^K
-\end{aligned}</script><p>Reconstruction error: $\left|(x-\bar{x}) - \hat{x}\right|_2$</p>
+\end{array}</script><p>Reconstruction error: $\left|(x-\bar{x}) - \hat{x}\right|_2$</p>
 <p>Find $\{u^1, u^2 \cdots, u^k\}$ minimizing the error</p>
 <script type="math/tex; mode=display">
 L = min_{\{u^1, u^2 \cdots, u^k\}}\sum\left\|(x-\bar{x}) -(\sum_{k=1}^K{c_ku^k})\right\|_2</script><p>这里要找的$u^k$就是对应前面PCA中的$W$。但是这两者有有不同，因为前面PCA要求必须垂直（线性情况较快），但此处用gradient descent求解出来的对象不一定保证垂直（但是可以deep）。</p>
@@ -295,7 +295,7 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
 <h1 id="Word-embedding词嵌入"><a href="#Word-embedding词嵌入" class="headerlink" title="Word-embedding词嵌入"></a>Word-embedding词嵌入</h1><p>为什么需要词嵌入？</p>
 <p>传统的表示一个文字的方法就是1-of-N encoding，每一个word用一个vector来表示，这个vector的dimension就是这个世界上可能有的word的数目，很显然这过于大了。但是词汇之间是有联系的，可以组成word class，因此可以把同样性质但是不同的word用所属的class来表示。</p>
 <p>词嵌入就是把每一个词都project到high dimension space上去，在这个高维空间中每一个word embedding都有一个feature vector。</p>
-<p>如何找到适合该词的词嵌入？了解一个词汇的含义需要看改词的contex。</p>
+<p>如何找到适合该词的词嵌入？了解一个词汇的含义需要看该词的contex。</p>
 <h2 id="count-based"><a href="#count-based" class="headerlink" title="count-based"></a>count-based</h2><p>基于计数的词嵌入原则是单词$w_i$的word vector是$V(w_i)$，单词$w_j$的word vector是$V(w_j)$，计算出这两个word vector的inner product后我们希望该值和两个词在该文章中同时出现的次数越近越好。其实这个思想和matrix factorization类似。</p>
 <h2 id="prediction-based"><a href="#prediction-based" class="headerlink" title="prediction-based"></a>prediction-based</h2><h3 id="预测结构"><a href="#预测结构" class="headerlink" title="预测结构"></a>预测结构</h3><p>最朴素的就是拿前一个词汇去预测后一个词汇，也可以用前后词汇预测中间词汇，也可以用中间词汇预测前后词汇。</p>
 <h3 id="输入输出定义"><a href="#输入输出定义" class="headerlink" title="输入输出定义"></a>输入输出定义</h3><p>希望同class的多个先后连续的词作输入的时候，输出是预测的下一个词汇。为了实现这个效果，中间hidden layer需要通过weight对输入进行转化，让他们对应到相同的空间</p>
@@ -311,7 +311,8 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
 <p><strong>假设从高维空间到低维空间，描述空间里点之间关系的weight是不变的，</strong>因此可以用上面求出来的weight用同样的方式定义一个相似的函数。总结：已知的是数据间的关系weight，求的是低维空间中的数据。</p>
 <h2 id="LE-拉普拉斯特征映射-Laplacian-Eigenmap"><a href="#LE-拉普拉斯特征映射-Laplacian-Eigenmap" class="headerlink" title="LE 拉普拉斯特征映射 Laplacian Eigenmap"></a>LE 拉普拉斯特征映射 Laplacian Eigenmap</h2><p>在semi-supervised learning中提出过graph-based approach以及定量描述smoothness相类似，最重要的区别在于有带label的数据项去约束smoothness的表达式。</p>
 <p>我们希望close in high density region中的数据投射到低维空间之后数据还是很相近，但是要对投射后的结果加一点constraint，如果一开始的维度是M，那么找出来的那些在低维空间的点做span之后还会恢复成原来数据的M维度（可逆？）。</p>
-<h2 id="T-SNE-T分布随机领域-T-distributed-stochastic-neighbour-embedding"><a href="#T-SNE-T分布随机领域-T-distributed-stochastic-neighbour-embedding" class="headerlink" title="T-SNE T分布随机领域 T-distributed stochastic neighbour embedding"></a>T-SNE T分布随机领域 T-distributed stochastic neighbour embedding</h2><h3 id="why"><a href="#why" class="headerlink" title="why"></a>why</h3><p>以上都假设相近的点非线性降维之后都相近，但是却没有说不相近的点非线性降维之后都不相近（有可能不相近的点线性降维之后反而相近了）。</p>
+<h2 id="T-SNE"><a href="#T-SNE" class="headerlink" title="T-SNE"></a>T-SNE</h2><p>T分布随机领域 T-distributed stochastic neighbour embedding</p>
+<h3 id="why"><a href="#why" class="headerlink" title="why"></a>why</h3><p>以上都假设相近的点非线性降维之后都相近，但是却没有说不相近的点非线性降维之后都不相近（有可能不相近的点线性降维之后反而相近了）。</p>
 <p>之前都是针对某一个数据locally的相近，如果从整体上看呢？我们要求投影前后的数据的分布distribution相近。</p>
 <h3 id="how"><a href="#how" class="headerlink" title="how"></a>how</h3><p>如何计算？</p>
 <p>分别计算出所有投影前数据x之间的similarity（已知），并写出投影后数据z之间的similarity（未知），让这两个值之间的KL distance越小越好，从而可以求出未知的投影后的数据z。</p>
@@ -320,19 +321,19 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
 <p>投影前数据的similarity用负的欧氏距离去exponent，因为距离一大，similarity就会非常小，确保了只有非常相近的点才有值。</p>
 <p>投影后数据的similarity有两种方式。可以选择和投影前数据相同的衡量方式，这样总的方法就是SNE；但更好的是选择T-dirtribution中的一种用欧氏距离加上一，整体取个倒数作为similarity，这样总的方法就是T-SNE。</p>
 <h1 id="自编码器-auto-encoder"><a href="#自编码器-auto-encoder" class="headerlink" title="自编码器 auto encoder"></a>自编码器 auto encoder</h1><p>想找一个编码器，input是一个比较复杂的东西，encoder就是一个neuron network，它的output就是code，维度远比输入要小实现了类似压缩的效果。</p>
-<p>结构如下：input layer — layer1 — layer2 — … bottle… — layer2’ — layer1‘ — output layer</p>
+<p>结构如下：input layer — layer1 — layer2 — … bottle… — layer2’  — layer1’  — output layer</p>
 <p>input layer到bottle是属于encoder，bottle到output layer属于decoder，bottle的结果就是code。也就是dimension reduction的过程和reconstruct的过程。</p>
-<h2 id="如何做得更好"><a href="#如何做得更好" class="headerlink" title="如何做得更好"></a>如何做得更好</h2><p>de-noising auto-encoder，input加上noise之后再去encode，output要和加noise之前的原来的input越近越好。Neuron Network不仅学到了encode这件事，还学到了过滤噪音。</p>
-<h2 id="文本检索-Text-Retrieval"><a href="#文本检索-Text-Retrieval" class="headerlink" title="文本检索 Text Retrieval"></a>文本检索 Text Retrieval</h2><p>把一篇文章压缩成一个code，利用降维将它表示成空间中的一个vector，现在有一个词汇用于查询，把查询的词汇也变成空间中的一个点，计算该查询次和每个document之间的内积，越大的内积代表相似程度最高。</p>
+<h2 id="TIPS-on-auto-encoder"><a href="#TIPS-on-auto-encoder" class="headerlink" title="TIPS on auto-encoder"></a>TIPS on auto-encoder</h2><h3 id="Add-Noise"><a href="#Add-Noise" class="headerlink" title="Add Noise"></a>Add Noise</h3><p>de-noising auto-encoder，input加上noise之后再去encode，output要和加noise之前的原来的input越近越好。Neuron Network不仅学到了encode这件事，还学到了过滤噪音。</p>
+<h3 id="Pre-training"><a href="#Pre-training" class="headerlink" title="Pre-training"></a>Pre-training</h3><p>一般用于参数的initialization，pre-training就能让你找到一组好的初始化参数。</p>
+<p>注意一般做auto-encoder的时候，希望coder的dimension要比input dimension小，如果coder的dimensionbiinput dimension大的话，需要加一个很强的regularization，避免auto-encoder直接把input并起来再输出（也就是learn不起来）。每一个步骤得到的weight都fix住，然后再输出结果之后再backpropagation微调fine-tune一下这些weight。</p>
+<p>适合于大量unlabeled data存在，少量labeled data的情况。大量unlabeled data用于得出最初的weight，少量labeled data用于fine-tune。</p>
+<h2 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h2><h3 id="文本检索-Text-Retrieval"><a href="#文本检索-Text-Retrieval" class="headerlink" title="文本检索 Text Retrieval"></a>文本检索 Text Retrieval</h3><p>把一篇文章压缩成一个code，利用降维将它表示成空间中的一个vector，现在有一个词汇用于查询，把查询的词汇也变成空间中的一个点，计算该查询次和每个document之间的内积，越大的内积代表相似程度最高。</p>
 <p>如何把一个document表示成一个vector？</p>
 <p>可以使用bag-of-word，vector的size就是所有lexical单词的个数，可以乘上weight代表每个单词的重要性。缺点在于缺失语义，词汇之间没有相关性。</p>
 <p>可以使用auto-encoder使语义考虑进来。</p>
-<h2 id="类似图像搜索-Similar-Image-Search"><a href="#类似图像搜索-Similar-Image-Search" class="headerlink" title="类似图像搜索 Similar Image Search"></a>类似图像搜索 Similar Image Search</h2><p>如果单纯比较query image和database中image的pixel的相似度的话，结果会很不好。</p>
+<h3 id="类似图像搜索-Similar-Image-Search"><a href="#类似图像搜索-Similar-Image-Search" class="headerlink" title="类似图像搜索 Similar Image Search"></a>类似图像搜索 Similar Image Search</h3><p>如果单纯比较query image和database中image的pixel的相似度的话，结果会很不好。</p>
 <p>需要用一个auto-encoder把image变革一个code，再在code上面去搜寻。</p>
-<h2 id="Pre-training"><a href="#Pre-training" class="headerlink" title="Pre-training"></a>Pre-training</h2><p>一般用于参数的initialization，pre-training就能让你找到一组好的初始化参数。</p>
-<p>注意一般做auto-encoder的时候，希望coder的dimension要比input dimension小，如果coder的dimensionbiinput dimension大的话，需要加一个很强的regularization，避免auto-encoder直接把input并起来再输出（也就是learn不起来）。每一个步骤得到的weight都fix住，然后再输出结果之后再backpropagation微调fine-tune一下这些weight。</p>
-<p>适合于大量unlabeled data存在，少量labeled data的情况。大量unlabeled data用于得出最初的weight，少量labeled data用于fine-tune。</p>
-<h2 id="CNN-auto-encoder"><a href="#CNN-auto-encoder" class="headerlink" title="CNN auto-encoder"></a>CNN auto-encoder</h2><p>unpooling无池化，记录pooling的位置，把pooling后的值放在这个记录的位置上，其他都放0。或者也不用记录pooling位置，直接全部复制。</p>
+<h3 id="CNN-auto-encoder"><a href="#CNN-auto-encoder" class="headerlink" title="CNN auto-encoder"></a>CNN auto-encoder</h3><p>unpooling无池化，记录pooling的位置，把pooling后的值放在这个记录的位置上，其他都放0。或者也不用记录pooling位置，直接全部复制。</p>
 <p>deconvolution反卷积，本质也是convolution，只不过weight相反。</p>
 
     </div>
@@ -418,7 +419,7 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">聚类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dimension-Reduction%E9%99%8D%E7%BB%B4"><span class="nav-number">2.</span> <span class="nav-text">Dimension Reduction降维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">2.1.</span> <span class="nav-text">特征选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Principal-Component-Analysis-%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">Principal Component Analysis 主成分分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%BB%B4"><span class="nav-number">2.2.1.</span> <span class="nav-text">一维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BB%B4"><span class="nav-number">2.2.2.</span> <span class="nav-text">高维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%AD%A3%E4%BA%A4%E5%9F%BA"><span class="nav-number">2.2.3.</span> <span class="nav-text">如何寻找正交基</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#w-1-%E7%9A%84%E5%AF%BB%E6%89%BE"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">$w^1$的寻找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#w-2-%E7%9A%84%E5%AF%BB%E6%89%BE"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">$w^2$的寻找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%95%E5%BD%B1%E5%90%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-number">2.2.4.</span> <span class="nav-text">投影后数据的特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3PCA"><span class="nav-number">2.2.5.</span> <span class="nav-text">从另一个角度理解PCA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%B1%E7%82%B9"><span class="nav-number">2.2.6.</span> <span class="nav-text">弱点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3-Matrix-Factorization"><span class="nav-number">3.</span> <span class="nav-text">矩阵分解 Matrix Factorization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word-embedding%E8%AF%8D%E5%B5%8C%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">Word-embedding词嵌入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#count-based"><span class="nav-number">4.1.</span> <span class="nav-text">count-based</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prediction-based"><span class="nav-number">4.2.</span> <span class="nav-text">prediction-based</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E6%B5%8B%E7%BB%93%E6%9E%84"><span class="nav-number">4.2.1.</span> <span class="nav-text">预测结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%AE%9A%E4%B9%89"><span class="nav-number">4.2.2.</span> <span class="nav-text">输入输出定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.3.</span> <span class="nav-text">如何训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%AF%AD%E8%A8%80%E4%B8%8E%E5%A4%9A%E9%A2%86%E5%9F%9F"><span class="nav-number">4.2.4.</span> <span class="nav-text">多语言与多领域</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Neighbour-Embedding"><span class="nav-number">5.</span> <span class="nav-text">Neighbour Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LLE-%E5%B1%80%E9%83%A8%E7%BA%BF%E6%80%A7%E5%B5%8C%E5%85%A5-Locally-Linear-Embedding"><span class="nav-number">5.1.</span> <span class="nav-text">LLE 局部线性嵌入 Locally Linear Embedding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LE-%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%89%B9%E5%BE%81%E6%98%A0%E5%B0%84-Laplacian-Eigenmap"><span class="nav-number">5.2.</span> <span class="nav-text">LE 拉普拉斯特征映射 Laplacian Eigenmap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T-SNE-T%E5%88%86%E5%B8%83%E9%9A%8F%E6%9C%BA%E9%A2%86%E5%9F%9F-T-distributed-stochastic-neighbour-embedding"><span class="nav-number">5.3.</span> <span class="nav-text">T-SNE T分布随机领域 T-distributed stochastic neighbour embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">5.3.1.</span> <span class="nav-text">why</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how"><span class="nav-number">5.3.2.</span> <span class="nav-text">how</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8-auto-encoder"><span class="nav-number">6.</span> <span class="nav-text">自编码器 auto encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%81%9A%E5%BE%97%E6%9B%B4%E5%A5%BD"><span class="nav-number">6.1.</span> <span class="nav-text">如何做得更好</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%A3%80%E7%B4%A2-Text-Retrieval"><span class="nav-number">6.2.</span> <span class="nav-text">文本检索 Text Retrieval</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E4%BC%BC%E5%9B%BE%E5%83%8F%E6%90%9C%E7%B4%A2-Similar-Image-Search"><span class="nav-number">6.3.</span> <span class="nav-text">类似图像搜索 Similar Image Search</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pre-training"><span class="nav-number">6.4.</span> <span class="nav-text">Pre-training</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CNN-auto-encoder"><span class="nav-number">6.5.</span> <span class="nav-text">CNN auto-encoder</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%81%9A%E7%B1%BB"><span class="nav-number">1.</span> <span class="nav-text">聚类</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Dimension-Reduction%E9%99%8D%E7%BB%B4"><span class="nav-number">2.</span> <span class="nav-text">Dimension Reduction降维</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%89%B9%E5%BE%81%E9%80%89%E6%8B%A9"><span class="nav-number">2.1.</span> <span class="nav-text">特征选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Principal-Component-Analysis-%E4%B8%BB%E6%88%90%E5%88%86%E5%88%86%E6%9E%90"><span class="nav-number">2.2.</span> <span class="nav-text">Principal Component Analysis 主成分分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%80%E7%BB%B4"><span class="nav-number">2.2.1.</span> <span class="nav-text">一维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%AB%98%E7%BB%B4"><span class="nav-number">2.2.2.</span> <span class="nav-text">高维</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%AF%BB%E6%89%BE%E6%AD%A3%E4%BA%A4%E5%9F%BA"><span class="nav-number">2.2.3.</span> <span class="nav-text">如何寻找正交基</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#w-1-%E7%9A%84%E5%AF%BB%E6%89%BE"><span class="nav-number">2.2.3.1.</span> <span class="nav-text">$w^1$的寻找</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#w-2-%E7%9A%84%E5%AF%BB%E6%89%BE"><span class="nav-number">2.2.3.2.</span> <span class="nav-text">$w^2$的寻找</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8A%95%E5%BD%B1%E5%90%8E%E6%95%B0%E6%8D%AE%E7%9A%84%E7%89%B9%E5%BE%81"><span class="nav-number">2.2.4.</span> <span class="nav-text">投影后数据的特征</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%8E%E5%8F%A6%E4%B8%80%E4%B8%AA%E8%A7%92%E5%BA%A6%E7%90%86%E8%A7%A3PCA"><span class="nav-number">2.2.5.</span> <span class="nav-text">从另一个角度理解PCA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%B1%E7%82%B9"><span class="nav-number">2.2.6.</span> <span class="nav-text">弱点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E5%88%86%E8%A7%A3-Matrix-Factorization"><span class="nav-number">3.</span> <span class="nav-text">矩阵分解 Matrix Factorization</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Word-embedding%E8%AF%8D%E5%B5%8C%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">Word-embedding词嵌入</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#count-based"><span class="nav-number">4.1.</span> <span class="nav-text">count-based</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#prediction-based"><span class="nav-number">4.2.</span> <span class="nav-text">prediction-based</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%84%E6%B5%8B%E7%BB%93%E6%9E%84"><span class="nav-number">4.2.1.</span> <span class="nav-text">预测结构</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E5%AE%9A%E4%B9%89"><span class="nav-number">4.2.2.</span> <span class="nav-text">输入输出定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.3.</span> <span class="nav-text">如何训练</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E8%AF%AD%E8%A8%80%E4%B8%8E%E5%A4%9A%E9%A2%86%E5%9F%9F"><span class="nav-number">4.2.4.</span> <span class="nav-text">多语言与多领域</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Neighbour-Embedding"><span class="nav-number">5.</span> <span class="nav-text">Neighbour Embedding</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#LLE-%E5%B1%80%E9%83%A8%E7%BA%BF%E6%80%A7%E5%B5%8C%E5%85%A5-Locally-Linear-Embedding"><span class="nav-number">5.1.</span> <span class="nav-text">LLE 局部线性嵌入 Locally Linear Embedding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LE-%E6%8B%89%E6%99%AE%E6%8B%89%E6%96%AF%E7%89%B9%E5%BE%81%E6%98%A0%E5%B0%84-Laplacian-Eigenmap"><span class="nav-number">5.2.</span> <span class="nav-text">LE 拉普拉斯特征映射 Laplacian Eigenmap</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#T-SNE"><span class="nav-number">5.3.</span> <span class="nav-text">T-SNE</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#why"><span class="nav-number">5.3.1.</span> <span class="nav-text">why</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#how"><span class="nav-number">5.3.2.</span> <span class="nav-text">how</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%87%AA%E7%BC%96%E7%A0%81%E5%99%A8-auto-encoder"><span class="nav-number">6.</span> <span class="nav-text">自编码器 auto encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#TIPS-on-auto-encoder"><span class="nav-number">6.1.</span> <span class="nav-text">TIPS on auto-encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Add-Noise"><span class="nav-number">6.1.1.</span> <span class="nav-text">Add Noise</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Pre-training"><span class="nav-number">6.1.2.</span> <span class="nav-text">Pre-training</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">6.2.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E6%A3%80%E7%B4%A2-Text-Retrieval"><span class="nav-number">6.2.1.</span> <span class="nav-text">文本检索 Text Retrieval</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%B1%BB%E4%BC%BC%E5%9B%BE%E5%83%8F%E6%90%9C%E7%B4%A2-Similar-Image-Search"><span class="nav-number">6.2.2.</span> <span class="nav-text">类似图像搜索 Similar Image Search</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CNN-auto-encoder"><span class="nav-number">6.2.3.</span> <span class="nav-text">CNN auto-encoder</span></a></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -432,18 +433,18 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">76</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -479,12 +480,12 @@ L = \sum_{(i,j)}{(r^i\cdot r^j-n_{ij})^2}</script><p>Only considering the define
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">122k</span>
+    <span title="站点总字数">215k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">6:31</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

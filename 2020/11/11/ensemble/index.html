@@ -19,12 +19,12 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="李宏毅机器学习，集成学习Ensemble。">
+  <meta name="description" content="集成学习Ensemble，主要涉及两大类方法Bagging和Boosting。Bagging的过程，如何验证，适用于什么情况。Boosting介绍了Adaboost，衍生到了Gradient Boosting。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="集成学习">
 <meta property="og:url" content="http://example.com/2020/11/11/ensemble/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="李宏毅机器学习，集成学习Ensemble。">
+<meta property="og:description" content="集成学习Ensemble，主要涉及两大类方法Bagging和Boosting。Bagging的过程，如何验证，适用于什么情况。Boosting介绍了Adaboost，衍生到了Gradient Boosting。">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/11/11/ensemble/adaboost.png">
 <meta property="og:image" content="http://example.com/2020/11/11/ensemble/adaboost2.png">
@@ -36,7 +36,7 @@
 <meta property="og:image" content="http://example.com/2020/11/11/ensemble/gradientboosting8.png">
 <meta property="og:image" content="http://example.com/2020/11/11/ensemble/gradientboosting9.png">
 <meta property="article:published_time" content="2020-11-11T02:49:02.000Z">
-<meta property="article:modified_time" content="2020-11-11T14:19:45.559Z">
+<meta property="article:modified_time" content="2020-11-13T05:54:23.514Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="集成学习">
@@ -193,10 +193,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-11-11 10:49:02 / 修改时间：22:19:45" itemprop="dateCreated datePublished" datetime="2020-11-11T10:49:02+08:00">2020-11-11</time>
+              <time title="创建时间：2020-11-11 10:49:02" itemprop="dateCreated datePublished" datetime="2020-11-11T10:49:02+08:00">2020-11-11</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-11-13 13:54:23" itemprop="dateModified" datetime="2020-11-13T13:54:23+08:00">2020-11-13</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -222,7 +228,7 @@
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
               <span>6 分钟</span>
             </span>
-            <div class="post-description">李宏毅机器学习，集成学习Ensemble。</div>
+            <div class="post-description">集成学习Ensemble，主要涉及两大类方法Bagging和Boosting。Bagging的过程，如何验证，适用于什么情况。Boosting介绍了Adaboost，衍生到了Gradient Boosting。</div>
 
         </div>
       </header>
@@ -406,18 +412,18 @@ d_1= \sqrt{(1-\varepsilon_1)/\varepsilon_1} > 1
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">76</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -453,12 +459,12 @@ d_1= \sqrt{(1-\varepsilon_1)/\varepsilon_1} > 1
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">122k</span>
+    <span title="站点总字数">215k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">6:31</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

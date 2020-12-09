@@ -27,7 +27,7 @@
 <meta property="og:description" content="记录自己用Typora书写LaTeX中数学公式的问题。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-27T00:59:35.000Z">
-<meta property="article:modified_time" content="2020-10-29T23:58:14.332Z">
+<meta property="article:modified_time" content="2020-12-03T02:47:59.686Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="LaTeX">
 <meta name="twitter:card" content="summary">
@@ -190,7 +190,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-30 07:58:14" itemprop="dateModified" datetime="2020-10-30T07:58:14+08:00">2020-10-30</time>
+                <time title="修改时间：2020-12-03 10:47:59" itemprop="dateModified" datetime="2020-12-03T10:47:59+08:00">2020-12-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -208,7 +208,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>965</span>
+              <span>1k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -230,7 +230,7 @@
       
         <h1 id="区别常用函数表示"><a href="#区别常用函数表示" class="headerlink" title="区别常用函数表示"></a>区别常用函数表示</h1><p>$ln$ &amp;&amp; $\ln$左边单纯输入ln两个字母，右边加了斜杠，代表是一个函数。</p>
 <p>同样适用于min max sin cos等。</p>
-<h2 id="函数中的圆括号和花括号"><a href="#函数中的圆括号和花括号" class="headerlink" title="函数中的圆括号和花括号"></a>函数中的圆括号和花括号</h2><p>区别一下两种在函数中加入表达式的方法。</p>
+<h1 id="函数中的圆括号和花括号"><a href="#函数中的圆括号和花括号" class="headerlink" title="函数中的圆括号和花括号"></a>函数中的圆括号和花括号</h1><p>区别一下两种在函数中加入表达式的方法。</p>
 <p>函数后面只用了花括号：<code>\ln&#123;1-f_&#123;\omega,b&#125;(x_n)&#125;</code></p>
 <script type="math/tex; mode=display">
 \ln{1-f_{\omega,b}(x_n)}</script><p>花括号中另外加了一层圆括号把减号前后包括起来。<code>\ln&#123;(1-f_&#123;\omega,b&#125;(x_n))&#125;</code></p>
@@ -257,7 +257,7 @@
 <h1 id="多行公式左对齐"><a href="#多行公式左对齐" class="headerlink" title="多行公式左对齐"></a>多行公式左对齐</h1><script type="math/tex; mode=display">
 \begin{split}
 \theta_{ML} &= arg\max \limits_{\theta}\sum_{i=1}^{m}p_{model}(x_{i};\theta) \\&= arg\max \limits_{\theta} {\frac{1}{m} \cdot \sum_{i=1}^{m}\log {p_{model}(x_{i};\theta) }} \\
-\end{split}</script><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;split&#125;</span></span></span><br><span class="line">x &amp;= a <span class="tag">\<span class="name">\</span></span></span><br><span class="line">&amp;= b <span class="tag">\<span class="name">\</span></span></span><br><span class="line">&amp;= c</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;split&#125;</span></span></span><br></pre></td></tr></table></figure>
+\end{split}</script><figure class="highlight latex"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;split&#125;</span></span></span><br><span class="line">x &amp;= a <span class="tag">\<span class="name">\</span></span></span><br><span class="line">&amp;= b <span class="tag">\<span class="name">\</span></span></span><br><span class="line">&amp;= c</span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;split&#125;</span></span></span><br><span class="line"></span><br><span class="line"><span class="tag">\<span class="name">begin</span><span class="string">&#123;array&#125;</span><span class="string">&#123;ll&#125;</span></span></span><br><span class="line"></span><br><span class="line"><span class="tag">\<span class="name">end</span><span class="string">&#123;array&#125;</span></span></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -341,7 +341,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.</span> <span class="nav-text">区别常用函数表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84%E5%9C%86%E6%8B%AC%E5%8F%B7%E5%92%8C%E8%8A%B1%E6%8B%AC%E5%8F%B7"><span class="nav-number">1.1.</span> <span class="nav-text">函数中的圆括号和花括号</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E6%A0%87%E7%BD%AE%E4%BA%8E%E6%AD%A3%E4%B8%8B%E6%96%B9"><span class="nav-number">2.</span> <span class="nav-text">下标置于正下方</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC"><span class="nav-number">3.</span> <span class="nav-text">空格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A2%E6%B5%AA%E5%8F%B7"><span class="nav-number">4.</span> <span class="nav-text">波浪号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A6%E6%96%87%E5%AD%97%E7%9A%84%E7%AE%AD%E5%A4%B4"><span class="nav-number">5.</span> <span class="nav-text">带文字的箭头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B"><span class="nav-number">6.</span> <span class="nav-text">期望</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#product-amp-summation"><span class="nav-number">7.</span> <span class="nav-text">product &amp; summation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E5%85%AC%E5%BC%8F%E5%B7%A6%E5%AF%B9%E9%BD%90"><span class="nav-number">8.</span> <span class="nav-text">多行公式左对齐</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB%E5%B8%B8%E7%94%A8%E5%87%BD%E6%95%B0%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.</span> <span class="nav-text">区别常用函数表示</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%B8%AD%E7%9A%84%E5%9C%86%E6%8B%AC%E5%8F%B7%E5%92%8C%E8%8A%B1%E6%8B%AC%E5%8F%B7"><span class="nav-number">2.</span> <span class="nav-text">函数中的圆括号和花括号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%8B%E6%A0%87%E7%BD%AE%E4%BA%8E%E6%AD%A3%E4%B8%8B%E6%96%B9"><span class="nav-number">3.</span> <span class="nav-text">下标置于正下方</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A9%BA%E6%A0%BC"><span class="nav-number">4.</span> <span class="nav-text">空格</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B3%A2%E6%B5%AA%E5%8F%B7"><span class="nav-number">5.</span> <span class="nav-text">波浪号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A6%E6%96%87%E5%AD%97%E7%9A%84%E7%AE%AD%E5%A4%B4"><span class="nav-number">6.</span> <span class="nav-text">带文字的箭头</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B"><span class="nav-number">7.</span> <span class="nav-text">期望</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#product-amp-summation"><span class="nav-number">8.</span> <span class="nav-text">product &amp; summation</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E8%A1%8C%E5%85%AC%E5%BC%8F%E5%B7%A6%E5%AF%B9%E9%BD%90"><span class="nav-number">9.</span> <span class="nav-text">多行公式左对齐</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -355,18 +355,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">50</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">13</span>
+        <span class="site-state-item-count">14</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">64</span>
+        <span class="site-state-item-count">76</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -402,12 +402,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">122k</span>
+    <span title="站点总字数">215k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">3:42</span>
+    <span title="站点阅读时长">6:31</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>
