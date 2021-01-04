@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/ 
+Allow: /JavaScript/ 
+Disallow: /js/
+Disallow: /css/
+Disallow: /images/
+Disallow: /fonts/
+
+Sitemap: https://drunk99.xyz/sitemap.xml
+Sitemap: https://drunk99.xyz/baidusitemap.xml
