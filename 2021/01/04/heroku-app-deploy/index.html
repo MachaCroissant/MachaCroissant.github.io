@@ -260,19 +260,19 @@
 
       
         <p>本来想在Netlify上部署网站的，结果无论如何都没办法重定向到github，并且总是网页无法打开，就转用heroku了。</p>
-<h1 id="Vue-CLI项目部署"><a href="#Vue-CLI项目部署" class="headerlink" title="Vue-CLI项目部署"></a>Vue-CLI项目部署</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><a target="_blank" rel="noopener" href="https://gist.github.com/hone/24b06869b4c1eca701f9">VueCLI官方给出的部署教程</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.binarcode.com/blog/deploying-vue-apps-to-heroku-the-right-way/">BinarCode上的部署教程</a></p>
-<p><a target="_blank" rel="noopener" href="https://devcenter.heroku.com/articles/getting-started-with-nodejs">Heroku官方基于Heroku CLI的Node.js应用部署文档</a></p>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/59658200/9853144">StackOverflow上比较好的回答1</a></p>
-<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/a/65056203/9853144">StackOverflow上比较好的回答2</a></p>
+<h1 id="Vue-CLI项目部署"><a href="#Vue-CLI项目部署" class="headerlink" title="Vue-CLI项目部署"></a>Vue-CLI项目部署</h1><h2 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h2><p><span class="exturl" data-url="aHR0cHM6Ly9naXN0LmdpdGh1Yi5jb20vaG9uZS8yNGIwNjg2OWI0YzFlY2E3MDFmOQ==">VueCLI官方给出的部署教程<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuYmluYXJjb2RlLmNvbS9ibG9nL2RlcGxveWluZy12dWUtYXBwcy10by1oZXJva3UtdGhlLXJpZ2h0LXdheS8=">BinarCode上的部署教程<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9kZXZjZW50ZXIuaGVyb2t1LmNvbS9hcnRpY2xlcy9nZXR0aW5nLXN0YXJ0ZWQtd2l0aC1ub2RlanM=">Heroku官方基于Heroku CLI的Node.js应用部署文档<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzU5NjU4MjAwLzk4NTMxNDQ=">StackOverflow上比较好的回答1<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzY1MDU2MjAzLzk4NTMxNDQ=">StackOverflow上比较好的回答2<i class="fa fa-external-link-alt"></i></span></p>
 <h2 id="部署操作"><a href="#部署操作" class="headerlink" title="部署操作"></a>部署操作</h2><p>需要在heroku上创建账号，创建app。在进入app后有一排工具栏，可以查看对应的信息。</p>
 <p><img src="/2021/01/04/heroku-app-deploy/image-20210104130207252.png" alt="image-20210104130207252" style="zoom:50%;"></p>
 <p>Deploy一栏是初次部署的时候显示的页面，在这里关联github的特定项目。</p>
 <p>Activity一栏可以查看build log，如果部署不成功需要去查找错误。</p>
-<p>Settings一栏可以<strong>配置环境变量</strong>。在<a target="_blank" rel="noopener" href="https://github.com/MachaCroissant/vue3-demo3">vue3-demo3</a>中用到了.env配置环境变量，需要在部署的时候添加到heroku去。</p>
+<p>Settings一栏可以<strong>配置环境变量</strong>。在<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50L3Z1ZTMtZGVtbzM=">vue3-demo3<i class="fa fa-external-link-alt"></i></span>中用到了.env配置环境变量，需要在部署的时候添加到heroku去。</p>
 <p>如果部署中出现报错<code>npm ERR! missing script: start</code>，意思是在<code>package.json</code>中没有找到start相关的script，因为vue-cli默认只有serve/build/lint。这时需要自定义start脚本的内容。</p>
 <blockquote>
-<p>这里涉及一些npm脚本的知识。<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903957228158983">掘金上关于npm的知识点汇总</a></p>
+<p>这里涉及一些npm脚本的知识。<span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82ODQ0OTAzOTU3MjI4MTU4OTgz">掘金上关于npm的知识点汇总<i class="fa fa-external-link-alt"></i></span></p>
 <p>npm脚本常用的几个缩写分别是：</p>
 <ul>
 <li><p><code>npm start</code> short for <code>npm run start</code></p>

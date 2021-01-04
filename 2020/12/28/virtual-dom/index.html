@@ -254,9 +254,9 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="参阅"><a href="#参阅" class="headerlink" title="参阅"></a>参阅</h1><p><a target="_blank" rel="noopener" href="https://v3.vuejs.org/guide/optimizations.html#virtual-dom">Vue3官方文档对此的解释</a></p>
-<p><a target="_blank" rel="noopener" href="https://codepen.io/sdras/pen/RwwQapa">官方文档中动画演示源代码，用于看解释</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=e-E0UB-YDRk&amp;ab_channel=Bitfumes">Bitfumes Vue3教程中的Vue Virtual DOM解释</a></p>
+        <h1 id="参阅"><a href="#参阅" class="headerlink" title="参阅"></a>参阅</h1><p><span class="exturl" data-url="aHR0cHM6Ly92My52dWVqcy5vcmcvZ3VpZGUvb3B0aW1pemF0aW9ucy5odG1sI3ZpcnR1YWwtZG9t">Vue3官方文档对此的解释<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9jb2RlcGVuLmlvL3NkcmFzL3Blbi9Sd3dRYXBh">官方文档中动画演示源代码，用于看解释<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1lLUUwVUItWURSayZhbXA7YWJfY2hhbm5lbD1CaXRmdW1lcw==">Bitfumes Vue3教程中的Vue Virtual DOM解释<i class="fa fa-external-link-alt"></i></span></p>
 <h1 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h1><p>虚拟DOM是浏览器DOM的一份JavaScript复制。虚拟DOM是一个轻量级的JavaScript对象。</p>
 <p>当用JavaScript去update html DOM的时候，这个操作十分expensive，但是用JavaScript对JavaScript DOM去update相对cheap。</p>
 <p>找出每一个DOM节点并更新是一个十分缓慢的过程，因此不如在虚拟DOM中把所有要更新的DOM节点都找出来，然后vue去比较虚拟DOM和浏览器DOM之间的区别，然后batch calls to re-render/一次完成所有节点更新。</p>

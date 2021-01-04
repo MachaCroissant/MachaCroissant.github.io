@@ -353,7 +353,7 @@
 <li>When iterating over the dimension sizes, starting at the trailing dimension, the dimension sizes must either be equal, one of them is 1, or one of them does not exist.</li>
 </ul>
 <p>对应dimension要么相同，要么一个是1另一个是更大的数字。</p>
-<h1 id="计算图"><a href="#计算图" class="headerlink" title="计算图"></a>计算图</h1><p>为什么需要用到计算图？<a target="_blank" rel="noopener" href="http://colah.github.io/posts/2015-08-Backprop/">参考</a></p>
+<h1 id="计算图"><a href="#计算图" class="headerlink" title="计算图"></a>计算图</h1><p>为什么需要用到计算图？<span class="exturl" data-url="aHR0cDovL2NvbGFoLmdpdGh1Yi5pby9wb3N0cy8yMDE1LTA4LUJhY2twcm9wLw==">参考<i class="fa fa-external-link-alt"></i></span></p>
 <p>计算图将函数表达式用树状结构表示。求偏导，联系链式法则，因子路径。</p>
 <p>对于某一个结点往根结点去就是forward propagation，可以求该节点对它上面的所有节点的影响。对于某一个节点往叶子结点去就是backpropagation，可以求该节点受它下面的那些节点的影响。</p>
 <p>记录了计算图，就能追踪每一次微分。</p>
@@ -392,8 +392,8 @@
 <p>在一个关于data_size/batch_size的循环，或者data_size的循环中，首先计算y_hat，其次计算loss，接下来求梯度(<strong>Optimizers do not compute the gradients for you, so you must call <code>backward()</code> yourself. </strong>)，要注意先清空梯度。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">step_size = <span class="number">0.01</span></span><br><span class="line"></span><br><span class="line">linear_module = nn.Linear(d, <span class="number">1</span>)</span><br><span class="line">loss_func = nn.MSELoss()</span><br><span class="line">optim = torch.optim.SGD(linear_module.parameters(), lr=step_size)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">20</span>):</span><br><span class="line">    <span class="comment"># shuffling data</span></span><br><span class="line">    rand_idx = np.random.choice(n) <span class="comment"># take a random point from the dataset</span></span><br><span class="line">    x = X[rand_idx] </span><br><span class="line">    y_hat = linear_module(x)</span><br><span class="line">    loss = loss_func(y_hat, y)</span><br><span class="line">    <span class="comment"># You also must call the optim.zero_grad() function before calling backward() since by default PyTorch does and inplace add to the .grad member variable rather than overwriting it.</span></span><br><span class="line">    optim.zero_grad()</span><br><span class="line">    loss.backward()</span><br><span class="line">    optim.step()</span><br></pre></td></tr></table></figure>
 <p>在初始化参数的时候可以定一个momentum的初始值，之后当作参数传入<code>torch.optim</code>。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=kQeezFrNoOg&amp;feature=youtu.be">台大李宏毅机器学习助教补充课</a></p>
-<p><a target="_blank" rel="noopener" href="https://pytorch.org/docs/stable/index.html">Pytorch官方文档</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1rUWVlekZyTm9PZyZhbXA7ZmVhdHVyZT15b3V0dS5iZQ==">台大李宏毅机器学习助教补充课<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9weXRvcmNoLm9yZy9kb2NzL3N0YWJsZS9pbmRleC5odG1s">Pytorch官方文档<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 

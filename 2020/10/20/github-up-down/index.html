@@ -290,7 +290,7 @@
 <p>利用命令<code>git remote set-URL origin SSH</code>先把本地url设置为ssh的地址，并转到具体分支<code>git branch -M BRANCH_NAME</code>。</p>
 <p>利用命令<code>git push -u origin BRACH_NAME</code>把文件提交到BRACH_NAME的分支中，默认repository创建只有一个main brach。</p>
 <h1 id="查看历史版本"><a href="#查看历史版本" class="headerlink" title="查看历史版本"></a>查看历史版本</h1><p>跟随做项目的时候为了看懂别人的代码，需要用到查看历史Commits。一般git clone出来的总是最新更新的版本，通过版本退回可以看到别人实现项目的思路演变。</p>
-<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000010771974">操作参考</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9zZWdtZW50ZmF1bHQuY29tL2EvMTE5MDAwMDAxMDc3MTk3NA==">操作参考<i class="fa fa-external-link-alt"></i></span></p>
 <ol>
 <li>正常git clone项目到目的文件夹</li>
 <li>点击Commits进入历史版本，获取你想要查看的那个版本的SHA</li>
@@ -311,7 +311,7 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url origin https://username@github.com/MyRepo/project.git</span><br></pre></td></tr></table></figure>
 <h2 id="无法打开github文件夹"><a href="#无法打开github文件夹" class="headerlink" title="无法打开github文件夹"></a>无法打开github文件夹</h2><p>很有可能是因为子文件夹下面已经有了一个隐藏的.git文件夹，导致无法解析，github把这个文件夹默认为untracked content。只需要删除.git文件夹即可。</p>
 <p>对于一个repository中的所有文件夹，必须只能 only one root<code>.git</code> folder，否则无法解析。</p>
-<p>参考StackOverflow的回答<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/28384464/why-can-i-not-open-my-folder-in-github">为什么无法打开github文件夹</a>。</p>
+<p>参考StackOverflow的回答<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMjgzODQ0NjQvd2h5LWNhbi1pLW5vdC1vcGVuLW15LWZvbGRlci1pbi1naXRodWI=">为什么无法打开github文件夹<i class="fa fa-external-link-alt"></i></span>。</p>
 
     </div>
 

@@ -287,7 +287,7 @@
 <p><strong>Chian commands together using pipe symbol <code>|</code>. The pipe redirects the output of the former command to the input of the latter command.</strong>使用pipe输出重定向到吓一跳语句。</p>
 <p>Counts the number of words, characters, or bytes of whatever is inputted into it: <code>wc the-thing-you-want-to-count</code></p>
 <h1 id="开发工具链-Tool-Chain"><a href="#开发工具链-Tool-Chain" class="headerlink" title="开发工具链 Tool Chain"></a>开发工具链 Tool Chain</h1><h2 id="包管理工具的npm解释"><a href="#包管理工具的npm解释" class="headerlink" title="包管理工具的npm解释"></a>包管理工具的npm解释</h2><p><code>npm</code>: Node Package Management. Together with <code>node.js</code>. A package manager is a system taht will manage your project dependencies.</p>
-<p><code>Package registries</code>: a central place that a package is published to and thus can be installed from. e.g. The npm registry exists at <a target="_blank" rel="noopener" href="https://www.npmjs.com/">npmjs.com</a>.在国内一般使用淘宝源能够更快下载。</p>
+<p><code>Package registries</code>: a central place that a package is published to and thus can be installed from. e.g. The npm registry exists at <span class="exturl" data-url="aHR0cHM6Ly93d3cubnBtanMuY29tLw==">npmjs.com<i class="fa fa-external-link-alt"></i></span>.在国内一般使用淘宝源能够更快下载。</p>
 <p><code>dependency</code>:  a third-party bit of software that was probably written by someone else and ideally solves a single problem for you.</p>
 <h3 id="npm命令集合"><a href="#npm命令集合" class="headerlink" title="npm命令集合"></a>npm命令集合</h3><p>Intialise a new project: <code>npm init</code>.</p>
 <p>installing dependencies: <code>npm install your-target-dependency</code>.（这是局部安装，在当前文件夹下）</p>
@@ -306,7 +306,7 @@
 <center>
 
 <p>如果执行<code>--save-dev</code> option就是要求把安装信息写在当前路径下已经存在的package.json文件中的devDependencies field中，包安装在当前路径下的node_modules文件夹中。</p>
-<p>局部安装一般都是发生在一个具体的项目中，而这些包的的使用需要在文件全体根目录下的<code>eslint.config.js</code>文件（项目级配置）或者<code>.eslintrc.js</code>（文件级配置）。具体配置文件的区别参考<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/60288375/when-to-use-babel-config-js-and-babelrc">StackOverflow的回答</a>。</p>
+<p>局部安装一般都是发生在一个具体的项目中，而这些包的的使用需要在文件全体根目录下的<code>eslint.config.js</code>文件（项目级配置）或者<code>.eslintrc.js</code>（文件级配置）。具体配置文件的区别参考<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNjAyODgzNzUvd2hlbi10by11c2UtYmFiZWwtY29uZmlnLWpzLWFuZC1iYWJlbHJj">StackOverflow的回答<i class="fa fa-external-link-alt"></i></span>。</p>
 <p>局部安装更利于将各种依赖包以项目为单位集中管理、升级。</p>
 <h3 id="npm与npx的区别"><a href="#npm与npx的区别" class="headerlink" title="npm与npx的区别"></a>npm与npx的区别</h3><p>npm是管理node包的工具。npx是执行node包的工具。</p>
 <p>只有全局安装的包才能以包名去执行。</p>

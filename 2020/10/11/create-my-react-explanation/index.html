@@ -278,7 +278,7 @@
 <p>因此，我们通过在命令行中运行<code>npm create-react-app my-react-tutorial</code>，就是下载了React官方发布的项目，且列出在package.json中的所有依赖包都被我们下载并放到了<code>./node_modules</code>目录下。</p>
 <h1 id="public"><a href="#public" class="headerlink" title="public"></a>public</h1><p>只有在<code>public</code>目录中的文件才可以被<code>public/index.html</code>使用。一般来说除了修改<code>title</code>元素的内容来更改应用程序的名字，其他<code>index.html</code>中的内容都不应当被编辑，除非你清楚自己在进行什么样的操作。</p>
 <p><code>public</code>目录只有在build和deploy的时候会被更新。</p>
-<h1 id="src"><a href="#src" class="headerlink" title="src"></a>src</h1><p>该目录存放该项目的JS以及CSS文件，只有<code>src</code>目录下的文件才会被<a target="_blank" rel="noopener" href="https://www.webpackjs.com/concepts/">Webpack静态模块打包器</a>处理。可以在<code>src</code>目录中新建子目录。</p>
+<h1 id="src"><a href="#src" class="headerlink" title="src"></a>src</h1><p>该目录存放该项目的JS以及CSS文件，只有<code>src</code>目录下的文件才会被<span class="exturl" data-url="aHR0cHM6Ly93d3cud2VicGFja2pzLmNvbS9jb25jZXB0cy8=">Webpack静态模块打包器<i class="fa fa-external-link-alt"></i></span>处理。可以在<code>src</code>目录中新建子目录。</p>
 <p>React将<code>src</code>目录中的代码嵌入到HTML文件的DOM树中，从而让浏览器能够解析出<code>index.html</code>文件。</p>
 <h2 id="关于index-js的解读"><a href="#关于index-js的解读" class="headerlink" title="关于index.js的解读"></a>关于index.js的解读</h2><h3 id="顶部import语句"><a href="#顶部import语句" class="headerlink" title="顶部import语句"></a>顶部<code>import</code>语句</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import React from &#39;react&#39;;</span><br><span class="line">import logo from &#39;.&#x2F;logo.svg&#39;;</span><br><span class="line">import &#39;.&#x2F;App.css&#39;;</span><br></pre></td></tr></table></figure>
 <p>第一句导入React库，这一步的目的是允许React库将JS文件中的JSX语句转换成<code>React.createElement()</code>。所有与React相关的部分都需要包括这个React库。</p>
@@ -288,11 +288,11 @@
 <h3 id="中间class-函数组件"><a href="#中间class-函数组件" class="headerlink" title="中间class/函数组件"></a>中间class/函数组件</h3><p>组件名称遵循<code>pascal-case variable</code>，一定要大写。</p>
 <p>对于JSX写法的元素(element)设定属性(attribute)，和HTML中写法大致一致。区别在于HTML中元素的<code>class attribute</code>到JSX中变成了<code>className attribute</code>，这是因为<code>class</code>作为关键字被使用了。</p>
 <h3 id="底部export语句"><a href="#底部export语句" class="headerlink" title="底部export语句"></a>底部<code>export</code>语句</h3><p>一个<code>.js</code>文件底部的<code>export default this-js-name.js</code>使该文件能够在其他的<code>.js</code>文件的顶部利用<code>import</code>导入并使用。</p>
-<h1 id="参阅"><a href="#参阅" class="headerlink" title="参阅"></a>参阅</h1><p><a target="_blank" rel="noopener" href="https://create-react-app.dev/docs/folder-structure">create-my-react document: folder structure</a></p>
-<p><a target="_blank" rel="noopener" href="https://wiki.developer.mozilla.org/zh-CN/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started">MDN web docs: React getting started</a></p>
-<p><a target="_blank" rel="noopener" href="https://nodejs.org/en/knowledge/getting-started/npm/what-is-the-file-package-json/">What is the file package json</a></p>
-<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903502720794638">前端基础配置详解</a></p>
-<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/26041084">webpack配置解释</a></p>
+<h1 id="参阅"><a href="#参阅" class="headerlink" title="参阅"></a>参阅</h1><p><span class="exturl" data-url="aHR0cHM6Ly9jcmVhdGUtcmVhY3QtYXBwLmRldi9kb2NzL2ZvbGRlci1zdHJ1Y3R1cmU=">create-my-react document: folder structure<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93aWtpLmRldmVsb3Blci5tb3ppbGxhLm9yZy96aC1DTi9kb2NzL0xlYXJuL1Rvb2xzX2FuZF90ZXN0aW5nL0NsaWVudC1zaWRlX0phdmFTY3JpcHRfZnJhbWV3b3Jrcy9SZWFjdF9nZXR0aW5nX3N0YXJ0ZWQ=">MDN web docs: React getting started<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ub2RlanMub3JnL2VuL2tub3dsZWRnZS9nZXR0aW5nLXN0YXJ0ZWQvbnBtL3doYXQtaXMtdGhlLWZpbGUtcGFja2FnZS1qc29uLw==">What is the file package json<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82ODQ0OTAzNTAyNzIwNzk0NjM4">前端基础配置详解<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNjA0MTA4NA==">webpack配置解释<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 

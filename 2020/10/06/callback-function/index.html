@@ -263,8 +263,8 @@
         <h1 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h1><p>回调函数本质是一个在特定时刻特定事件下执行的函数，意思就是这个函数他和某个时间或事件相关联了，到达那个时间点或关注的事件被触发了，回调函数将被执行。</p>
 <p>回调函数的作用是实现异步操作。程序不需要一直等待某个事件的发生才去执行回调函数，而是等事件发生后再去执行。</p>
 <p>一个比较好理解的回答：</p>
-<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/19801131/answer/17312995">回调函数（callback）是什么？ - 朱栩的回答 - 知乎</a></p>
-<h1 id="回调函数与this"><a href="#回调函数与this" class="headerlink" title="回调函数与this"></a>回调函数与this</h1><p>React官方文档<a target="_blank" rel="noopener" href="https://zh-hans.reactjs.org/docs/handling-events.html">事件处理</a>一章节给出了一个例子，提到需要谨慎使用JSX回调中的this。</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5ODAxMTMxL2Fuc3dlci8xNzMxMjk5NQ==">回调函数（callback）是什么？ - 朱栩的回答 - 知乎<i class="fa fa-external-link-alt"></i></span></p>
+<h1 id="回调函数与this"><a href="#回调函数与this" class="headerlink" title="回调函数与this"></a>回调函数与this</h1><p>React官方文档<span class="exturl" data-url="aHR0cHM6Ly96aC1oYW5zLnJlYWN0anMub3JnL2RvY3MvaGFuZGxpbmctZXZlbnRzLmh0bWw=">事件处理<i class="fa fa-external-link-alt"></i></span>一章节给出了一个例子，提到需要谨慎使用JSX回调中的this。</p>
 <p><code>this.handleClick = this.handleClick.bind(this);</code></p>
 <p>一旦删除构造函数中的这句语句：</p>
 <ul>
@@ -282,7 +282,7 @@
 <p>从它是一个函数内部环境来看：在非严格模式下<code>`this</code>的值默认指向全局对象，在浏览器中就是<code>window</code>；在严格模式下，进入执行环境却没有设置<code>this</code>的值，<code>this</code>会保持<code>undefined</code>。</p>
 </li>
 </ul>
-<p>参考：<a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/this">MDN Web Docs关于this的说明</a></p>
+<p>参考：<span class="exturl" data-url="aHR0cHM6Ly9kZXZlbG9wZXIubW96aWxsYS5vcmcvemgtQ04vZG9jcy9XZWIvSmF2YVNjcmlwdC9SZWZlcmVuY2UvT3BlcmF0b3JzL3RoaXM=">MDN Web Docs关于this的说明<i class="fa fa-external-link-alt"></i></span></p>
 
     </div>
 

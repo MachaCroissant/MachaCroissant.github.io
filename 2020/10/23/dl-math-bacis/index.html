@@ -311,7 +311,7 @@
 <p>Its goal is: <strong>given some arbitrary function, find a minumum</strong>. For some small subset of functions - those that are <strong><em>convex</em></strong> - there’s just a single minumum which also happens to be global. For most realistic functions, there may be many minima, so most <strong>minima are local.</strong> </p>
 <p>The main premise of gradient descent is: given some current location <em>x</em> in the search space (the domain of the optimized function) we ought to <strong>update <em>x</em> for the next step in the direction opposite to the gradient of the function computed at <em>x</em></strong>. </p>
 <p>Where $\eta$ is what we call a “<strong>learning rate</strong>“, and is <strong>constant for each given update</strong>. It’s the reason why <strong>we don’t care much about the magnitude of the derivative at $x_0$, only its direction</strong>. </p>
-<p>Reference: <a target="_blank" rel="noopener" href="https://eli.thegreenplace.net/2016/understanding-gradient-descent/">理解梯度下降</a></p>
+<p>Reference: <span class="exturl" data-url="aHR0cHM6Ly9lbGkudGhlZ3JlZW5wbGFjZS5uZXQvMjAxNi91bmRlcnN0YW5kaW5nLWdyYWRpZW50LWRlc2NlbnQv">理解梯度下降<i class="fa fa-external-link-alt"></i></span></p>
 </blockquote>
 <h2 id="数学理论"><a href="#数学理论" class="headerlink" title="数学理论"></a>数学理论</h2><p>对于损失函数的一个初始点$\{\theta_1, \theta_2\}$，需要在其邻域(表现在这里就是在等高图上着一个平面圆圈)找一个新的值使得损失函数更小，该怎么找？</p>
 <blockquote>
@@ -330,8 +330,8 @@
 <p>该任意向量可以有任意长度，但是把它scale到模为1就可以表示用这个向量平面去切空间里的函数，在那个点的切线斜率。</p>
 <h1 id="方向导数与偏微分-梯度向量"><a href="#方向导数与偏微分-梯度向量" class="headerlink" title="方向导数与偏微分/梯度向量"></a>方向导数与偏微分/梯度向量</h1><p>由内积的定义可知，梯度向量是方向导数最大的地方，就是曲面最陡峭的方向。</p>
 <h1 id="全微分"><a href="#全微分" class="headerlink" title="全微分"></a>全微分</h1><p>全微分就是改变坐标系基向量的所有维度的值，衡量函数值变化的情况。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/39059717">知乎专栏</a></p>
-<p><a target="_blank" rel="noopener" href="https://www.youtube.com/watch?v=AXqhWeUEtQU&amp;list=PLSQl0a2vh4HC5feHa6Rc5c0wbRTx56nF7&amp;index=15&amp;ab_channel=KhanAcademy">Khan Acadamy Multivariable Calculus</a></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8zOTA1OTcxNw==">知乎专栏<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cueW91dHViZS5jb20vd2F0Y2g/dj1BWHFoV2VVRXRRVSZhbXA7bGlzdD1QTFNRbDBhMnZoNEhDNWZlSGE2UmM1YzB3YlJUeDU2bkY3JmFtcDtpbmRleD0xNSZhbXA7YWJfY2hhbm5lbD1LaGFuQWNhZGVteQ==">Khan Acadamy Multivariable Calculus<i class="fa fa-external-link-alt"></i></span></p>
 </blockquote>
 <p>注意这里化简的前提，是基于泰勒展开式对于损失函数在该点的模拟的精确度，因此我们适用的邻域就要足够小，这个邻域的大小表现在数据上就是我们选择的学习率。</p>
 <h2 id="如何实现"><a href="#如何实现" class="headerlink" title="如何实现"></a>如何实现</h2><h3 id="小心地调整Learning-Rate"><a href="#小心地调整Learning-Rate" class="headerlink" title="小心地调整Learning Rate"></a>小心地调整Learning Rate</h3><ul>

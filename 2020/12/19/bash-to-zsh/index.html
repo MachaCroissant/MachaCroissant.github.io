@@ -265,7 +265,7 @@
 
       
         <p>一个冷知识，zsh该怎么读，我一直读z-s-h三个字母，后来发现应该读z-shell。</p>
-<h1 id="从bash到zsh"><a href="#从bash到zsh" class="headerlink" title="从bash到zsh"></a>从bash到zsh</h1><p>参考<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021216800">macos上的zsh配置</a>。</p>
+<h1 id="从bash到zsh"><a href="#从bash到zsh" class="headerlink" title="从bash到zsh"></a>从bash到zsh</h1><p>参考<span class="exturl" data-url="aHR0cHM6Ly9zZWdtZW50ZmF1bHQuY29tL2EvMTE5MDAwMDAyMTIxNjgwMA==">macos上的zsh配置<i class="fa fa-external-link-alt"></i></span>。</p>
 <h2 id="shell脚本切换"><a href="#shell脚本切换" class="headerlink" title="shell脚本切换"></a>shell脚本切换</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line">chsh -s /bin/bash</span><br></pre></td></tr></table></figure>
 <h2 id="查看当前系统默认shell"><a href="#查看当前系统默认shell" class="headerlink" title="查看当前系统默认shell"></a>查看当前系统默认shell</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $SHELL</span><br></pre></td></tr></table></figure>
 <h2 id="默认zsh安装-升级"><a href="#默认zsh安装-升级" class="headerlink" title="默认zsh安装/升级"></a>默认zsh安装/升级</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zsh --version</span><br><span class="line"></span><br><span class="line">brew install zsh zsh-completions</span><br></pre></td></tr></table></figure>
@@ -311,15 +311,15 @@
 <p>直接在终端输入<code>setproxy</code>即可。</p>
 <hr>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><p><a target="_blank" rel="noopener" href="https://github.com/FatliTalk/blog/issues/131">macOS终端使用代理网络</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL0ZhdGxpVGFsay9ibG9nL2lzc3Vlcy8xMzE=">macOS终端使用代理网络<i class="fa fa-external-link-alt"></i></span></p>
 </li>
-<li><p><a target="_blank" rel="noopener" href="https://jerrysun.org/skill/2020/02/19/proxy/">关于终端代理</a></p>
+<li><p><span class="exturl" data-url="aHR0cHM6Ly9qZXJyeXN1bi5vcmcvc2tpbGwvMjAyMC8wMi8xOS9wcm94eS8=">关于终端代理<i class="fa fa-external-link-alt"></i></span></p>
 </li>
 </ol>
-<h2 id="无法PING"><a href="#无法PING" class="headerlink" title="无法PING"></a>无法PING</h2><p>在设置完代理之后，使用ping方法依然无法成功。因为ping方法是基于网络层的ICMP协议，而代理协议socks和http分别基于OSI模型的会话层和应用层。详细解释看这里<a target="_blank" rel="noopener" href="https://hackcraker.github.io/2020/03/11/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%87%8C%E8%AE%BE%E4%BB%A3%E7%90%86/">如何在命令行里设代理</a>。可以使用curl方法访问外网网站。</p>
+<h2 id="无法PING"><a href="#无法PING" class="headerlink" title="无法PING"></a>无法PING</h2><p>在设置完代理之后，使用ping方法依然无法成功。因为ping方法是基于网络层的ICMP协议，而代理协议socks和http分别基于OSI模型的会话层和应用层。详细解释看这里<span class="exturl" data-url="aHR0cHM6Ly9oYWNrY3Jha2VyLmdpdGh1Yi5pby8yMDIwLzAzLzExLyVFNSVBNiU4MiVFNCVCRCU5NSVFNSU5QyVBOCVFNSU5MSVCRCVFNCVCQiVBNCVFOCVBMSU4QyVFOSU4NyU4QyVFOCVBRSVCRSVFNCVCQiVBMyVFNyU5MCU4Ni8=">如何在命令行里设代理<i class="fa fa-external-link-alt"></i></span>。可以使用curl方法访问外网网站。</p>
 <h2 id="curl-ip依然显示实际地理位置"><a href="#curl-ip依然显示实际地理位置" class="headerlink" title="curl ip依然显示实际地理位置"></a>curl ip依然显示实际地理位置</h2><p>在设置完代理之后，使用curl方法获得地理位置信息<code>curl cip.cc</code>，可能依然显示实际地理位置，注意查看参考1中给出的前提条件是Clash X代理客户端开启全局模式，如果是规则判断依然会出现实际地理位置。</p>
 <h2 id="npm-yarn设置代理"><a href="#npm-yarn设置代理" class="headerlink" title="npm/yarn设置代理"></a>npm/yarn设置代理</h2><p>为npm和yarn设置包管理工具的初衷是出现network error。一般情况下，会建议切换国内源，但是国内源切换了也还是没办法的话就试试设置代理。</p>
-<p>参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904160513490957">如何为git,npm,yarn设置代理</a>。</p>
+<p>参考<span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82ODQ0OTA0MTYwNTEzNDkwOTU3">如何为git,npm,yarn设置代理<i class="fa fa-external-link-alt"></i></span>。</p>
 <h3 id="查看代理命令"><a href="#查看代理命令" class="headerlink" title="查看代理命令"></a>查看代理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config list</span><br><span class="line">yarn config list</span><br></pre></td></tr></table></figure>
 <h3 id="设置代理命令"><a href="#设置代理命令" class="headerlink" title="设置代理命令"></a>设置代理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm config set proxy  http://127.0.0.1:7890</span><br><span class="line">npm config set https-proxy http://127.0.0.1:7890</span><br><span class="line"></span><br><span class="line">yarn config set https-proxy http://127.0.0.1:7890</span><br><span class="line">yarn config set proxy http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
 <blockquote>

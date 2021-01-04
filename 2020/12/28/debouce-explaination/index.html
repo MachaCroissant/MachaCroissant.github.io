@@ -257,7 +257,7 @@
       
         <h1 id="为什么需要防抖函数"><a href="#为什么需要防抖函数" class="headerlink" title="为什么需要防抖函数"></a>为什么需要防抖函数</h1><p>在浏览器中，触发频繁的事件，如window的onresize、鼠标的mousemove、滚轮的wheel、文本输入框的验证等，因为这些事件被频繁触发，有可能导致大量的计算或者服务器资源消耗极大的操作，event handler就没有必要每一次触发都执行。</p>
 <p>因此就有了函数防抖的概念，让事件触发的n秒内只执行一次，防止event handler多次调用，如果连续触发就重新计算事件。</p>
-<p><a target="_blank" rel="noopener" href="https://github.com/YvetteLau/Step-By-Step/issues/10">Github上找到的关于防抖函数的讨论</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL1l2ZXR0ZUxhdS9TdGVwLUJ5LVN0ZXAvaXNzdWVzLzEw">Github上找到的关于防抖函数的讨论<i class="fa fa-external-link-alt"></i></span></p>
 <h1 id="vue中的防抖的相关实现"><a href="#vue中的防抖的相关实现" class="headerlink" title="vue中的防抖的相关实现"></a>vue中的防抖的相关实现</h1><h2 id="v-model与lazy修饰符"><a href="#v-model与lazy修饰符" class="headerlink" title="v-model与lazy修饰符"></a>v-model与lazy修饰符</h2><p>vue提供了输入框数据的双向绑定v-model指令，该指令默认每一次用户的输入都让vue重新计算重新渲染，当用户输入很长一段内容的时候这是极大的渲染负担。因此引入了.lazy修饰符，但.lazy修饰符的局限在于只有当用户focus out才渲染，对于比较小的输入会比较方便，但是大的文本输入情况下不适用。</p>
 <h2 id="v-bind-value与event-handler"><a href="#v-bind-value与event-handler" class="headerlink" title="v-bind:value与event handler"></a>v-bind:value与event handler</h2><p>v-bind指令与v-model指令的区别在于，v-bind是实现用户输入流向vue的单向绑定（需要绑定在value上），如果要让vue的数据去流向用户（也就是渲染），需要用到事件处理函数，每一次用户的输入，我都利用事件去update一下，相当于手动实现了v-model的双向绑定。</p>
 <p>这样的实现方式与v-model相比，可以更细致化的去定义事件处理函数如何去处理如何去渲染。</p>

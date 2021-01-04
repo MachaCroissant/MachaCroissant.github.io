@@ -285,7 +285,7 @@ L = \sum_{n=1}^{n}{l_n}</script><p>注意这里的$x^i$不是一维的数据，�
 <p>线性输出z进入一个激励函数non-linear activation function获得一个非线性输出，该输出作为下一层神经网络的输入。最常用的非线性激励函数就是Sigmoid Function。</p>
 <blockquote>
 <p>为什么需要激励函数？用于加入非线性因素。因为有些数据线性可分，但是某些数据线性不可分。</p>
-<p><a target="_blank" rel="noopener" href="https://www.zhihu.com/question/22334626/answer/103835591">神经网络激励函数的作用是什么？有没有形象的解释？ - 颜沁睿的回答 - 知乎</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzIyMzM0NjI2L2Fuc3dlci8xMDM4MzU1OTE=">神经网络激励函数的作用是什么？有没有形象的解释？ - 颜沁睿的回答 - 知乎<i class="fa fa-external-link-alt"></i></span></p>
 </blockquote>
 <script type="math/tex; mode=display">
 \frac{\partial l}{\partial \omega} = \frac{\partial l}{\partial z} \frac{\partial z}{\partial \omega}</script><p>计算$\frac{\partial z}{\partial \omega} $就是Forward Pass的过程，结果就是the value of the input connected by the weight，该层神经网络的输入。此处需要注意z已经在forward pass中被确定了。</p>

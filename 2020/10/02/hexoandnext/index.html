@@ -260,13 +260,13 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="踩坑与出坑"><a href="#踩坑与出坑" class="headerlink" title="踩坑与出坑"></a>踩坑与出坑</h1><h2 id="Mac终端生成SSH-key并添加到Github上"><a href="#Mac终端生成SSH-key并添加到Github上" class="headerlink" title="Mac终端生成SSH key并添加到Github上"></a>Mac终端生成SSH key并添加到Github上</h2><p>参考<a target="_blank" rel="noopener" href="https://vic.kim/2019/05/21/Mac%E7%94%B5%E8%84%91%E7%94%A8%E7%BB%88%E7%AB%AF%E7%94%9F%E6%88%90SSH%20key%20%E8%AE%BF%E9%97%AE%E8%87%AA%E5%B7%B1%E7%9A%84Github/">这篇博客</a>。</p>
+        <h1 id="踩坑与出坑"><a href="#踩坑与出坑" class="headerlink" title="踩坑与出坑"></a>踩坑与出坑</h1><h2 id="Mac终端生成SSH-key并添加到Github上"><a href="#Mac终端生成SSH-key并添加到Github上" class="headerlink" title="Mac终端生成SSH key并添加到Github上"></a>Mac终端生成SSH key并添加到Github上</h2><p>参考<span class="exturl" data-url="aHR0cHM6Ly92aWMua2ltLzIwMTkvMDUvMjEvTWFjJUU3JTk0JUI1JUU4JTg0JTkxJUU3JTk0JUE4JUU3JUJCJTg4JUU3JUFCJUFGJUU3JTk0JTlGJUU2JTg4JTkwU1NIJTIwa2V5JTIwJUU4JUFFJUJGJUU5JTk3JUFFJUU4JTg3JUFBJUU1JUI3JUIxJUU3JTlBJTg0R2l0aHViLw==">这篇博客<i class="fa fa-external-link-alt"></i></span>。</p>
 <p>比较实用的部分是<code>如何检测SSH key是否有权限访问github</code>这一部分，通过在终端输入<code>ssh git@github.com</code>。</p>
 <h2 id="执行npm-install出现的各种问题"><a href="#执行npm-install出现的各种问题" class="headerlink" title="执行npm install出现的各种问题"></a>执行<code>npm install</code>出现的各种问题</h2><p>错误1：<code>npm ERR! Unexpected end of JSON input while parsing near</code></p>
 <p>执行<code>npm cache clean --force</code>，再执行<code>npm intsall</code>。可能要多尝试几次。</p>
 <p>错误2：<code>Missing write access to /usr/local/lib/node_modules</code></p>
-<p>执行<code>sudo chown -R $USER /usr/local/lib/node_modules</code>，具体解释在<a target="_blank" rel="noopener" href="https://flaviocopes.com/npm-fix-missing-write-access-error/">此处</a>。</p>
-<p>错误3：<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/42735837/git-bash-remote-error-you-cant-push-to-git-github-com">Git Bash: remote error: You can’t push to git://github.com/</a></p>
+<p>执行<code>sudo chown -R $USER /usr/local/lib/node_modules</code>，具体解释在<span class="exturl" data-url="aHR0cHM6Ly9mbGF2aW9jb3Blcy5jb20vbnBtLWZpeC1taXNzaW5nLXdyaXRlLWFjY2Vzcy1lcnJvci8=">此处<i class="fa fa-external-link-alt"></i></span>。</p>
+<p>错误3：<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNDI3MzU4MzcvZ2l0LWJhc2gtcmVtb3RlLWVycm9yLXlvdS1jYW50LXB1c2gtdG8tZ2l0LWdpdGh1Yi1jb20=">Git Bash: remote error: You can’t push to git://github.com/<i class="fa fa-external-link-alt"></i></span></p>
 <p>需要使用HTTPS或SSH URL。</p>
 <h2 id="区分-config-yml文件"><a href="#区分-config-yml文件" class="headerlink" title="区分._config.yml文件"></a>区分._config.yml文件</h2><p>在<code>hexo site root direcotory</code>和<code>theme directory under site root directory</code>下分别有两个<code>._config.yml</code>文件，在阅读安装教程时请一定要看仔细每一步操作是针对哪一个配置文件进行的。</p>
 <p>学会熟练使用配置文件comment中给出的链接，阅读相关内容即可设置出想要的效果。在遇到问题时优先选择阅读最新官方文档！</p>
@@ -274,19 +274,19 @@
 <p>对于创建纯文件<code>CNAME</code>，应当在终端目录<code>hexo/source</code>下执行命令行<code>vi CNAME</code>，进入<code>vim</code>文本编辑输入模式<code>your-domain-name</code>，退出保存即可。</p>
 <h2 id="本地重新部署后浏览器没有显示网页变化"><a href="#本地重新部署后浏览器没有显示网页变化" class="headerlink" title="本地重新部署后浏览器没有显示网页变化"></a>本地重新部署后浏览器没有显示网页变化</h2><p>由于学习使用的时候用的主要还是Chrome浏览器，他会自动缓存上一次的浏览记录，会让重新部署后的网页无法正确显示。在CNAME文件本地创建并上传多次后依然网页404，在设定<code>favicon</code>多次之后发现依然不出现小图标。</p>
 <p>可以尝试在Chrome浏览器中删除最近一小时的浏览记录，问题即可解决。也可以多尝试其他浏览器，比如Firefox、Safari。</p>
-<h1 id="实用指南"><a href="#实用指南" class="headerlink" title="实用指南"></a>实用指南</h1><h2 id="博客运作原理"><a href="#博客运作原理" class="headerlink" title="博客运作原理"></a>博客运作原理</h2><p> <a target="_blank" rel="noopener" href="https://juejin.im/post/6844904131266609165">彻底搞懂如何使用Hexo+GitHubPages搭建个人博客</a></p>
+<h1 id="实用指南"><a href="#实用指南" class="headerlink" title="实用指南"></a>实用指南</h1><h2 id="博客运作原理"><a href="#博客运作原理" class="headerlink" title="博客运作原理"></a>博客运作原理</h2><p> <span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uaW0vcG9zdC82ODQ0OTA0MTMxMjY2NjA5MTY1">彻底搞懂如何使用Hexo+GitHubPages搭建个人博客<i class="fa fa-external-link-alt"></i></span></p>
 <p>建议参考这篇文章前半部分，能够帮助理解Hexo和Github Pages之间的关系，Hexo在博客中扮演什么角色，Github Pages在博客中扮演什么角色。</p>
-<h2 id="域名解析配置"><a href="#域名解析配置" class="headerlink" title="域名解析配置"></a>域名解析配置</h2><p><a target="_blank" rel="noopener" href="https://sketchk.xyz/2017/03/24/A-Guide-Of-Making-Your-Personal-Blog-Part-3/">A Guide of Making Your Personal Blog - Part3</a></p>
+<h2 id="域名解析配置"><a href="#域名解析配置" class="headerlink" title="域名解析配置"></a>域名解析配置</h2><p><span class="exturl" data-url="aHR0cHM6Ly9za2V0Y2hrLnh5ei8yMDE3LzAzLzI0L0EtR3VpZGUtT2YtTWFraW5nLVlvdXItUGVyc29uYWwtQmxvZy1QYXJ0LTMv">A Guide of Making Your Personal Blog - Part3<i class="fa fa-external-link-alt"></i></span></p>
 <p>这系列文章都为我部署我的个人博客提供了很大的帮助。这一篇为我理解域名解析提供了很大帮助，它不仅告诉你操作流程，还告诉你操作流程背后的原因。</p>
 <p>主要有三个部分：Namecheap购买域名，Cloudflare域名解析，Github响应解析。</p>
 <p>Namecheap购买完域名之后，我们需要告诉Namecheap我需要通过Cloudflare的服务器进行域名解析，而不是通过namecheap自带的服务器解析。所以，我们需要在购买的域名中选择<code>Custom DNS</code>，并将<code>nameservers</code>的值更改为Cloudflare的服务器的地址。</p>
 <p>为了获得Cloudflare的服务器地址，需要访问Cloudflare的网站。在这里为购买的域名添加记录，目的是将域名指向Github服务器的地址，添加记录的类型均为CNAME。</p>
 <p>我们在这个定位到的是Github服务器的地址，但是服务器却不知道该返回什么样的子资源。为了让属于我们的Github Pages被返回，我们需要将Github Pages的<code>Settings</code>中的<code>Custom Domain</code>设定为在Namecheap购买的域名。</p>
 <p>由此才可以建立起完整的域名解析。</p>
-<h2 id="Hexo官方文档"><a href="#Hexo官方文档" class="headerlink" title="Hexo官方文档"></a>Hexo官方文档</h2><p><a target="_blank" rel="noopener" href="https://hexo.io/docs/">这是Hexo官方文档</a></p>
+<h2 id="Hexo官方文档"><a href="#Hexo官方文档" class="headerlink" title="Hexo官方文档"></a>Hexo官方文档</h2><p><span class="exturl" data-url="aHR0cHM6Ly9oZXhvLmlvL2RvY3Mv">这是Hexo官方文档<i class="fa fa-external-link-alt"></i></span></p>
 <p>此官方文档能够指导的内容有：Node.js的安装、Hexo的安装、Hexo生成文件中各个参数的作用、如何使用Hexo来产出博客内容。</p>
-<h2 id="NexT官方文档"><a href="#NexT官方文档" class="headerlink" title="NexT官方文档"></a>NexT官方文档</h2><p><a target="_blank" rel="noopener" href="https://theme-next.js.org/">这是NexT最新说明文档</a></p>
-<p>之前一直参考的是<a target="_blank" rel="noopener" href="https://theme-next.iissnan.com/getting-started.html">iissnan</a>给出的说明文档，但是由于NexT更新，最新的指南应该根据最新的文档，否则会发现有<code>hexo/themes/next/_config.yml</code>配置文件内容的不同。</p>
+<h2 id="NexT官方文档"><a href="#NexT官方文档" class="headerlink" title="NexT官方文档"></a>NexT官方文档</h2><p><span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0LmpzLm9yZy8=">这是NexT最新说明文档<i class="fa fa-external-link-alt"></i></span></p>
+<p>之前一直参考的是<span class="exturl" data-url="aHR0cHM6Ly90aGVtZS1uZXh0Lmlpc3NuYW4uY29tL2dldHRpbmctc3RhcnRlZC5odG1s">iissnan<i class="fa fa-external-link-alt"></i></span>给出的说明文档，但是由于NexT更新，最新的指南应该根据最新的文档，否则会发现有<code>hexo/themes/next/_config.yml</code>配置文件内容的不同。</p>
 <p>另外，这个最新的文档似乎没有中文版。</p>
 
     </div>
