@@ -20,35 +20,35 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="讲述了GAN在SequenceToSequence问题中的应用。首先讲述了Maximum Likelihood与 Reinforcement Learning的关系，详细推导了RL中objective function推导的过程，其次讲述了如何用GAN来优化Reinfocement Learning，以及提供了三种训练GAN无法微分的情况的解决办法。最后，讲述了把CycleGAN从图像领域应用到文">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Improve Sequence Generation by GAN">
-<meta property="og:url" content="http://example.com/2020/11/19/sequence-generation/index.html">
+<meta property="og:url" content="https://drunk99.xyz/2020/11/19/sequence-generation/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
 <meta property="og:description" content="讲述了GAN在SequenceToSequence问题中的应用。首先讲述了Maximum Likelihood与 Reinforcement Learning的关系，详细推导了RL中objective function推导的过程，其次讲述了如何用GAN来优化Reinfocement Learning，以及提供了三种训练GAN无法微分的情况的解决办法。最后，讲述了把CycleGAN从图像领域应用到文">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119092032885.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119092140775.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119100146718.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119100944313.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119102742821.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119104915932.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119112453832.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119112857282.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119113321481.png">
-<meta property="og:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119115647507.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119092032885.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119092140775.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119100146718.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119100944313.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119102742821.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119104915932.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119112453832.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119112857282.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119113321481.png">
+<meta property="og:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119115647507.png">
 <meta property="article:published_time" content="2020-11-19T00:57:55.000Z">
 <meta property="article:modified_time" content="2020-11-19T08:22:19.958Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="ML">
 <meta property="article:tag" content="GAN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2020/11/19/sequence-generation/image-20201119092032885.png">
+<meta name="twitter:image" content="https://drunk99.xyz/2020/11/19/sequence-generation/image-20201119092032885.png">
 
-<link rel="canonical" href="http://example.com/2020/11/19/sequence-generation/">
+<link rel="canonical" href="https://drunk99.xyz/2020/11/19/sequence-generation/">
 
 
 <script id="page-configurations">
@@ -176,7 +176,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/19/sequence-generation/">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2020/11/19/sequence-generation/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
