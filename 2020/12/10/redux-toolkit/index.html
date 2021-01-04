@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Redux Toolkit is the standard way to write Redux application logic.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redux-toolkit介绍">
+<meta property="og:url" content="http://example.com/2020/12/10/redux-toolkit/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="Redux Toolkit is the standard way to write Redux application logic.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-12-10T12:29:48.000Z">
+<meta property="article:modified_time" content="2020-12-23T06:30:55.463Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Redux">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2020/12/10/redux-toolkit/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>redux-toolkit介绍 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/10/redux-toolkit/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          redux-toolkit介绍
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-10 20:29:48" itemprop="dateCreated datePublished" datetime="2020-12-10T20:29:48+08:00">2020-12-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-23 14:30:55" itemprop="dateModified" datetime="2020-12-23T14:30:55+08:00">2020-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.8k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>11 分钟</span>
+            </span>
+            <div class="post-description">Redux Toolkit is the standard way to write Redux application logic.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在使用redux toolkit之前需要在项目中安装依赖包。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install @reduxjs/toolkit</span><br></pre></td></tr></table></figure>
+<p>由于redux toolkit本身已经是依赖于redux/redux-thunk/reselect这些依赖包的抽象集合，所以可以不再使用这些基础依赖包。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall redux redux-thunk reselect</span><br></pre></td></tr></table></figure>
+<p>这些基础依赖包提供的API都能在redux-toolkit中找到。</p>
+<h1 id="Store-Setup"><a href="#Store-Setup" class="headerlink" title="Store Setup"></a>Store Setup</h1><h2 id="手写store基础配置"><a href="#手写store基础配置" class="headerlink" title="手写store基础配置"></a>手写store基础配置</h2><p>在redux fundamentals与redux essentials的教程中都涉及了最底层的创建redux store的流程。</p>
+<p>为了创建一个redux store，需要经历以下几个步骤：</p>
+<ul>
+<li>import各个slices中的reducers到rootReducer文件中，combine形成rootReducer</li>
+<li>将rootReducer文件中的rootReducer添加到store file中</li>
+<li>在store file中import用于配置thunk middleware/applyMiddleware等方法</li>
+<li>将多个配置方法使用composeWithDevTools组合起来形成唯一的一个composed store enhancer</li>
+<li>调用createStore并传入root reducer和composed store enhancer</li>
+</ul>
+<h2 id="使用configureStore"><a href="#使用configureStore" class="headerlink" title="使用configureStore"></a>使用configureStore</h2><p>Redux Toolkit提供了<strong>configureStore API</strong>简化以上五个步骤。</p>
+<p>configureStore为我们直接提供了以下功能：</p>
+<ul>
+<li>默认combine slice reducers为rootReducer</li>
+<li>跳过rootReducer直接创建redux store</li>
+<li>自动添加thunk middleware</li>
+<li>自动添加其他一些能够检查mutating updates的middleware，如果我们在slice内部的reducer中进行了mutable updates就会报错</li>
+<li>自动将store连接到Redux DevTools Extension</li>
+</ul>
+<h1 id="Writing-Slices"><a href="#Writing-Slices" class="headerlink" title="Writing Slices"></a>Writing Slices</h1><p>redux store要求对state的变更必须是immutable的，因此在书写slices的时候，需要一遍一遍地先copy原来的obj，再修改原来的obj，再整体return obj。</p>
+<p>而且reducer的书写是以switch/case的形式书写的，每一次都需要传入action type进行匹配。</p>
+<p>Redux Toolkit提供了createSlice API简化reducer logic and actions。</p>
+<h2 id="createSlice优点"><a href="#createSlice优点" class="headerlink" title="createSlice优点"></a>createSlice优点</h2><p>createSlice为我们直接提供了以下功能：</p>
+<ul>
+<li>直接在reducers对象内部以函数的形式书写case reducers，不需要使用switch/case</li>
+</ul>
+<blockquote>
+<p>We write case reducer functions inside the <code>reducers</code> object, and give them readable names</p>
+</blockquote>
+<ul>
+<li>由于Immer Library的配置，可以在createSlice内部写”mutable update logic”</li>
+</ul>
+<blockquote>
+<p><strong><code>createSlice</code> allows us to safely “mutate” our state!</strong></p>
+</blockquote>
+<ul>
+<li>action creator会因为reducer function的定义而自动生成</li>
+</ul>
+<blockquote>
+<p><strong><code>createSlice</code> will automatically generate action creators</strong> that correspond to each case reducer function we provide</p>
+<p>可以通过访问slice.actions.reducerFunctionName来访问自动生成的actioncreator。</p>
+<p>action creator的action type就是name filed + reducer field里的function name</p>
+</blockquote>
+<h2 id="使用createSlice"><a href="#使用createSlice" class="headerlink" title="使用createSlice"></a>使用createSlice</h2><p>createSlice()参数接受一个含有三个主要fielde的对象：</p>
+<ul>
+<li>name field是自动生成的action creator的action type的前缀</li>
+<li>initialState field是reducer的初始状态</li>
+<li>reducers field是一个key为string，value为case reducer functions的函数。</li>
+</ul>
+<hr>
+<p>每次一完成createSlice的定义后都有两行需要export的内容。</p>
+<p>第一行是需要被import到redux store的reducer整体：<code>export default todosSlice.reducer</code>。</p>
+<p>第二行是需要被import到UI component的、自动生成的reducer.actions：<code>export const &#123; todoAdded, todoToggled &#125; = todosSlice.actions</code>。</p>
+<hr>
+<p>如何为reducer field中的reducer function传递更多的参数？在UI component中调用dispatch的时候传递给dispatch的action的参数是和slice中定义的action.payload是形式上是一致的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; slice file中定义在createSlice的reducer field里的reducer function</span><br><span class="line">reactionAdded(state, action) &#123;const &#123; postId, reaction &#125; &#x3D; action.payload&#125;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; UI component</span><br><span class="line">&lt;button key&#x3D;&#123;name&#125; </span><br><span class="line">        type&#x3D;&quot;button&quot; </span><br><span class="line">        className&#x3D;&quot;muted-button reaction-button&quot;</span><br><span class="line">        onClick&#x3D;&#123;() &#x3D;&gt; dispatch(reactionAdded(&#123;postId: post.id, reaction: name&#125;))&#125;&gt;&#123;emoji&#125; &#123;post.reactions[name]&#125;&lt;&#x2F;button&gt;</span><br></pre></td></tr></table></figure>
+<p>数据都是以对象的形式，按照key和value的形式一一对应传递的。</p>
+<hr>
+<p>如果遇到从UI component传入多个参数需要经过某些preparation logic（也就是UI传入的数据要做一些额外的变换）才能作为该action的payload传递到reducer function的情况下，该怎么办？</p>
+<p>createSlice提供了为该reducer function添加一个prepare callback function field，用于把UI传过来的数据处理一下，在作为action.payload传递到reducer function中去运行。</p>
+<p>在reducers field中将带有prepare callback的函数放在该reducer function名字的对象下，该对象有prepare field和reducer field。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; reducer中createSlice的reducers field</span><br><span class="line">todoColorSelected: &#123;</span><br><span class="line">      reducer(state, action) &#123;</span><br><span class="line">        const &#123; color, todoId &#125; &#x3D; action.payload</span><br><span class="line">        state.entities[todoId].color &#x3D; color</span><br><span class="line">      &#125;,</span><br><span class="line">      prepare(todoId, color) &#123;</span><br><span class="line">        return &#123;</span><br><span class="line">          payload: &#123; todoId, color &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>When we call the generated action creator, the <code>prepare</code> function will be called with whatever parameters were passed in. It should then create and return an object that has a <code>payload</code> field (or, optionally, <code>meta</code> and <code>error</code> fields)</p>
+</blockquote>
+<h1 id="Writing-Thunks"><a href="#Writing-Thunks" class="headerlink" title="Writing Thunks"></a>Writing Thunks</h1><p><strong>Redux Toolkit has a <code>createAsyncThunk</code> API that will generate these thunks for us.</strong></p>
+<h2 id="createAsyncThunk定义与使用方法"><a href="#createAsyncThunk定义与使用方法" class="headerlink" title="createAsyncThunk定义与使用方法"></a>createAsyncThunk定义与使用方法</h2><p>createAsyncThunk接受两个参数：</p>
+<ul>
+<li>第一个参数是string类型，作为自动生成的action的action type</li>
+<li>第二个参数是返回Promise对象的payload creator callback function。通常用async/await语法书写。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export const Thunk1 &#x3D; createAsyncThunk(&#39;feature&#x2F;Thunk1&#39;, async () &#x3D;&gt; &#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p>createAsyncThunk内部会自动生成：三个action creators以及对应的action types，一个在（该thunk function）被调用的时候自动dispatch这些actions的thunk function。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">createAsyncThunk.pending: feature&#x2F;createAsyncThunk&#x2F;pending</span><br><span class="line">createAsyncThunk.fulfilled: feature&#x2F;createAsyncThunk&#x2F;fulfilled</span><br><span class="line">createAsyncThunk.rejected: feature&#x2F;createAsyncThunk&#x2F;rejected</span><br></pre></td></tr></table></figure>
+<h2 id="Thunk-generated-action-in-extraReducers"><a href="#Thunk-generated-action-in-extraReducers" class="headerlink" title="Thunk generated action in extraReducers"></a>Thunk generated action in extraReducers</h2><p>注意在我们的slice文件中thunk都是被书写在createSlice外部的，因此createSlice内部的状态是无法监听createSlice本身之外定义的action type的。</p>
+<p>为了监听其他地方定义的action type，createSlice提供了extraReducers field。</p>
+<p><strong><code>createSlice</code> also accepts an <code>extraReducers</code> option, where we can have the same slice reducer listen for other action types</strong></p>
+<p>该field就是一个callback function with a buidler parameter。当我们需要createSlice去监听其他的action type的时候，只要在callback function内部调用<code>builder.addCase(actionCreator, caseReducer)</code>即可。</p>
+<h1 id="Normalizing-State"><a href="#Normalizing-State" class="headerlink" title="Normalizing State"></a>Normalizing State</h1><p>normalizing state的好处就是可以用ID寻找任何一项数据本身，而不需要循环整个数组。与其用数组来储存数据本身，不如用对象想储存数据，以及数据相关的元数据，以及错误信息。</p>
+<p><strong>Redux Toolkit includes a <code>createEntityAdapter</code> API that has prebuilt reducers for typical data update operations with normalized state</strong>. </p>
+<h2 id="createEntityAdapter的内置方法"><a href="#createEntityAdapter的内置方法" class="headerlink" title="createEntityAdapter的内置方法"></a>createEntityAdapter的内置方法</h2><p>Calling <code>createEntityAdapter</code> gives us an “adapter” object that contains several premade reducer functions, including:</p>
+<ul>
+<li><code>addOne</code> / <code>addMany</code>: add new items to the state</li>
+<li><code>upsertOne</code> / <code>upsertMany</code>: add new items or update existing ones</li>
+<li><code>updateOne</code> / <code>updateMany</code>: update existing items by supplying partial values</li>
+<li><code>removeOne</code> / <code>removeMany</code>: remove items based on IDs</li>
+<li><code>setAll</code>: replace all existing items</li>
+</ul>
+<hr>
+<p>以上都是和增删state value相关的操作。</p>
+<ul>
+<li><code>getInitialState</code>: returns an object that looks like <code>&#123; ids: [], entities: &#123;&#125; &#125;</code>, for storing a normalized state of items along with an array of all item IDs</li>
+</ul>
+<p>一般getInitialState可以作为createSlice的initialState field的参数传入。</p>
+<ul>
+<li><code>getSelectors</code>: generates a standard set of selector functions。</li>
+</ul>
+<p>getSelectors默认自动生成两个selector：返回所有items的数组的selectAll；以及返回一个item的selectById。但是由于这个通用的名称是不具有语境的，我们可以把它换名字变成当前slice语境下的函数。使用array destructing为selector重命名。</p>
+<p>由于getSelector不知道应该在redux state tree中的那个分支找这个slice的数据，所以需要传递一个小小的selector来告诉getSelector，要找所有state中的当前slice的state。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; todos slice in whole redux store</span><br><span class="line">export const &#123;</span><br><span class="line">  selectAll: selectTodos,</span><br><span class="line">  selectById: selectTodoById</span><br><span class="line">&#125; &#x3D; todosAdapter.getSelectors(state &#x3D;&gt; state.todos)&#x2F;&#x2F; this slice</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/10/redux-fundamentals/" rel="prev" title="redux数据流基础">
+      <i class="fa fa-chevron-left"></i> redux数据流基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/14/JWT-explaination/" rel="next" title="JWT介绍">
+      JWT介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Store-Setup"><span class="nav-number">1.</span> <span class="nav-text">Store Setup</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%86%99store%E5%9F%BA%E7%A1%80%E9%85%8D%E7%BD%AE"><span class="nav-number">1.1.</span> <span class="nav-text">手写store基础配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8configureStore"><span class="nav-number">1.2.</span> <span class="nav-text">使用configureStore</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Writing-Slices"><span class="nav-number">2.</span> <span class="nav-text">Writing Slices</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#createSlice%E4%BC%98%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">createSlice优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8createSlice"><span class="nav-number">2.2.</span> <span class="nav-text">使用createSlice</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Writing-Thunks"><span class="nav-number">3.</span> <span class="nav-text">Writing Thunks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#createAsyncThunk%E5%AE%9A%E4%B9%89%E4%B8%8E%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95"><span class="nav-number">3.1.</span> <span class="nav-text">createAsyncThunk定义与使用方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Thunk-generated-action-in-extraReducers"><span class="nav-number">3.2.</span> <span class="nav-text">Thunk generated action in extraReducers</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Normalizing-State"><span class="nav-number">4.</span> <span class="nav-text">Normalizing State</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#createEntityAdapter%E7%9A%84%E5%86%85%E7%BD%AE%E6%96%B9%E6%B3%95"><span class="nav-number">4.1.</span> <span class="nav-text">createEntityAdapter的内置方法</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">8:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

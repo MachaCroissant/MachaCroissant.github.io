@@ -19,22 +19,20 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="React状态管理中一些术语的解读，Hooks API和Redux API的学习。">
+  <meta name="description" content="React状态管理中一些术语的解读，Hooks API和Redux API介绍。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="React数据管理之Hooks与Redux">
 <meta property="og:url" content="http://example.com/2020/12/04/redux-hooks/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="React状态管理中一些术语的解读，Hooks API和Redux API的学习。">
+<meta property="og:description" content="React状态管理中一些术语的解读，Hooks API和Redux API介绍。">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="http://example.com/2020/12/04/redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif">
 <meta property="article:published_time" content="2020-12-04T02:36:54.000Z">
-<meta property="article:modified_time" content="2020-12-09T12:12:18.862Z">
+<meta property="article:modified_time" content="2020-12-23T06:27:15.880Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="React">
 <meta property="article:tag" content="Hooks">
 <meta property="article:tag" content="Redux">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="http://example.com/2020/12/04/redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif">
 
 <link rel="canonical" href="http://example.com/2020/12/04/redux-hooks/">
 
@@ -194,7 +192,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-09 20:12:18" itemprop="dateModified" datetime="2020-12-09T20:12:18+08:00">2020-12-09</time>
+                <time title="修改时间：2020-12-23 14:27:15" itemprop="dateModified" datetime="2020-12-23T14:27:15+08:00">2020-12-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -202,7 +200,7 @@
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
                 </span>
             </span>
 
@@ -212,16 +210,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>6.6k</span>
+              <span>4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>12 分钟</span>
+              <span>7 分钟</span>
             </span>
-            <div class="post-description">React状态管理中一些术语的解读，Hooks API和Redux API的学习。</div>
+            <div class="post-description">React状态管理中一些术语的解读，Hooks API和Redux API介绍。</div>
 
         </div>
       </header>
@@ -285,56 +283,6 @@
 </ul>
 <p>当我们需要在组件之间共享状态/数据时该怎么做？React核心概念中提出了lifting state up to parent components状态提升至父组件。那这又涉及到抽象与嵌套，state到props的转变，不停地在变换多种组件构成的树component tree，十分麻烦。</p>
 <p>一个方法就是把这些所有需要共享的数据/状态抽取出来集中管理，与component tree割裂开来。这也就是Redux的核心思想——This is the basic idea behind Redux: a single centralized place to contain the global state in your application, and specific patterns to follow when updating that state to make the code predictable.</p>
-<h2 id="涉及的属于Terminology"><a href="#涉及的属于Terminology" class="headerlink" title="涉及的属于Terminology"></a>涉及的属于Terminology</h2><h3 id="action"><a href="#action" class="headerlink" title="action"></a>action</h3><p>action是一个由type field和其他信息payload field组成的对象。type field的值用于描述这个action，命名上要与该action的语义一致。</p>
-<p>An <strong>action</strong> is a plain JavaScript object that has a <code>type</code> field. <strong>You can think of an action as an event that describes something that happened in the application</strong>.</p>
-<p>The <code>type</code> field should be a string that gives this action a descriptive name. We usually write that type string like <code>&quot;domain/eventName&quot;</code>.</p>
-<p>An action object can have other fields with additional information about what happened. By convention, we put that information in a field called <code>payload</code>.</p>
-<h3 id="action-creators"><a href="#action-creators" class="headerlink" title="action creators"></a>action creators</h3><p>action creators是一个抽象了具体action的形式的一个函数。它接收payload field的值作为参数，返回action对象；该action对象的type对于该action creators应该是一致的。</p>
-<p>An <strong>action creator</strong> is a function that creates and returns an action object. We typically use these so we don’t have to write the action object by hand every time.</p>
-<h3 id="reducers"><a href="#reducers" class="headerlink" title="reducers"></a>reducers</h3><p>reducer是一个更新数据/状态的函数，它接收当前状态和action对象作为参数，返回更新后的状态。</p>
-<p>A <strong>reducer</strong> is a function that receives the current <code>state</code> and an <code>action</code> object, decides how to update the state if necessary, and returns the new state: <code>(state, action) =&gt; newState</code>. </p>
-<p><strong>You can think of a reducer as an event listener which handles events based on the received action (event) type.</strong>可以把reducer堪称一个监听状态变化的监听函数，action就相当于call backfunction/event handler。</p>
-<p>调用逻辑——The logic inside reducer functions typically follows the same series of steps:</p>
-<ul>
-<li>Check to see if the reducer cares about this action<ul>
-<li>If so, make a copy of the state, update the copy with new values, and return it</li>
-</ul>
-</li>
-<li>Otherwise, return the existing state unchanged</li>
-</ul>
-<p>类比useEffect Hook就相当于传入了第二个参数，有条件地针对某个state的变化去更新状态。</p>
-<h3 id="store"><a href="#store" class="headerlink" title="store"></a>store</h3><p>用于管理整个app的当前状态。</p>
-<p>The current Redux application state lives in an object called the <strong>store</strong> .</p>
-<p>The store is created by passing in a reducer, and has a method called <code>getState</code> that returns the current state value:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; configureStore &#125; from &#39;@reduxjs&#x2F;toolkit&#39;</span><br><span class="line"></span><br><span class="line">const store &#x3D; configureStore(&#123; reducer: counterReducer &#125;)</span><br><span class="line"></span><br><span class="line">console.log(store.getState())</span><br></pre></td></tr></table></figure>
-<h3 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h3><p>dispatch作为更新app当前状态store的唯一媒介，接受一个action obejct作为参数。由于action creator返回一个action object，所以可以把action creators传入dispatch函数。</p>
-<p>The Redux store has a method called <code>dispatch</code>. <strong>The only way to update the state is to call <code>store.dispatch()</code> and pass in an action object</strong>. </p>
-<p><strong>You can think of dispatching actions as “triggering an event”</strong>.类比事件监听函数，这就像客户端有一个用户去点击了网页，触发了事件监听函数。</p>
-<h3 id="selectors"><a href="#selectors" class="headerlink" title="selectors"></a>selectors</h3><p>选择store中的特定状态</p>
-<p><strong>Selectors</strong> are functions that know how to extract specific pieces of information from a store state value.</p>
-<h2 id="redux-sync-data-flow"><a href="#redux-sync-data-flow" class="headerlink" title="redux sync data flow"></a>redux sync data flow</h2><p><img src="/2020/12/04/redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif" alt="ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26" style="zoom:50%;"></p>
-<ul>
-<li><p>首次渲染</p>
-<ul>
-<li>创建一个redux store。</li>
-<li>store调用root reducer，将它返回的值作为initial state。</li>
-<li>当UI被渲染的时候，UI中的组件从redux store中读取当前状态，并渲染。</li>
-</ul>
-</li>
-<li><p>重新渲染</p>
-<ul>
-<li>用户有一些行为，UI组件发现了这些行为的发生，这些行为用action对象来描述。</li>
-<li>通过给dispatch函数传递该行为action，获得的返回值就是current state，store将这更新后的值<strong>覆盖原值</strong>地保存起来。（immutable）</li>
-</ul>
-<blockquote>
-<p><strong>In order to update values immutably, your code must make <em>copies</em> of existing objects/arrays, and then modify the copies</strong>.</p>
-</blockquote>
-<ul>
-<li>store会通知所有的UI组件状态值被更新了</li>
-<li>那些需要从store中获取状态的UI组件就<strong>检查store</strong>看自己需要的值是否被更新了，<strong>更新了的话就重新渲染</strong>自己的那个部分。</li>
-</ul>
-</li>
-</ul>
 
     </div>
 
@@ -420,7 +368,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React-Component-Review"><span class="nav-number">1.</span> <span class="nav-text">React Component Review</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-component"><span class="nav-number">1.1.</span> <span class="nav-text">class component</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#function-component"><span class="nav-number">1.2.</span> <span class="nav-text">function component</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hooks"><span class="nav-number">2.</span> <span class="nav-text">Hooks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#useState"><span class="nav-number">2.1.</span> <span class="nav-text">useState</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#useEffect"><span class="nav-number">2.2.</span> <span class="nav-text">useEffect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#effects-with-cleanup"><span class="nav-number">2.2.1.</span> <span class="nav-text">effects with cleanup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useEffect-on-Condition"><span class="nav-number">2.2.2.</span> <span class="nav-text">useEffect on Condition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiple-effects-to-Separate-Concerns"><span class="nav-number">2.2.3.</span> <span class="nav-text">multiple effects to Separate  Concerns</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rules-of-Hooks"><span class="nav-number">2.3.</span> <span class="nav-text">Rules of Hooks</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redux"><span class="nav-number">3.</span> <span class="nav-text">Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E9%9D%A2%E4%B8%B4%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">3.1.</span> <span class="nav-text">状态&#x2F;数据管理面临的挑战</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B6%89%E5%8F%8A%E7%9A%84%E5%B1%9E%E4%BA%8ETerminology"><span class="nav-number">3.2.</span> <span class="nav-text">涉及的属于Terminology</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#action"><span class="nav-number">3.2.1.</span> <span class="nav-text">action</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#action-creators"><span class="nav-number">3.2.2.</span> <span class="nav-text">action creators</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#reducers"><span class="nav-number">3.2.3.</span> <span class="nav-text">reducers</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#store"><span class="nav-number">3.2.4.</span> <span class="nav-text">store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#dispatch"><span class="nav-number">3.2.5.</span> <span class="nav-text">dispatch</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#selectors"><span class="nav-number">3.2.6.</span> <span class="nav-text">selectors</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#redux-sync-data-flow"><span class="nav-number">3.3.</span> <span class="nav-text">redux sync data flow</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#React-Component-Review"><span class="nav-number">1.</span> <span class="nav-text">React Component Review</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#class-component"><span class="nav-number">1.1.</span> <span class="nav-text">class component</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#function-component"><span class="nav-number">1.2.</span> <span class="nav-text">function component</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hooks"><span class="nav-number">2.</span> <span class="nav-text">Hooks</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#useState"><span class="nav-number">2.1.</span> <span class="nav-text">useState</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#useEffect"><span class="nav-number">2.2.</span> <span class="nav-text">useEffect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#effects-with-cleanup"><span class="nav-number">2.2.1.</span> <span class="nav-text">effects with cleanup</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useEffect-on-Condition"><span class="nav-number">2.2.2.</span> <span class="nav-text">useEffect on Condition</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#multiple-effects-to-Separate-Concerns"><span class="nav-number">2.2.3.</span> <span class="nav-text">multiple effects to Separate  Concerns</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Rules-of-Hooks"><span class="nav-number">2.3.</span> <span class="nav-text">Rules of Hooks</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redux"><span class="nav-number">3.</span> <span class="nav-text">Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%8A%B6%E6%80%81-%E6%95%B0%E6%8D%AE%E7%AE%A1%E7%90%86%E9%9D%A2%E4%B8%B4%E7%9A%84%E6%8C%91%E6%88%98"><span class="nav-number">3.1.</span> <span class="nav-text">状态&#x2F;数据管理面临的挑战</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -434,18 +382,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-count">98</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -471,8 +419,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -481,12 +429,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">215k</span>
+    <span title="站点总字数">290k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6:31</span>
+    <span title="站点阅读时长">8:47</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

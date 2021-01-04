@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2020/10/20/github-up-down/ssh-key.png">
 <meta property="article:published_time" content="2020-10-20T05:17:25.000Z">
-<meta property="article:modified_time" content="2020-12-09T11:51:59.223Z">
+<meta property="article:modified_time" content="2020-12-25T12:39:48.495Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="踩坑记录">
 <meta property="article:tag" content="Github">
@@ -193,7 +193,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-09 19:51:59" itemprop="dateModified" datetime="2020-12-09T19:51:59+08:00">2020-12-09</time>
+                <time title="修改时间：2020-12-25 20:39:48" itemprop="dateModified" datetime="2020-12-25T20:39:48+08:00">2020-12-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -211,7 +211,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.4k</span>
+              <span>1.7k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -244,13 +244,28 @@
 <p>git化之后的文件夹当中应当有一个隐藏的<code>.git</code>文件，在mac下直接<code>cmd</code>+<code>shift</code>+<code>.</code>可以显示。</p>
 <p>SSH-KEY和BRANCH-NAME就是下图所示的内容。</p>
 <p><img src="/2020/10/20/github-up-down/ssh-key.png" alt="ssh-key" style="zoom:50%;"></p>
-<h2 id="第一次上传代码"><a href="#第一次上传代码" class="headerlink" title="第一次上传代码"></a>第一次上传代码</h2><h3 id="在终端下分别进入目标文件夹并初始化git"><a href="#在终端下分别进入目标文件夹并初始化git" class="headerlink" title="在终端下分别进入目标文件夹并初始化git"></a>在终端下分别进入目标文件夹并初始化git</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> target-dir</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
-<h3 id="关联本地库与远程库"><a href="#关联本地库与远程库" class="headerlink" title="关联本地库与远程库"></a>关联本地库与远程库</h3><p>从本地工作区(working directory)到暂缓区/提交区(staging srea)；从暂缓区/提交区到git目录/版本库(git directory)。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add -a</span><br><span class="line">git commit -m &quot;description-for-this-commit&quot;</span><br></pre></td></tr></table></figure>
-<p>关联远程github库</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin SSH-KEY</span><br></pre></td></tr></table></figure>
-<hr>
-<h4 id="可能遇到的问题："><a href="#可能遇到的问题：" class="headerlink" title="可能遇到的问题："></a>可能遇到的问题：</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Repository not found.</span><br><span class="line">fatal: repository <span class="string">&#x27;https://github.com/MyRepo/project.git/&#x27;</span> not found</span><br></pre></td></tr></table></figure>
+<h2 id="第一次上传代码"><a href="#第一次上传代码" class="headerlink" title="第一次上传代码"></a>第一次上传代码</h2><h3 id="第一步：在终端下分别进入目标文件夹并初始化git"><a href="#第一步：在终端下分别进入目标文件夹并初始化git" class="headerlink" title="第一步：在终端下分别进入目标文件夹并初始化git"></a>第一步：在终端下分别进入目标文件夹并初始化git</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> target-dir</span><br><span class="line">git init</span><br></pre></td></tr></table></figure>
+<h3 id="第二步：关联本地库与远程库"><a href="#第二步：关联本地库与远程库" class="headerlink" title="第二步：关联本地库与远程库"></a>第二步：关联本地库与远程库</h3><p>从本地工作区(working directory)到暂缓区/提交区(staging srea)；从暂缓区/提交区到git目录/版本库(git directory)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git add -A</span><br><span class="line">git commit -m &quot;description-for-this-commit&quot;</span><br></pre></td></tr></table></figure>
+<p>关联远程github库并设置分支</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git remote add origin SSH-KEY</span><br><span class="line">git branch -M main</span><br></pre></td></tr></table></figure>
+<h3 id="第三步：上传到github"><a href="#第三步：上传到github" class="headerlink" title="第三步：上传到github"></a>第三步：上传到github</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin main</span><br></pre></td></tr></table></figure>
+<h2 id="第二次更新代码"><a href="#第二次更新代码" class="headerlink" title="第二次更新代码"></a>第二次更新代码</h2><p>首先查看仓库状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
+<p>之后的操作和关联本地库与远程库相同。</p>
+<h2 id="添加项目更新总结"><a href="#添加项目更新总结" class="headerlink" title="添加项目更新总结"></a>添加项目更新总结</h2><p>先在Github上创建一个repository，并复制SSH。</p>
+<p>在本地终端进入目的文件夹，并用命令<code>git init</code>初始化，<code>git add .</code>或者<code>git add -A</code>把所有该文件夹下的文件放到本地暂缓区，在利用命令<code>git commit -m &quot;&quot;</code>把本地暂缓区的内容放到本地版本库。</p>
+<p>利用命令<code>git remote set-URL origin SSH</code>先把本地url设置为ssh的地址，并转到具体分支<code>git branch -M BRANCH_NAME</code>。</p>
+<p>利用命令<code>git push -u origin BRACH_NAME</code>把文件提交到BRACH_NAME的分支中，默认repository创建只有一个main brach。</p>
+<h1 id="查看历史版本"><a href="#查看历史版本" class="headerlink" title="查看历史版本"></a>查看历史版本</h1><p>跟随做项目的时候为了看懂别人的代码，需要用到查看历史Commits。一般git clone出来的总是最新更新的版本，通过版本退回可以看到别人实现项目的思路演变。</p>
+<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000010771974">操作参考</a></p>
+<ol>
+<li>正常git clone项目到目的文件夹</li>
+<li>点击Commits进入历史版本，获取你想要查看的那个版本的SHA</li>
+<li>在目的文件夹下使用git checkout SHA</li>
+</ol>
+<h1 id="可能遇到的问题集合"><a href="#可能遇到的问题集合" class="headerlink" title="可能遇到的问题集合"></a>可能遇到的问题集合</h1><h2 id="Repository-not-found"><a href="#Repository-not-found" class="headerlink" title="Repository not found"></a>Repository not found</h2><p>可能遇到的问题如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">remote: Repository not found.</span><br><span class="line">fatal: repository <span class="string">&#x27;https://github.com/MyRepo/project.git/&#x27;</span> not found</span><br></pre></td></tr></table></figure>
 <ul>
 <li><p>解决办法1: </p>
 <p>尝试从钥匙串中删除所有与GitHub有关的内容</p>
@@ -262,24 +277,9 @@
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote -v</span><br></pre></td></tr></table></figure>
 <p>如果发现不对就重新设置</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git remote set-url origin https://username@github.com/MyRepo/project.git</span><br></pre></td></tr></table></figure>
-<hr>
-<h3 id="上传到github"><a href="#上传到github" class="headerlink" title="上传到github"></a>上传到github</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git push -u origin BRANCH-NAME</span><br></pre></td></tr></table></figure>
-<h2 id="第二次更新代码"><a href="#第二次更新代码" class="headerlink" title="第二次更新代码"></a>第二次更新代码</h2><p>首先查看仓库状态</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git status</span><br></pre></td></tr></table></figure>
-<p>之后的操作和关联本地库与远程库相同。</p>
-<hr>
-<h1 id="添加项目更新总结"><a href="#添加项目更新总结" class="headerlink" title="添加项目更新总结"></a>添加项目更新总结</h1><p>先在Github上创建一个repository，并复制SSH。</p>
-<p>在本地终端进入目的文件夹，并用命令<code>git init</code>初始化，<code>git add .</code>或者<code>git add -A</code>把所有该文件夹下的文件放到本地暂缓区，在利用命令<code>git commit -m &quot;&quot;</code>把本地暂缓区的内容放到本地版本库。</p>
-<p>利用命令<code>git remote set-URL origin SSH</code>先把本地url设置为ssh的地址。</p>
-<p>利用命令<code>git push -u origin BRACH_NAME</code>把文件提交到BRACH_NAME的分支中，默认repository创建只有一个main brach。</p>
-<hr>
-<h1 id="查看历史版本"><a href="#查看历史版本" class="headerlink" title="查看历史版本"></a>查看历史版本</h1><p>跟随做项目的时候为了看懂别人的代码，需要用到查看历史Commits。一般git clone出来的总是最新更新的版本，通过版本退回可以看到别人实现项目的思路演变。</p>
-<p><a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000010771974">操作参考</a></p>
-<ol>
-<li>正常git clone项目到目的文件夹</li>
-<li>点击Commits进入历史版本，获取你想要查看的那个版本的SHA</li>
-<li>在目的文件夹下使用git checkout SHA</li>
-</ol>
+<h2 id="无法打开github文件夹"><a href="#无法打开github文件夹" class="headerlink" title="无法打开github文件夹"></a>无法打开github文件夹</h2><p>很有可能是因为子文件夹下面已经有了一个隐藏的.git文件夹，导致无法解析，github把这个文件夹默认为untracked content。只需要删除.git文件夹即可。</p>
+<p>对于一个repository中的所有文件夹，必须只能 only one root<code>.git</code> folder，否则无法解析。</p>
+<p>参考StackOverflow的回答<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/28384464/why-can-i-not-open-my-folder-in-github">为什么无法打开github文件夹</a>。</p>
 
     </div>
 
@@ -364,7 +364,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8B%E4%B8%8E%E5%85%B3%E8%81%94"><span class="nav-number">1.</span> <span class="nav-text">项目建立与关联</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E4%B8%AA%E4%BA%BAgithub%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">登陆个人github创建新的远程仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">第一次上传代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E5%88%86%E5%88%AB%E8%BF%9B%E5%85%A5%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E5%A4%B9%E5%B9%B6%E5%88%9D%E5%A7%8B%E5%8C%96git"><span class="nav-number">1.2.1.</span> <span class="nav-text">在终端下分别进入目标文件夹并初始化git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B3%E8%81%94%E6%9C%AC%E5%9C%B0%E5%BA%93%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%BA%93"><span class="nav-number">1.2.2.</span> <span class="nav-text">关联本地库与远程库</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%EF%BC%9A"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">可能遇到的问题：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%8A%E4%BC%A0%E5%88%B0github"><span class="nav-number">1.2.3.</span> <span class="nav-text">上传到github</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%9B%B4%E6%96%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">第二次更新代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E9%A1%B9%E7%9B%AE%E6%9B%B4%E6%96%B0%E6%80%BB%E7%BB%93"><span class="nav-number">2.</span> <span class="nav-text">添加项目更新总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC"><span class="nav-number">3.</span> <span class="nav-text">查看历史版本</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E5%BB%BA%E7%AB%8B%E4%B8%8E%E5%85%B3%E8%81%94"><span class="nav-number">1.</span> <span class="nav-text">项目建立与关联</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%99%BB%E9%99%86%E4%B8%AA%E4%BA%BAgithub%E5%88%9B%E5%BB%BA%E6%96%B0%E7%9A%84%E8%BF%9C%E7%A8%8B%E4%BB%93%E5%BA%93"><span class="nav-number">1.1.</span> <span class="nav-text">登陆个人github创建新的远程仓库</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AC%A1%E4%B8%8A%E4%BC%A0%E4%BB%A3%E7%A0%81"><span class="nav-number">1.2.</span> <span class="nav-text">第一次上传代码</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E5%9C%A8%E7%BB%88%E7%AB%AF%E4%B8%8B%E5%88%86%E5%88%AB%E8%BF%9B%E5%85%A5%E7%9B%AE%E6%A0%87%E6%96%87%E4%BB%B6%E5%A4%B9%E5%B9%B6%E5%88%9D%E5%A7%8B%E5%8C%96git"><span class="nav-number">1.2.1.</span> <span class="nav-text">第一步：在终端下分别进入目标文件夹并初始化git</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%85%B3%E8%81%94%E6%9C%AC%E5%9C%B0%E5%BA%93%E4%B8%8E%E8%BF%9C%E7%A8%8B%E5%BA%93"><span class="nav-number">1.2.2.</span> <span class="nav-text">第二步：关联本地库与远程库</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E4%B8%8A%E4%BC%A0%E5%88%B0github"><span class="nav-number">1.2.3.</span> <span class="nav-text">第三步：上传到github</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AC%AC%E4%BA%8C%E6%AC%A1%E6%9B%B4%E6%96%B0%E4%BB%A3%E7%A0%81"><span class="nav-number">1.3.</span> <span class="nav-text">第二次更新代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B7%BB%E5%8A%A0%E9%A1%B9%E7%9B%AE%E6%9B%B4%E6%96%B0%E6%80%BB%E7%BB%93"><span class="nav-number">1.4.</span> <span class="nav-text">添加项目更新总结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%8E%86%E5%8F%B2%E7%89%88%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">查看历史版本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98%E9%9B%86%E5%90%88"><span class="nav-number">3.</span> <span class="nav-text">可能遇到的问题集合</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Repository-not-found"><span class="nav-number">3.1.</span> <span class="nav-text">Repository not found</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E6%B3%95%E6%89%93%E5%BC%80github%E6%96%87%E4%BB%B6%E5%A4%B9"><span class="nav-number">3.2.</span> <span class="nav-text">无法打开github文件夹</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -378,18 +378,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">65</span>
+          <span class="site-state-item-count">80</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-count">17</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">76</span>
+        <span class="site-state-item-count">98</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -415,8 +415,8 @@
 
 <div class="copyright">
   
-  &copy; 
-  <span itemprop="copyrightYear">2020</span>
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
@@ -425,12 +425,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">215k</span>
+    <span title="站点总字数">290k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">6:31</span>
+    <span title="站点阅读时长">8:47</span>
 </div>
   <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
   </div>

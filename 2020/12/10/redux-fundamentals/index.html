@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Redux fundamentals，涉及一些术语的介绍，以及手写功能函数。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redux数据流基础">
+<meta property="og:url" content="http://example.com/2020/12/10/redux-fundamentals/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="Redux fundamentals，涉及一些术语的介绍，以及手写功能函数。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/12/10/redux-fundamentals/drunk99/machacroissant/source/_posts/2020-12-04-redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif">
+<meta property="article:published_time" content="2020-12-10T06:41:52.000Z">
+<meta property="article:modified_time" content="2020-12-23T06:27:41.685Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="React">
+<meta property="article:tag" content="Redux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/12/10/redux-fundamentals/drunk99/machacroissant/source/_posts/2020-12-04-redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif">
+
+<link rel="canonical" href="http://example.com/2020/12/10/redux-fundamentals/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>redux数据流基础 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/10/redux-fundamentals/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          redux数据流基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-10 14:41:52" itemprop="dateCreated datePublished" datetime="2020-12-10T14:41:52+08:00">2020-12-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-23 14:27:41" itemprop="dateModified" datetime="2020-12-23T14:27:41+08:00">2020-12-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/React/" itemprop="url" rel="index"><span itemprop="name">React</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>22k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>40 分钟</span>
+            </span>
+            <div class="post-description">Redux fundamentals，涉及一些术语的介绍，以及手写功能函数。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="action"><a href="#action" class="headerlink" title="action"></a>action</h1><p>所有的<strong>Redux Action必须满足两个要求</strong>：第一，是一个朴素的<strong>JavaScript对象</strong>；第二，<strong>有type field</strong>。type field的值用于描述这个action，命名上要与该action的语义一致。</p>
+<p>An <strong>action</strong> is a plain JavaScript object that has a <code>type</code> field. <strong>You can think of an action as an event that describes something that happened in the application</strong>.</p>
+<p>The <code>type</code> field should be a string that gives this action a descriptive name. We usually write that type string like <code>&quot;domain/eventName&quot;</code>.</p>
+<p>An action object can have other fields with additional information about what happened. By convention, we put that information in a field called <code>payload</code>.</p>
+<h2 id="action规范化"><a href="#action规范化" class="headerlink" title="action规范化"></a>action规范化</h2><p>Flux standard actions conventions： FSA convention</p>
+<ul>
+<li>action对象的实体数据本身需要放在action.payload中。</li>
+<li>action对象必须拥有用于描述其他描述性信息的action.meta field。</li>
+<li>action对象必须拥有用于提供错误信息的action.error field。</li>
+</ul>
+<hr>
+<p>结合Redux action的两个必备条件：JS object以及type field，可以得出一个规范化的action对象必须用一以下三个fields：</p>
+<ul>
+<li>a payload field</li>
+<li>an error field</li>
+<li>a meta field</li>
+</ul>
+<h1 id="action-creators"><a href="#action-creators" class="headerlink" title="action creators"></a>action creators</h1><p>action creators是一个抽象了具体action的形式的一个函数。它接收payload field的值作为参数，返回action对象；该action对象的type对于该action creators应该是一致的。</p>
+<p>An <strong>action creator</strong> is a function that creates and returns an action object. We typically use these so we don’t have to write the action object by hand every time.</p>
+<p>调用action creator function后，将它返回的action object直接传递给dispatch函数。</p>
+<h1 id="reducers"><a href="#reducers" class="headerlink" title="reducers"></a>reducers</h1><p>reducer是一个更新数据/状态的函数，它接收当前状态和action对象作为参数，返回更新后的状态。</p>
+<p>A <strong>reducer</strong> is a function that receives the current <code>state</code> and an <code>action</code> object, decides how to update the state if necessary, and returns the new state: <code>(state, action) =&gt; newState</code>. </p>
+<h2 id="Reducers的调用逻辑"><a href="#Reducers的调用逻辑" class="headerlink" title="Reducers的调用逻辑"></a>Reducers的调用逻辑</h2><p><strong>You can think of a reducer as an event listener which handles events based on the received action (event) type.</strong>可以把reducer堪称一个监听状态变化的监听函数，action就相当于call backfunction/event handler。</p>
+<p>调用逻辑——The logic inside reducer functions typically follows the same series of steps:</p>
+<ul>
+<li>Check to see if the reducer cares about this action<ul>
+<li>If so, make a copy of the state, update the copy with new values, and return it</li>
+</ul>
+</li>
+<li>Otherwise, return the existing state unchanged</li>
+</ul>
+<p>类比useEffect Hook就相当于传入了第二个参数，有条件地针对某个state的变化去更新状态。</p>
+<hr>
+<h2 id="手写Reducers返回对象newState"><a href="#手写Reducers返回对象newState" class="headerlink" title="手写Reducers返回对象newState"></a>手写Reducers返回对象newState</h2><p>如果手写newState就面临一个问题，改动的值可能就一两个，返回的却是整个对象，这个对象可能还有很多子对象nested object。为了遵循redux state要求的immutable updates，每一次的返回都要在update之前先copy一份obj，然后再改动，进入下一层子对象还要继续copy再update，十分麻烦。</p>
+<blockquote>
+<p>wirte immutable updates by hand, by using JavaScript’s <strong>array / object spread operators</strong> and other functions that return copies of the original values.</p>
+<p>This becomes harder when the <strong>data is nested</strong>. A critical rule of immutable updates is that you must make a copy of <em>every</em> level of nesting that needs to be updated.</p>
+</blockquote>
+<hr>
+<h2 id="Reducers第一个参数的state初始值"><a href="#Reducers第一个参数的state初始值" class="headerlink" title="Reducers第一个参数的state初始值"></a>Reducers第一个参数的state初始值</h2><p>整个app初始化的时候一般是没有状态的，但是又不能给reducer提供undefined state，所以一般需要手动提供一个initialState value。</p>
+<p>A reducer may be called with <code>undefined</code> as the state value when the application is being initialized. If that happens, we need to provide an initial state value so the rest of the reducer code has something to work with. <strong>Reducers normally use ES6 default argument syntax to provide initial state: <code>(state = initialState, action)</code></strong>.</p>
+<hr>
+<h2 id="Reducers拆分"><a href="#Reducers拆分" class="headerlink" title="Reducers拆分"></a>Reducers拆分</h2><p>如果把一个app中的所有reducer结合起来，就是一个由switch/case组成的函数，传入的参数是action type。但是本身一个app涉及的action type就很多，每个action的内容也很多，所以考虑拆分reducers。</p>
+<p><strong>Redux reducers are typically split apart based on the section of the Redux state that they update</strong>. </p>
+<h3 id="拆分准则"><a href="#拆分准则" class="headerlink" title="拆分准则"></a>拆分准则</h3><p><strong>We recommend organizing your Redux app folders and files based on “features”</strong> - code that relates to a specific concept or area of your application.</p>
+<p>建议基于app的features拆分reducers。</p>
+<p><strong>The Redux code for a particular feature is usually written as a single file, known as a “slice” file</strong>, which contains all the reducer logic and all of the action-related code for that part of your app state.</p>
+<p>每一个feature的action以及state的相关的内容都被写在slice file中。</p>
+<h3 id="拆分的好处"><a href="#拆分的好处" class="headerlink" title="拆分的好处"></a>拆分的好处</h3><p>在基于feature拆分后，对action type的命名也可以写成’feature/actionName’。</p>
+<p>在基于feature拆分后，slice file中的action只需要应对feature-related state。也就意味着不再是nested object了。</p>
+<hr>
+<h2 id="Reducer组合"><a href="#Reducer组合" class="headerlink" title="Reducer组合"></a>Reducer组合</h2><p>因为redux store需要一个root reducer function，所以我们需要把slice文件中的各个feature的reducer组合起来。本质上reducer就是一个function，只需要把它们import到root reducer文件，重新写一个root reducer来调用slice中的reducer。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import todosReducer from &#39;.&#x2F;features&#x2F;todos&#x2F;todosSlice&#39;</span><br><span class="line">import filtersReducer from &#39;.&#x2F;features&#x2F;filters&#x2F;filtersSlice&#39;</span><br><span class="line"></span><br><span class="line">export default function rootReducer(state, action) &#123;</span><br><span class="line">  &#x2F;&#x2F; always return a new object for the root state</span><br><span class="line">  return &#123;</span><br><span class="line">    &#x2F;&#x2F; the value of &#96;state.todos&#96; is whatever the todos reducer returns</span><br><span class="line">    todos: todosReducer(state.todos, action),</span><br><span class="line">    &#x2F;&#x2F; For both reducers, we only pass in their slice of the state</span><br><span class="line">    filters: filtersReducer(state.filters, action)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出来手写root reducer，每一次调用某一个reducer遵循的模式都是相通的。因此redux core library把这种pattern抽象了出来，写成一个新的utility function名为<code>combineReducers</code>，这样能让代码更简洁。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">import &#123; combineReducers &#125; from &#39;redux&#39;</span><br><span class="line"></span><br><span class="line">import todosReducer from &#39;.&#x2F;features&#x2F;todos&#x2F;todosSlice&#39;</span><br><span class="line">import filtersReducer from &#39;.&#x2F;features&#x2F;filters&#x2F;filtersSlice&#39;</span><br><span class="line"></span><br><span class="line">const rootReducer &#x3D; combineReducers(&#123;</span><br><span class="line">  &#x2F;&#x2F; Define a top-level state field named &#96;todos&#96;, handled by &#96;todosReducer&#96;</span><br><span class="line">  todos: todosReducer,</span><br><span class="line">  filters: filtersReducer</span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">export default rootReducer</span><br></pre></td></tr></table></figure>
+<p>combineReducers接受一个对象作为参数，对象的key是root state object的feature（也就是redux store的state.key对象），对象的value是该feature的slice reducers functions。</p>
+<h1 id="store"><a href="#store" class="headerlink" title="store"></a>store</h1><p>用于管理整个app的当前状态。整个redux application只能有唯一一个store。</p>
+<p>The current Redux application state lives in an object called the <strong>store</strong> .</p>
+<p>The store is created by passing in a reducer, and has a method called <code>getState</code> that returns the current state value:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">import &#123; configureStore &#125; from &#39;@reduxjs&#x2F;toolkit&#39;</span><br><span class="line"></span><br><span class="line">const store &#x3D; configureStore(&#123; reducer: counterReducer &#125;)</span><br><span class="line"></span><br><span class="line">console.log(store.getState())</span><br></pre></td></tr></table></figure>
+<h2 id="store功能"><a href="#store功能" class="headerlink" title="store功能"></a>store功能</h2><ul>
+<li>储存当前应用的所有state value以及所有的reducer function</li>
+<li>允许外部文件通过<code>store.getState()</code>访问当前状态</li>
+<li>允许通过<code>store.dispatch(action)</code>更新当前状态</li>
+<li>允许通过<code>store.subscribe(listener)</code>将listener callback绑定</li>
+<li>允许通过<code>store.unsubscribe(listener)</code>将listener callback的绑定解除</li>
+</ul>
+<p>这些功能能够组成createStore API的内部逻辑。The store API is an object with {dispatch, subscribe, getState} inside。</p>
+<p><code>getState</code> just returns whatever the current <code>state</code> value is. That means that <strong>by default, nothing prevents you from accidentally mutating the current state value!</strong> </p>
+<p>store本身并不会在外部调用getState()的时候提前做一个原来state value的copy，store本身不能防止accidential mutatable updates。一种最常见的accidental mutations就是sorting arrays。</p>
+<h2 id="创建store及三个参数rootReducer-initialState-enhancer"><a href="#创建store及三个参数rootReducer-initialState-enhancer" class="headerlink" title="创建store及三个参数rootReducer/initialState/enhancer"></a>创建store及三个参数rootReducer/initialState/enhancer</h2><p>Redux core library有一个<code>createStore</code> API用于创建store，只需要把从reducer中rootReducer给import进来就可以。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">import &#123; createStore &#125; from &#39;redux&#39;</span><br><span class="line">import rootReducer from &#39;.&#x2F;reducer&#39;</span><br><span class="line"></span><br><span class="line">const store &#x3D; createStore(rootReducer)</span><br><span class="line"></span><br><span class="line">export default store</span><br></pre></td></tr></table></figure>
+<p>除了接受rootReducer为第一个argument以外，createStore还接受一个装载了初始状态值的preloadedState value作为第二个参数。</p>
+<p>另外createStore还接受一个enhancer作为第三个参数（如果没有initialState就是第二个参数）。enhancer就相当于用enhancer的函数包裹住了原来的redux store，他可以override or replace原来store中的任何方法。</p>
+<p>A store enhancer is like a special version of <code>createStore</code> that adds another layer wrapping around the original Redux store.</p>
+<p>如果有多个enhancers存在该怎么办？可以用compose API把这些enhancers合并起来。</p>
+<hr>
+<h2 id="从enhancer到middleware"><a href="#从enhancer到middleware" class="headerlink" title="从enhancer到middleware"></a>从enhancer到middleware</h2><p>但是有时候我们只需要<strong>customize how dispatch behaves</strong>，我们希望在dispatch函数运行的时候有一些特殊的行为，那么就可以使用middleware。</p>
+<p>Redux uses a special kind of addon called <strong>middleware</strong> to let us customize the <code>dispatch</code> function.</p>
+<h3 id="middleware在redux数据流中的位置"><a href="#middleware在redux数据流中的位置" class="headerlink" title="middleware在redux数据流中的位置"></a>middleware在redux数据流中的位置</h3><p><strong>Middleware form a pipeline around the store’s <code>dispatch</code> method</strong>. 当我们dispatch一个action时，实际上我们是在calling the first middleware in the pipeline。首先，middleware会检查这个action是不是它要去customize的action，如果不是他就传递给流水线中下一个middleware；如果是需要customize的action，那么他就运行一些custom logic。</p>
+<p><strong>Redux middleware provides a third-party extension point between dispatching an action, and the moment it reaches the reducer.</strong> </p>
+<h3 id="手写middleware"><a href="#手写middleware" class="headerlink" title="手写middleware"></a>手写middleware</h3><p>redux middleware手写的话就是三层嵌套的函数：outer的功能是someCustomMiddleware；middle功能是wrapDispatch；inner的功能是handleAction。</p>
+<h4 id="使用ES5手写中间件"><a href="#使用ES5手写中间件" class="headerlink" title="使用ES5手写中间件"></a>使用<strong>ES5手写中间件</strong></h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Middleware written as ES5 functions</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Outer function:</span><br><span class="line">function exampleMiddleware(storeAPI) &#123;</span><br><span class="line">  return function wrapDispatch(next) &#123;</span><br><span class="line">    return function handleAction(action) &#123;</span><br><span class="line">      &#x2F;&#x2F; Do anything here: pass the action onwards with next(action),</span><br><span class="line">      &#x2F;&#x2F; or restart the pipeline with storeAPI.dispatch(action)</span><br><span class="line">      &#x2F;&#x2F; Can also use storeAPI.getState() here</span><br><span class="line"></span><br><span class="line">      return next(action)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>最外层的outer exampleMiddleware就是我们调用的middleware本身，它接受包含了store’s <code>&#123;dispatch, getState&#125;</code> functions的storeAPI对象作为参。called once。</p>
+<p>中间层的inner wrapDispatch接受一个名为next的function作为函数。这个next function本质上就是pipeline中的下一个middleware。如果该middleware已经是最后一个中间件了，那么next function就是original store.dispatch function。Calling <code>next(action)</code> passes the middleware to the <em>next</em> middleware in the pipeline. called once。</p>
+<p>最里层的inner handleAction接受当前action作为参数，called everytime an action is dispatched。</p>
+<hr>
+<p>middleware inner handleAction的逻辑如下：</p>
+<p>return内容可以是任何值。the return value from the first middleware in the pipeline is actually returned when you call <code>store.dispatch()</code>。</p>
+<p>通常会利用一个if判断去匹配某一个特定的action，然后do something when that action is dispatched。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const delayedMessageMiddleware &#x3D; storeAPI &#x3D;&gt; next &#x3D;&gt; action &#x3D;&gt; &#123;</span><br><span class="line">  if (action.type &#x3D;&#x3D;&#x3D; &#39;todos&#x2F;todoAdded&#39;) &#123;</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">      console.log(&#39;Added a new todo: &#39;, action.payload)</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">  &#125;</span><br><span class="line">  return next(action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<hr>
+<h4 id="使用ES6的箭头函数重写middleware"><a href="#使用ES6的箭头函数重写middleware" class="headerlink" title="使用ES6的箭头函数重写middleware"></a>使用<strong>ES6的箭头函数重写</strong>middleware</h4><p>因为是implicit return所以比较难阅读：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const anotherExampleMiddleware &#x3D; storeAPI &#x3D;&gt; next &#x3D;&gt; action &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; Do something in here, when each action is dispatched</span><br><span class="line">    </span><br><span class="line">  return next(action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="调用手写middleware"><a href="#调用手写middleware" class="headerlink" title="调用手写middleware"></a>调用手写middleware</h4><p>需要用到<code>applyMiddleware(middleWare)</code>函数作为middlewareEnhancer再次传入createStore API去。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">const middlewareEnhancer &#x3D; applyMiddleware(alwaysReturnHelloMiddleware)</span><br><span class="line">const store &#x3D; createStore(rootReducer, middlewareEnhancer)</span><br></pre></td></tr></table></figure>
+<p>当一个action被dispatch的时候运行逻辑如下：</p>
+<ul>
+<li>最内层的handleAction会最先运行</li>
+<li>接着将action传递到next section，也就是另一个middleware或者real store dispatch。</li>
+<li>最后reducer会运行然后状态被更新，next 函数返回</li>
+<li>可以通过storeAPI.getState()获取当前状态</li>
+</ul>
+<h3 id="async-function-middleware"><a href="#async-function-middleware" class="headerlink" title="async function middleware"></a>async function middleware</h3><h4 id="手写async-function-middleware的两种方式"><a href="#手写async-function-middleware的两种方式" class="headerlink" title="手写async function middleware的两种方式"></a>手写async function middleware的两种方式</h4><p>以上涉及的middleware都是同步逻辑下的，能够让我们书写异步逻辑的middleware怎么书写？一种方式就是在middleware内部，用if条件语句匹配特定的action type，并且return async logic（比如在内部调用了定时器）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const delayedActionMiddleware &#x3D; storeAPI &#x3D;&gt; next &#x3D;&gt; action &#x3D;&gt; &#123;</span><br><span class="line">  if (action.type &#x3D;&#x3D;&#x3D; &#39;todos&#x2F;todoAdded&#39;) &#123;</span><br><span class="line">    setTimeout(() &#x3D;&gt; &#123;</span><br><span class="line">      &#x2F;&#x2F; Delay this action by one second</span><br><span class="line">      next(action)</span><br><span class="line">    &#125;, 1000)</span><br><span class="line">    return</span><br><span class="line">  &#125;</span><br><span class="line">  return next(action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>但是这种写法过于specific且only do one thing（因为通过action type来识别异步逻辑）。因为我们传递给middleware的是用action type来识别的action object。</p>
+<p>更好的想法就是我们把<strong>异步逻辑从middleware的定义中剥离</strong>(<strong>write async logic ahead of time, without knowing what Redux store is being used</strong>)，但是middleware为异步逻辑代码块提供store的dispatch函数与getState方法的访问许可。</p>
+<blockquote>
+<p>It would be nice if we had a way to write <em>any</em> async logic ahead of time, separate from the middleware itself, and still have access to <code>dispatch</code> and <code>getState</code> so that we can interact with the store.</p>
+</blockquote>
+<p>We could have our middleware <strong>check to see if the “action” is actually a function</strong> instead, and if it’s a function, call the function right away. That would let us <strong>write async logic in separate functions, outside of the middleware definition.</strong></p>
+<p>为middleware配备识别function的能力：let us pass a function to dispatch</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">const asyncFunctionMiddleware &#x3D; storeAPI &#x3D;&gt; next &#x3D;&gt; action &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; If the &quot;action&quot; is actually a function instead...</span><br><span class="line">  if (typeof action &#x3D;&#x3D;&#x3D; &#39;function&#39;) &#123;</span><br><span class="line">    &#x2F;&#x2F; then call the function and pass &#96;dispatch&#96; and &#96;getState&#96; as arguments</span><br><span class="line">    return action(storeAPI.dispatch, storeAPI.getState)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  &#x2F;&#x2F; Otherwise, it&#39;s a normal action - send it onwards</span><br><span class="line">  return next(action)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在middleware外部定义异步逻辑并调用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">const middlewareEnhancer &#x3D; applyMiddleware(asyncFunctionMiddleware)</span><br><span class="line">const store &#x3D; createStore(rootReducer, middlewareEnhancer)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F; Write a function that has &#96;dispatch&#96; and &#96;getState&#96; as arguments</span><br><span class="line">const fetchSomeData &#x3D; (dispatch, getState) &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; Make an async HTTP request</span><br><span class="line">  &#x2F;&#x2F; 使用dispatch和getState书写异步逻辑</span><br><span class="line">&#125;</span><br><span class="line">store.dispatch(fetchSomeData)</span><br></pre></td></tr></table></figure>
+<h4 id="使用redux-thunk-middleware"><a href="#使用redux-thunk-middleware" class="headerlink" title="使用redux-thunk middleware"></a>使用redux-thunk middleware</h4><p>The thunk middleware allows us to write functions that get <code>dispatch</code> and <code>getState</code> as arguments.</p>
+<p>在使用redux-thunk middleware的时候可以简单分两种情况。</p>
+<p>第一种是从第三方API获取数据。直接export async function之后disptach该thunk function即可。</p>
+<p>第二种是将UI中的数据传到服务器。简单的async function只能接受dispatch和getState作为arguments，但是UI中的数据从何而来？需要先写一个接受UI数据作为参数的函数，然后创建使用该UI数据的thunk function。We need a way to write one function that accepts <code>text</code> as its parameter, but then creates the actual thunk function so that it can use the <code>text</code> value to make the API call. </p>
+<p>方法就是先在外层写一个同步逻辑把UI数据做为参数的函数，该函数返回的是一个异步逻辑的thunk function。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; Write a synchronous outer function that receives the &#96;text&#96; parameter:</span><br><span class="line">export function saveNewTodo(text) &#123;</span><br><span class="line">  &#x2F;&#x2F; And then creates and returns the async thunk function:</span><br><span class="line">  return async function saveNewTodoThunk(dispatch, getState) &#123;</span><br></pre></td></tr></table></figure>
+<p>在UI中调用这个function要先传入UI数据，然后再dispatch。</p>
+<h1 id="dispatch"><a href="#dispatch" class="headerlink" title="dispatch"></a>dispatch</h1><p>dispatch作为更新app当前状态store的唯一媒介，接受一个action obejct作为参数。由于action creator返回一个action object，所以可以把action creators传入dispatch函数。</p>
+<p>The Redux store has a method called <code>dispatch</code>. <strong>The only way to update the state is to call <code>store.dispatch()</code> and pass in an action object</strong>. </p>
+<p><strong>You can think of dispatching actions as “triggering an event”</strong>.类比事件监听函数，这就像客户端有一个用户去点击了网页，触发了事件监听函数。</p>
+<h1 id="selectors"><a href="#selectors" class="headerlink" title="selectors"></a>selectors</h1><p>选择store中的特定状态</p>
+<p><strong>Selectors</strong> are functions that know how to extract specific pieces of information from a store state value.</p>
+<p>一般作为参数传入useSelector中去。</p>
+<h1 id="redux-sync-data-flow"><a href="#redux-sync-data-flow" class="headerlink" title="redux sync data flow"></a>redux sync data flow</h1><p><img src="/2020/12/10/redux-fundamentals/drunk99/machacroissant/source/_posts/2020-12-04-redux-hooks/ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26.gif" alt="ReduxDataFlowDiagram-49fa8c3968371d9ef6f2a1486bd40a26" style="zoom:50%;"></p>
+<ul>
+<li><p>首次渲染</p>
+<ul>
+<li>创建一个redux store。</li>
+<li>store调用root reducer，将它返回的值作为initial state。</li>
+<li>当UI被渲染的时候，UI中的组件从redux store中读取当前状态，并渲染。</li>
+</ul>
+</li>
+<li><p>重新渲染</p>
+<ul>
+<li>用户有一些行为，UI组件发现了这些行为的发生，这些行为用action对象来描述。</li>
+<li>通过给dispatch函数传递该行为action，获得的返回值就是current state，store将这更新后的值<strong>覆盖原值</strong>地保存起来。（immutable）</li>
+</ul>
+<blockquote>
+<p><strong>In order to update values immutably, your code must make <em>copies</em> of existing objects/arrays, and then modify the copies</strong>.</p>
+</blockquote>
+<ul>
+<li>store会通知所有的UI组件状态值被更新了</li>
+<li>那些需要从store中获取状态的UI组件就<strong>检查store</strong>看自己需要的值是否被更新了，<strong>更新了的话就重新渲染</strong>自己的那个部分。</li>
+</ul>
+</li>
+</ul>
+<h1 id="UI-and-Redux"><a href="#UI-and-Redux" class="headerlink" title="UI and Redux"></a>UI and Redux</h1><p>最原始的基础的redux and UI integration必须经历一下几个步骤：</p>
+<ol>
+<li>Create a Redux store</li>
+<li>Subscribe to updates(UI中的render)</li>
+<li>Inside the subscription callback:(render函数的具体内容)<ol>
+<li>Get the current store state</li>
+<li>Extract the data needed by this piece of UI</li>
+<li>Update the UI with the data</li>
+</ol>
+</li>
+<li>If necessary, render the UI with initial state(初始UI呈现通过调用render函数来实现)</li>
+<li>Respond to UI inputs by dispatching Redux actions</li>
+</ol>
+<p>有许多UI binding libraries协助use Redux with a given UI framework，他们承担subscribing to the store和update UI的工作。其中<strong>react-redux UI binding library</strong>就是redux core的一个独立包。</p>
+<h2 id="Connect"><a href="#Connect" class="headerlink" title="Connect"></a>Connect</h2><p>connect函数的作用就是connects a React component to a Redux store。使用connect的好处就是：it encapsulates the logic of talking to the Redux store。</p>
+<p>从UI component的角度出发，该函数为UI提供了data needed from store，以及提供了functions it can use to dispatch actions to the store。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">function connect(mapStateToProps?, mapDispatchToProps?, mergeProps?, options?)</span><br></pre></td></tr></table></figure>
+<p>The <code>mapStateToProps</code> and <code>mapDispatchToProps</code> deals with your Redux store’s <code>state</code> and <code>dispatch</code>, respectively.</p>
+<h3 id="Connect-Extracting-Data-with-mapSateToProps"><a href="#Connect-Extracting-Data-with-mapSateToProps" class="headerlink" title="Connect: Extracting Data with mapSateToProps"></a>Connect: Extracting Data with <code>mapSateToProps</code></h3><p><code>mapStateToProps</code>是传递给<code>connect</code>函数的第一个参数。它的作用是从整体store中把所需要的那部分数据传递给connected components，也就是让UI组件订阅保存全体数据的store。</p>
+<p>如果不希望该组件订阅全体store，可以直接给connect函数的第一个参数传入<code>null</code>或者<code>undefined</code>。</p>
+<hr>
+<p>该函数有以下特性：</p>
+<ul>
+<li>每次store发生变化该函数就会重新调用。</li>
+</ul>
+<p>如果整个app中有一个action被dispatched了，这就意味着store state有可能改变。那么mapStateToProps的UI component就会调用<code>store.getState()</code> 来检查是否 <code>lastState === currentState</code>，如果两次的state value是identical by reference，那么就不会重新调用 <code>mapStateToProps</code> function</p>
+<ul>
+<li>它就接受整个的store state作为参数，返回an object of data this component needs。</li>
+</ul>
+<hr>
+<p>定义<code>mapStateToProps</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">function mapStateToProps(state, ownProps?)&#123; return &#123;</span><br><span class="line">    a: 42,</span><br><span class="line">    todos: state.todos</span><br><span class="line">&#125;&#125;</span><br></pre></td></tr></table></figure>
+<p>参数说明：</p>
+<p>state参数代表了整个app的redux store state。(the same value returned by a call to <code>store.getState()</code>)。这是必须有的一个参数。</p>
+<p>ownProps参数(optional)是一个可选参数，如果UI组件需要使用它自己的props去retrieve date from store的话就需要改参数。比如当前UI component中拥有名为id的props，该id可以作为key去查找store，所以要把该id作为ownProps传入mapStateToProps。</p>
+<p>返回内容：</p>
+<p>mapStateToProps函数返回一个plain object，这个对象中的每一个field都会成为该UI component的props。返回对象中的field的value决定了你的UI component是否需要重新渲染。比如上面的例子就说明该component会接受props.a/props.todos。</p>
+<hr>
+<p>为什么要使用mapStateToProps？</p>
+<p>这个函数拥有re-shaping store data as needed for that component的功能。它可以将整个UI component所需要的数据都集中到一个返回对象中。</p>
+<p>一般在mapStateToProps的函数体中会用到useSelector。useSelector用于在mapStateToProps函数内部实现选取数据，每一次useSelector选取的数据都是互相独立，如果单独使用useSelector，这个选取数据的过程会和UI component交织在一起。(useSelector help encapsulate the process of extracting values from specific locations in the state tree)</p>
+<h3 id="Connect-Dispatching-Actions-with-mapDispatchToProps"><a href="#Connect-Dispatching-Actions-with-mapDispatchToProps" class="headerlink" title="Connect: Dispatching Actions with mapDispatchToProps"></a>Connect: Dispatching Actions with <code>mapDispatchToProps</code></h3><p><code>mapDispatchToProps</code>是传递给<code>connect</code>函数的第二个参数。它的作用是dispatching action to the store。</p>
+<p>如果connect的第二个参数没有传入或者传入的是null，那么默认UI component会接受<code>dispatch</code>函数作为<code>props.dispatch</code>。在UI中调用时依然需要给dispatch函数传递action type。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; UI与store绑定默认dispatch的三种方式</span><br><span class="line">&#x2F;&#x2F; 1</span><br><span class="line">connect()(MyComponent)</span><br><span class="line">&#x2F;&#x2F; 2</span><br><span class="line">connect(null, null)(MyComponent)</span><br><span class="line">&#x2F;&#x2F; 3</span><br><span class="line">connect(mapStateToProps &#x2F;** no second argument *&#x2F;)(MyComponent)</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;在UI描述中调用时需要传递action type</span><br><span class="line">function Counter(&#123; count, dispatch &#125;) &#123;</span><br><span class="line">  return (</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;button onClick&#x3D;&#123;() &#x3D;&gt; dispatch(&#123; type: &#39;DECREMENT&#39; &#125;)&#125;&gt;-&lt;&#x2F;button&gt;</span><br><span class="line">      </span><br><span class="line">    &lt;&#x2F;div&gt;</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于dispatch函数</p>
+<p><code>dispatch</code> is a function of the Redux store. You call <code>store.dispatch</code> to dispatch an action. This is the only way to trigger a state change.</p>
+</blockquote>
+<p>由于当前UI component并不能access the store directly，所以<code>connect</code>就实现了让UI component直接与redux store对接。同样的useDispatch hook也实现了相同的功能。</p>
+<hr>
+<p>定义mapDispatchToProps能帮我们省去写dispatch函数。<strong>if you define your own <code>mapDispatchToProps</code>, the connected component will no longer receive <code>dispatch</code>.</strong> </p>
+<hr>
+<p>定义mapDispatchToProps的两种方式：</p>
+<h4 id="Function-form"><a href="#Function-form" class="headerlink" title="Function form"></a>Function form</h4><p> Allows more customization, gains access to <code>dispatch</code> and optionally <code>ownProps</code></p>
+<p>传入参数说明：</p>
+<p>第一个必选参数是dispatch，一般会在mapDispatchToProps函数的返回对象中使用dispatch。给dispatch函数传入一个action object或者是action creator。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps &#x3D; dispatch &#x3D;&gt; &#123;</span><br><span class="line">  return &#123;&#x2F;&#x2F; dispatching plain actions</span><br><span class="line">    increment: () &#x3D;&gt; dispatch(&#123; type: &#39;INCREMENT&#39; &#125;),</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第二个参数是ownProps(optional)可选参数。在bind on component mount的基础之上，还能bind on props change。当传入的ownProps Change的时候也会dispatch action。</p>
+<p>返回对象说明：</p>
+<p>返回的应该是a plain object。这个object的每一个field都会被添加为该UI component的prop，也就在在原来UI compoennt的基础之上继续添补进去。（The return of the <code>mapDispatchToProps</code> function will be merged to your connected component as props.）同时the value should normally be a function that dispatches an action when called.</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; way1 plain object return</span><br><span class="line">const mapDispatchToProps &#x3D; dispatch &#x3D;&gt; &#123;</span><br><span class="line">  return &#123;</span><br><span class="line">    &#x2F;&#x2F; dispatching plain actions</span><br><span class="line">    increment: () &#x3D;&gt; dispatch(&#123; type: &#39;INCREMENT&#39; &#125;),</span><br><span class="line">    decrement: () &#x3D;&gt; dispatch(&#123; type: &#39;DECREMENT&#39; &#125;),</span><br><span class="line">    reset: () &#x3D;&gt; dispatch(&#123; type: &#39;RESET&#39; &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果给dipsatch传入的是action creator函数而非plain obejct action，通常的习惯就是把action creator的名字与mapDispatchToProps的return object的field也命名为相同的名字。</p>
+<p>如果存在多个action creator要dispatch绑定到props，这个过程很tedious，所以可以使用bindActionCreators函数来实现。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; way2 action creator return</span><br><span class="line">const increment &#x3D; () &#x3D;&gt; (&#123; type: &#39;INCREMENT&#39; &#125;)</span><br><span class="line">const decrement &#x3D; () &#x3D;&gt; (&#123; type: &#39;DECREMENT&#39; &#125;)</span><br><span class="line">const reset &#x3D; () &#x3D;&gt; (&#123; type: &#39;RESET&#39; &#125;)</span><br><span class="line"></span><br><span class="line">const mapDispatchToProps &#x3D; dispatch &#x3D;&gt; &#123;</span><br><span class="line">  return &#123;&#x2F;&#x2F; dispatching actions returned by action creators</span><br><span class="line">    increment: () &#x3D;&gt; dispatch(increment()),</span><br><span class="line">    decrement: () &#x3D;&gt; dispatch(decrement()),</span><br><span class="line">    reset: () &#x3D;&gt; dispatch(reset())</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用bindActionCreator：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#x2F;&#x2F; way3 bindActionCreator return</span><br><span class="line">const boundActionCreators &#x3D; bindActionCreators(</span><br><span class="line">  &#123; increment, decrement, reset &#125;,</span><br><span class="line">  dispatch</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<h4 id="Object-shorthand-form："><a href="#Object-shorthand-form：" class="headerlink" title="Object shorthand form："></a>Object shorthand form：</h4><p>More declarative and easier to use（更推荐使用）</p>
+<p>由于在define as function的语法中多次出现了类似another function that looks like <code>(…args) =&gt; dispatch(actionCreator(…args))</code>这样的pattern，这种模式可以抽取出来简化。走在上面我们尝试使用bindActionCreators来简化，但实际上还可以更加简化，这就是Object shorthand form。</p>
+<p>在obejct shorthand form当中，我们直接给mapDispatchToProps传递一个对象，对象中的每一个field都是action creators。那么根据内容重新命名mapDispatchToProps可以发现其实这本质上就是actionCreators的集合，作为第二个参数传入connect。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const mapDispatchToProps &#x3D; &#123;increment, decrement, reset&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="react-redux"><a href="#react-redux" class="headerlink" title="react-redux"></a>react-redux</h2><p>react-redux提供了一系列的hooks让store和UI发生数据双向流动。但是在使用这些hook前，需要让这些hook能够找到正确的redux store。</p>
+<p>我们需要告诉react-redux我们希望在compnents中使用哪一个store。因此我们需要rendering a <code>&lt;Provider&gt;</code>  component around our entire <code>&lt;App&gt;</code>, <strong>and passing the Redux store as a prop to <code>&lt;Provider&gt;</code></strong>.</p>
+<hr>
+<blockquote>
+<p><strong>In a React + Redux app, your global state should go in the Redux store, and your local state should stay in React components.</strong></p>
+</blockquote>
+<h3 id="useSelector"><a href="#useSelector" class="headerlink" title="useSelector"></a>useSelector</h3><p>react中提供类似于useState hook让react function components能够访问react state values。</p>
+<p>同样的react-redux提供useSelector hook让react component能够从redux store中读取数据。它接收selector function作为参数。selector function本身只接受一个state参数，这个state时entire redux store state，它的返回值可以是store state的某个slice，也可以是经过一些运算得到的derived value。</p>
+<p>那么useSelector本身不能执行select的功能，那么他的功能何在？它主要承担为selector function传递entire redux state object的工作。</p>
+<blockquote>
+<p><code>useSelector</code> accepts a single function, which we call a <strong>selector</strong> function. <strong>A selector is a function that takes the entire Redux store state as its argument, reads some value from the state, and returns that result</strong>.</p>
+</blockquote>
+<p>如果store中的state value有了变化该怎么办？useSelector自动帮我们subscribe to the redux store。意思就是只要selector返回的value和上一次的value不一样，useSelector就会force our component to re-render with the new data。</p>
+<blockquote>
+<p><strong><code>useSelector</code> compares its results using strict <code>===</code> reference comparisons, so the component will re-render any time the selector result is a new reference!</strong> </p>
+</blockquote>
+<hr>
+<h4 id="useSelector总是返回new-reference解决办法"><a href="#useSelector总是返回new-reference解决办法" class="headerlink" title="useSelector总是返回new reference解决办法"></a>useSelector总是返回new reference解决办法</h4><p>如果传递给useSelector的selector函数返回的总是是一个新的reference，那么这就回导致无条件re-render。比如filter函数和map函数总是return a new reference。</p>
+<p>在书写传入useSelector的selector function时最好注意以下几点：</p>
+<hr>
+<h5 id="单次selector选择store中尽可能少的数据量"><a href="#单次selector选择store中尽可能少的数据量" class="headerlink" title="单次selector选择store中尽可能少的数据量"></a>单次selector选择store中尽可能少的数据量</h5><p>建议在一个component中使用useSelector的时候，每一次的调用尽量返回最少的数据smallest amount of state。比如比起一个item本身，我们可能更希望返回指向该item的id。</p>
+<hr>
+<h5 id="useSelector-with-ShallowEuqal-comparison"><a href="#useSelector-with-ShallowEuqal-comparison" class="headerlink" title="useSelector with ShallowEuqal comparison"></a>useSelector with ShallowEuqal comparison</h5><p>但是方法1中提供的返回少量数据也不能改变返回的id本质上也是array的事实。因此我们需要一个比较前后返回数据的function（返回数据的volume越小这种comparison执行起来就越快）。<strong>将<code>shallowEqual</code> comparison function函数作为第二参传入useSelector函数</strong>。</p>
+<blockquote>
+<p>React-Redux has a <code>shallowEqual</code> comparison function we can use to check if the items <em>inside</em> the array are still the same.</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">import &#123; useSelector, shallowEqual &#125; from &#39;react-redux&#39;</span><br><span class="line"></span><br><span class="line">&#x2F;&#x2F;selector function</span><br><span class="line">const selectTodoIds &#x3D; state &#x3D;&gt; state.todos.map(todo &#x3D;&gt; todo.id)</span><br><span class="line"></span><br><span class="line">const TodoList &#x3D; () &#x3D;&gt; &#123;</span><br><span class="line">  &#x2F;&#x2F; useSelector in UI</span><br><span class="line">  const todoIds &#x3D; useSelector(selectTodoIds, shallowEqual)  </span><br><span class="line">  &#x2F;&#x2F; UI rendering</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="使用memoized-seletors"><a href="#使用memoized-seletors" class="headerlink" title="使用memoized seletors"></a>使用memoized seletors</h5><p>memoized selectors中的memoization的意思就是一种caching机制，储存经过较大运算量后得出的结果，并在后续遇到相同输入的时候重复使用该储存值。</p>
+<p>而memoized selector functions就是那些 save the most recent result value的selector。遇到相同的input，reuse the same result value；遇到不同的input，recalculate a new result value。</p>
+<p>那么如果创建memoized selector functions呢？<strong>Reselect library提供了<code>createSelector</code> API</strong>供创建memoized selector function。该函数接受一个或多个input selector function作为第一参数，接受一个output selector function作为第二参数，并且返回一个新的selector function。</p>
+<p>运行机制如下：</p>
+<ul>
+<li>All “input selectors” are called with all of the arguments</li>
+<li>If any of the input selector return values have changed, the “output selector” will re-run</li>
+<li>All of the input selector results become arguments to the output selector</li>
+<li>The final result of the output selector is cached for next time</li>
+</ul>
+<p>这是原来的写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">const selectTodoIds &#x3D; state &#x3D;&gt; state.todos.map(todo &#x3D;&gt; todo.id)</span><br></pre></td></tr></table></figure>
+<p>这是使用createSelector的写法：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">export const selectTodoIds &#x3D; createSelector(</span><br><span class="line">  &#x2F;&#x2F; First, pass one or more &quot;input selector&quot; functions:</span><br><span class="line">  state &#x3D;&gt; state.todos,</span><br><span class="line">  &#x2F;&#x2F; Then, an &quot;output selector&quot; that receives all the input results as arguments</span><br><span class="line">  &#x2F;&#x2F; and returns a final result value</span><br><span class="line">  todos &#x3D;&gt; todos.map(todo &#x3D;&gt; todo.id)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>就相当于把原来的一步到位拆分成了两个步骤。</p>
+<p>什么时候建议使用memoized selectors？当你<strong>需要从redux store中获取derived additional values</strong>。换句话说return的值是经过某些逻辑后产生的值，步骤较多。</p>
+<h3 id="useDispatch"><a href="#useDispatch" class="headerlink" title="useDispatch"></a>useDispatch</h3><p>useSelector解决了如何从redux store读取数据到UI的问题，但是如何解决从UI component去dispatch action到store的问题呢？当然我们可以调用store.dispatch(action)来完成，但是我们在component file中是无法访问到store的，因此我们需要一个API能让我们在UI component中使用dispatch function。</p>
+<p>由此react-redux提供了useDispatch Hook，它的作用是gives us the store’s <code>dispatch</code> method as its result. (In fact, the implementation of the hook really is <code>return store.dispatch</code>.)</p>
+<p>在UI component中使用useDispatch的方法一般是：调用<code>const dispatch = useDispatch()</code>，然后在需要时调用<code>dispatch(someAction)</code>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/React/" rel="tag"># React</a>
+              <a href="/tags/Redux/" rel="tag"># Redux</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/08/redux-async-data-flow/" rel="prev" title="Redux异步数据流与性能优化">
+      <i class="fa fa-chevron-left"></i> Redux异步数据流与性能优化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/10/redux-toolkit/" rel="next" title="redux-toolkit介绍">
+      redux-toolkit介绍 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#action"><span class="nav-number">1.</span> <span class="nav-text">action</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#action%E8%A7%84%E8%8C%83%E5%8C%96"><span class="nav-number">1.1.</span> <span class="nav-text">action规范化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#action-creators"><span class="nav-number">2.</span> <span class="nav-text">action creators</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#reducers"><span class="nav-number">3.</span> <span class="nav-text">reducers</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducers%E7%9A%84%E8%B0%83%E7%94%A8%E9%80%BB%E8%BE%91"><span class="nav-number">3.1.</span> <span class="nav-text">Reducers的调用逻辑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%89%8B%E5%86%99Reducers%E8%BF%94%E5%9B%9E%E5%AF%B9%E8%B1%A1newState"><span class="nav-number">3.2.</span> <span class="nav-text">手写Reducers返回对象newState</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducers%E7%AC%AC%E4%B8%80%E4%B8%AA%E5%8F%82%E6%95%B0%E7%9A%84state%E5%88%9D%E5%A7%8B%E5%80%BC"><span class="nav-number">3.3.</span> <span class="nav-text">Reducers第一个参数的state初始值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducers%E6%8B%86%E5%88%86"><span class="nav-number">3.4.</span> <span class="nav-text">Reducers拆分</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E5%88%86%E5%87%86%E5%88%99"><span class="nav-number">3.4.1.</span> <span class="nav-text">拆分准则</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%86%E5%88%86%E7%9A%84%E5%A5%BD%E5%A4%84"><span class="nav-number">3.4.2.</span> <span class="nav-text">拆分的好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reducer%E7%BB%84%E5%90%88"><span class="nav-number">3.5.</span> <span class="nav-text">Reducer组合</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#store"><span class="nav-number">4.</span> <span class="nav-text">store</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#store%E5%8A%9F%E8%83%BD"><span class="nav-number">4.1.</span> <span class="nav-text">store功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BAstore%E5%8F%8A%E4%B8%89%E4%B8%AA%E5%8F%82%E6%95%B0rootReducer-initialState-enhancer"><span class="nav-number">4.2.</span> <span class="nav-text">创建store及三个参数rootReducer&#x2F;initialState&#x2F;enhancer</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8Eenhancer%E5%88%B0middleware"><span class="nav-number">4.3.</span> <span class="nav-text">从enhancer到middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#middleware%E5%9C%A8redux%E6%95%B0%E6%8D%AE%E6%B5%81%E4%B8%AD%E7%9A%84%E4%BD%8D%E7%BD%AE"><span class="nav-number">4.3.1.</span> <span class="nav-text">middleware在redux数据流中的位置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%89%8B%E5%86%99middleware"><span class="nav-number">4.3.2.</span> <span class="nav-text">手写middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ES5%E6%89%8B%E5%86%99%E4%B8%AD%E9%97%B4%E4%BB%B6"><span class="nav-number">4.3.2.1.</span> <span class="nav-text">使用ES5手写中间件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8ES6%E7%9A%84%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E9%87%8D%E5%86%99middleware"><span class="nav-number">4.3.2.2.</span> <span class="nav-text">使用ES6的箭头函数重写middleware</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B0%83%E7%94%A8%E6%89%8B%E5%86%99middleware"><span class="nav-number">4.3.2.3.</span> <span class="nav-text">调用手写middleware</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async-function-middleware"><span class="nav-number">4.3.3.</span> <span class="nav-text">async function middleware</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%89%8B%E5%86%99async-function-middleware%E7%9A%84%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="nav-number">4.3.3.1.</span> <span class="nav-text">手写async function middleware的两种方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8redux-thunk-middleware"><span class="nav-number">4.3.3.2.</span> <span class="nav-text">使用redux-thunk middleware</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#dispatch"><span class="nav-number">5.</span> <span class="nav-text">dispatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#selectors"><span class="nav-number">6.</span> <span class="nav-text">selectors</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#redux-sync-data-flow"><span class="nav-number">7.</span> <span class="nav-text">redux sync data flow</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UI-and-Redux"><span class="nav-number">8.</span> <span class="nav-text">UI and Redux</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Connect"><span class="nav-number">8.1.</span> <span class="nav-text">Connect</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Connect-Extracting-Data-with-mapSateToProps"><span class="nav-number">8.1.1.</span> <span class="nav-text">Connect: Extracting Data with mapSateToProps</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Connect-Dispatching-Actions-with-mapDispatchToProps"><span class="nav-number">8.1.2.</span> <span class="nav-text">Connect: Dispatching Actions with mapDispatchToProps</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Function-form"><span class="nav-number">8.1.2.1.</span> <span class="nav-text">Function form</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object-shorthand-form%EF%BC%9A"><span class="nav-number">8.1.2.2.</span> <span class="nav-text">Object shorthand form：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#react-redux"><span class="nav-number">8.2.</span> <span class="nav-text">react-redux</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#useSelector"><span class="nav-number">8.2.1.</span> <span class="nav-text">useSelector</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#useSelector%E6%80%BB%E6%98%AF%E8%BF%94%E5%9B%9Enew-reference%E8%A7%A3%E5%86%B3%E5%8A%9E%E6%B3%95"><span class="nav-number">8.2.1.1.</span> <span class="nav-text">useSelector总是返回new reference解决办法</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%8D%95%E6%AC%A1selector%E9%80%89%E6%8B%A9store%E4%B8%AD%E5%B0%BD%E5%8F%AF%E8%83%BD%E5%B0%91%E7%9A%84%E6%95%B0%E6%8D%AE%E9%87%8F"><span class="nav-number">8.2.1.1.1.</span> <span class="nav-text">单次selector选择store中尽可能少的数据量</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#useSelector-with-ShallowEuqal-comparison"><span class="nav-number">8.2.1.1.2.</span> <span class="nav-text">useSelector with ShallowEuqal comparison</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8memoized-seletors"><span class="nav-number">8.2.1.1.3.</span> <span class="nav-text">使用memoized seletors</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#useDispatch"><span class="nav-number">8.2.2.</span> <span class="nav-text">useDispatch</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">8:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

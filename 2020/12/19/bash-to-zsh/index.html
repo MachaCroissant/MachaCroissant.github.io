@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="本文主要涉及从bash切换zsh的方式，以及安装oh my zsh的踩坑记录，终端应用代理，npm应用代理，yarn应用代理。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="终端从bash到zsh与终端代理">
+<meta property="og:url" content="http://example.com/2020/12/19/bash-to-zsh/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="本文主要涉及从bash切换zsh的方式，以及安装oh my zsh的踩坑记录，终端应用代理，npm应用代理，yarn应用代理。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://example.com/2020/12/19/bash-to-zsh/image-20201219101143203.png">
+<meta property="article:published_time" content="2020-12-19T00:58:17.000Z">
+<meta property="article:modified_time" content="2020-12-22T07:44:20.204Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="踩坑记录">
+<meta property="article:tag" content="shell">
+<meta property="article:tag" content="终端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2020/12/19/bash-to-zsh/image-20201219101143203.png">
+
+<link rel="canonical" href="http://example.com/2020/12/19/bash-to-zsh/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>终端从bash到zsh与终端代理 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/19/bash-to-zsh/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          终端从bash到zsh与终端代理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-12-19 08:58:17" itemprop="dateCreated datePublished" datetime="2020-12-19T08:58:17+08:00">2020-12-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-12-22 15:44:20" itemprop="dateModified" datetime="2020-12-22T15:44:20+08:00">2020-12-22</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BF%85%E5%A4%87%E6%8A%80%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">必备技能</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">本文主要涉及从bash切换zsh的方式，以及安装oh my zsh的踩坑记录，终端应用代理，npm应用代理，yarn应用代理。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>一个冷知识，zsh该怎么读，我一直读z-s-h三个字母，后来发现应该读z-shell。</p>
+<h1 id="从bash到zsh"><a href="#从bash到zsh" class="headerlink" title="从bash到zsh"></a>从bash到zsh</h1><p>参考<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000021216800">macos上的zsh配置</a>。</p>
+<h2 id="shell脚本切换"><a href="#shell脚本切换" class="headerlink" title="shell脚本切换"></a>shell脚本切换</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">chsh -s /bin/zsh</span><br><span class="line">chsh -s /bin/bash</span><br></pre></td></tr></table></figure>
+<h2 id="查看当前系统默认shell"><a href="#查看当前系统默认shell" class="headerlink" title="查看当前系统默认shell"></a>查看当前系统默认shell</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo $SHELL</span><br></pre></td></tr></table></figure>
+<h2 id="默认zsh安装-升级"><a href="#默认zsh安装-升级" class="headerlink" title="默认zsh安装/升级"></a>默认zsh安装/升级</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">zsh --version</span><br><span class="line"></span><br><span class="line">brew install zsh zsh-completions</span><br></pre></td></tr></table></figure>
+<h2 id="保留bash脚本"><a href="#保留bash脚本" class="headerlink" title="保留bash脚本"></a>保留bash脚本</h2><p>命令行输入</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;source ~/.bash_profile&quot; &gt;&gt; ~/.zshrc</span><br></pre></td></tr></table></figure>
+<p>但是会出现\和[和]和英文字母数字掺杂的情况，待解决。</p>
+<blockquote>
+<p>类unix文件命名规则：</p>
+<ul>
+<li>在类unix系统中常用缩略语rc是runcom/run command的简写。rc一般会跟在任何类脚本文件名的最后，这些脚本通常在程序的启动阶段被调用。例如，.bashrc是在bash shell启动后运行的脚本，/etc/rc是linux启动的主角本。</li>
+<li>~波浪号代表当前用户的home目录，在OS X下位于/Users/用户名/</li>
+<li>.点是类unix下的隐藏文件，在GUI文件管理器和ls的默认设置下不会显示出来，但ls -a命令可以显示英藏文件</li>
+</ul>
+</blockquote>
+<h1 id="安装oh-my-zsh"><a href="#安装oh-my-zsh" class="headerlink" title="安装oh my zsh"></a>安装oh my zsh</h1><p>官方推荐的curl方式以及wget方式在终端输入的时候会一直显示443拒绝连接！一开始以为是hosts的问题，需要像以前那样修改主机地址<code>sudo vim /etc/hosts</code>并添加github相关ip，但是发现依然没用！</p>
+<p>后来发现需要设置终端代理，分两种情况，针对当前终端窗口的代理设置；针对当前shell配置文件的永久设置。</p>
+<h1 id="终端代理"><a href="#终端代理" class="headerlink" title="终端代理"></a>终端代理</h1><p>以使用Clash X代理客户端为例，对Clash X客户端进行“复制终端代理命令”的操作。</p>
+<p><img src="/2020/12/19/bash-to-zsh/image-20201219101143203.png" alt="image-20201219101143203" style="zoom:33%;"></p>
+<p>然后Copy到终端为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_proxy=socks5://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<p>之后执行oh my zsh的命令就没有443问题了。这种方法只在当前终端有效，关闭或者新建终端窗口将失效。</p>
+<hr>
+<p>如果希望长期有效，将命令添加在shell配置文件<code>.bash_profile</code>或者<code>.zshrc</code>中。</p>
+<ol>
+<li>终端进入配置文件</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo vi ~/.zshrc # 进入配置文件，输入密码</span><br></pre></td></tr></table></figure>
+<ol>
+<li>添加shell配置文件</li>
+</ol>
+<p>如果没有vim使用经验需要查看一下vim操作，按下i从默认的正常模式变为编辑模式。</p>
+<p>在文件末尾添加以下命令，注意host：127.0.0.1和port：7890需要匹配Clash X客户端复制终端代理命令的相关数据。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">alias setproxy=&quot;export https_proxy=http://127.0.0.1:7890;export http_proxy=http://127.0.0.1:7890;export all_proxy=socks5://127.0.0.1:7890;echo \&quot;Set proxy successfully\&quot; &quot;</span><br><span class="line">alias unsetproxy=&quot;unset http_proxy;unset https_proxy;unset all_proxy;echo \&quot;Unset proxy successfully\&quot; &quot; </span><br></pre></td></tr></table></figure>
+<p>继续vim操作，esc变为正常模式，按下冒号:并输入wq会保存并退出，由此回到终端。</p>
+<ol>
+<li>应用shell配置文件</li>
+</ol>
+<p>在终端执行以下命令让配置生效。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">source ~/.bash_profile</span><br><span class="line">source ~/.zshrc</span><br></pre></td></tr></table></figure>
+<ol>
+<li>应用代理命令</li>
+</ol>
+<p>直接在终端输入<code>setproxy</code>即可。</p>
+<hr>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><p><a target="_blank" rel="noopener" href="https://github.com/FatliTalk/blog/issues/131">macOS终端使用代理网络</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://jerrysun.org/skill/2020/02/19/proxy/">关于终端代理</a></p>
+</li>
+</ol>
+<h2 id="无法PING"><a href="#无法PING" class="headerlink" title="无法PING"></a>无法PING</h2><p>在设置完代理之后，使用ping方法依然无法成功。因为ping方法是基于网络层的ICMP协议，而代理协议socks和http分别基于OSI模型的会话层和应用层。详细解释看这里<a target="_blank" rel="noopener" href="https://hackcraker.github.io/2020/03/11/%E5%A6%82%E4%BD%95%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E9%87%8C%E8%AE%BE%E4%BB%A3%E7%90%86/">如何在命令行里设代理</a>。可以使用curl方法访问外网网站。</p>
+<h2 id="curl-ip依然显示实际地理位置"><a href="#curl-ip依然显示实际地理位置" class="headerlink" title="curl ip依然显示实际地理位置"></a>curl ip依然显示实际地理位置</h2><p>在设置完代理之后，使用curl方法获得地理位置信息<code>curl cip.cc</code>，可能依然显示实际地理位置，注意查看参考1中给出的前提条件是Clash X代理客户端开启全局模式，如果是规则判断依然会出现实际地理位置。</p>
+<h2 id="npm-yarn设置代理"><a href="#npm-yarn设置代理" class="headerlink" title="npm/yarn设置代理"></a>npm/yarn设置代理</h2><p>为npm和yarn设置包管理工具的初衷是出现network error。一般情况下，会建议切换国内源，但是国内源切换了也还是没办法的话就试试设置代理。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://juejin.cn/post/6844904160513490957">如何为git,npm,yarn设置代理</a>。</p>
+<h3 id="查看代理命令"><a href="#查看代理命令" class="headerlink" title="查看代理命令"></a>查看代理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config list</span><br><span class="line">yarn config list</span><br></pre></td></tr></table></figure>
+<h3 id="设置代理命令"><a href="#设置代理命令" class="headerlink" title="设置代理命令"></a>设置代理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm config set proxy  http://127.0.0.1:7890</span><br><span class="line">npm config set https-proxy http://127.0.0.1:7890</span><br><span class="line"></span><br><span class="line">yarn config set https-proxy http://127.0.0.1:7890</span><br><span class="line">yarn config set proxy http://127.0.0.1:7890</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>如果走了代理，就可以把源设置为国外默认源了。</p>
+<ol>
+<li>查看国外源</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config get registry</span><br><span class="line">yarn config get registry</span><br></pre></td></tr></table></figure>
+<ol>
+<li>设置国外源</li>
+</ol>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm config set registry=http://registry.npmjs.org</span><br><span class="line">yarn config set registry https://registry.yarnpkg.com</span><br></pre></td></tr></table></figure>
+</blockquote>
+<h3 id="取消代理命令"><a href="#取消代理命令" class="headerlink" title="取消代理命令"></a>取消代理命令</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm config delete proxy</span><br><span class="line">npm config delete https-proxy</span><br><span class="line"></span><br><span class="line">yarn config delete proxy</span><br><span class="line">yarn config delete https-proxy</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%B8%A9%E5%9D%91%E8%AE%B0%E5%BD%95/" rel="tag"># 踩坑记录</a>
+              <a href="/tags/shell/" rel="tag"># shell</a>
+              <a href="/tags/%E7%BB%88%E7%AB%AF/" rel="tag"># 终端</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/12/17/data-preprocessing/" rel="prev" title="数据分析中的数据预处理">
+      <i class="fa fa-chevron-left"></i> 数据分析中的数据预处理
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2020/12/19/learn-sass/" rel="next" title="Sass学习">
+      Sass学习 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8Ebash%E5%88%B0zsh"><span class="nav-number">1.</span> <span class="nav-text">从bash到zsh</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#shell%E8%84%9A%E6%9C%AC%E5%88%87%E6%8D%A2"><span class="nav-number">1.1.</span> <span class="nav-text">shell脚本切换</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D%E7%B3%BB%E7%BB%9F%E9%BB%98%E8%AE%A4shell"><span class="nav-number">1.2.</span> <span class="nav-text">查看当前系统默认shell</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%BB%98%E8%AE%A4zsh%E5%AE%89%E8%A3%85-%E5%8D%87%E7%BA%A7"><span class="nav-number">1.3.</span> <span class="nav-text">默认zsh安装&#x2F;升级</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BF%9D%E7%95%99bash%E8%84%9A%E6%9C%AC"><span class="nav-number">1.4.</span> <span class="nav-text">保留bash脚本</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%89%E8%A3%85oh-my-zsh"><span class="nav-number">2.</span> <span class="nav-text">安装oh my zsh</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%88%E7%AB%AF%E4%BB%A3%E7%90%86"><span class="nav-number">3.</span> <span class="nav-text">终端代理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">3.1.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E6%B3%95PING"><span class="nav-number">3.2.</span> <span class="nav-text">无法PING</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#curl-ip%E4%BE%9D%E7%84%B6%E6%98%BE%E7%A4%BA%E5%AE%9E%E9%99%85%E5%9C%B0%E7%90%86%E4%BD%8D%E7%BD%AE"><span class="nav-number">3.3.</span> <span class="nav-text">curl ip依然显示实际地理位置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#npm-yarn%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86"><span class="nav-number">3.4.</span> <span class="nav-text">npm&#x2F;yarn设置代理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E4%BB%A3%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">3.4.1.</span> <span class="nav-text">查看代理命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E4%BB%A3%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">3.4.2.</span> <span class="nav-text">设置代理命令</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%A3%E7%90%86%E5%91%BD%E4%BB%A4"><span class="nav-number">3.4.3.</span> <span class="nav-text">取消代理命令</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">290k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">8:47</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
