@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="在CentOS上安装Nginx并使用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx安装与配置">
+<meta property="og:url" content="https://drunk99.xyz/2021/03/27/nginx-with-ssl/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="在CentOS上安装Nginx并使用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/27/nginx-with-ssl/image-20210327094232475.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/27/nginx-with-ssl/image-20210329110454009.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/27/nginx-with-ssl/image-20210327140647189.png">
+<meta property="article:published_time" content="2021-03-27T01:17:36.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:25:59.104Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="NGINX">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://drunk99.xyz/2021/03/27/nginx-with-ssl/image-20210327094232475.png">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/03/27/nginx-with-ssl/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Nginx安装与配置 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/03/27/nginx-with-ssl/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Nginx安装与配置
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-27 09:17:36" itemprop="dateCreated datePublished" datetime="2021-03-27T09:17:36+08:00">2021-03-27</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 15:25:59" itemprop="dateModified" datetime="2021-03-29T15:25:59+08:00">2021-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%BF%85%E5%A4%87%E6%8A%80%E8%83%BD/" itemprop="url" rel="index"><span itemprop="name">必备技能</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.6k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+            <div class="post-description">在CentOS上安装Nginx并使用。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Nginx的安装、启动、验证"><a href="#Nginx的安装、启动、验证" class="headerlink" title="Nginx的安装、启动、验证"></a>Nginx的安装、启动、验证</h1><p>安装分为以下三个命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum -y update # 更新</span><br><span class="line">sudo yum install -y epel-release # 安装epel repository，可以提供更多CentOS官方不提供下载的开源包</span><br><span class="line">sudo yum install nginx # 这里如果使用-y可能会没有反应，我自己弄的时候就存在这个问题</span><br></pre></td></tr></table></figure>
+<p>启动与查看Nginx的状态。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl start nginx # 按下Enter后不会获得返回值，但Nginx已经启动了</span><br><span class="line">sudo systemctl status nginx # 使用status查看，这会有返回值，看到active说明就在运行了</span><br></pre></td></tr></table></figure>
+<p>其他一些配置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo systemctl enable nginx # 设置开机自动启动</span><br><span class="line">sudo systemctl disable nginx # 设置开机不自动启动</span><br><span class="line">sudo systemctl stop nginx # 停止nginx</span><br><span class="line">sudo systemctl restart nginx # 重新启动</span><br></pre></td></tr></table></figure>
+<p>如果希望在浏览器中验证Nginx的可访问性，可以在浏览器中输入<code>http://Ip-or-domain</code>，返回一个CentOS相关的页面就没有问题。</p>
+<blockquote>
+<p>许多网页教程显示都是返回一个Welcome to nginx!的相关页面，之前我也一直以为自己配置错了。但是这个页面到底是服务器上存在的什么页面，是由<code>/etc/nginx/nginx.conf</code>中的server&gt;root选项决定的，如下：</p>
+<p><img src="/2021/03/27/nginx-with-ssl/image-20210327094232475.png" alt="image-20210327094232475" style="zoom:30%;"></p>
+<p>可以看到root的路径在<code>/usr/share/nginx/html</code>中，可以去查看一下该文件夹下的index.html文件。</p>
+<p>相关问题的解决连接附上<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3pqZGRhL2FydGljbGUvZGV0YWlscy8xMDQ2MTI0MTc=">关于nginx安装成功并启动后，登录网页不能进入欢迎页面的问题<i class="fa fa-external-link-alt"></i></span>。</p>
+</blockquote>
+<h1 id="Nginx相关命令"><a href="#Nginx相关命令" class="headerlink" title="Nginx相关命令"></a>Nginx相关命令</h1><p>以下是关于查看nginx配置文件的命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看当前使用nginx配置文件的地址</span></span><br><span class="line">nginx -t</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 查看所有的nginx.conf</span></span><br><span class="line">locate nginx.conf</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 以-c命令指定配置文件启动nginx</span></span><br><span class="line">sudo nginx -c /etc/nginx/nginx.conf</span><br></pre></td></tr></table></figure>
+<p>nginx服务的操作不必使用<code>systemctl</code>，可以直接使用nginx。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nginx # 启动nginx</span><br><span class="line">nginx -s reload # 重启nginx</span><br></pre></td></tr></table></figure>
+<h2 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h2><p>Nginx的安装目录为<code>/etc/nginx</code>。目录结构如下：</p>
+<p><img src="/2021/03/27/nginx-with-ssl/image-20210329110454009.png" alt="image-20210329110454009" style="zoom:30%;"></p>
+<p>使用yum安装的nginx的主要配置文件位于<code>/etc/nginx/nginx.conf</code>中。</p>
+<blockquote>
+<p>关于Nginx的默认配置文件<code>nginx.conf</code>到底在哪里的回答。可以参考<span class="exturl" data-url="aHR0cHM6Ly9zZWdtZW50ZmF1bHQuY29tL3EvMTAxMDAwMDAyMTk3MDgxOQ==">思否的回答<i class="fa fa-external-link-alt"></i></span>，<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvMTc0MTM1MjYvbmdpbngtbWlzc2luZy1zaXRlcy1hdmFpbGFibGUtZGlyZWN0b3J5">StackOverflow的回答<i class="fa fa-external-link-alt"></i></span>。</p>
+<p>不同的安装方式会导致nginx配置文件的目录不同。</p>
+<p>如果是yum以及epel安装的，配置文件在<code>/etc/nginx</code>下，<code>/etc/nginx/nginx.conf</code>的include语句<code>include /etc/nginx/conf.d/*.conf;</code>可以引入当前目录下<code>conf.d</code>下的所有<code>*.conf</code>的配置文件。</p>
+<p>如果是wget安装的，配置文件在<code>`/usr/local/nginx/conf</code>。</p>
+<p>如果在ubuntu系统下使用apt-get，文件目录中还会存在一个<code>sites-available</code>文件夹，其实他的作用就类似于conf.d文件夹。可以参考<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzI1NDM1MTE4Lzk4NTMxNDQ=">这个回答<i class="fa fa-external-link-alt"></i></span>。</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly9waG9lbml4bmFwLmNvbS9rYi9ob3ctdG8taW5zdGFsbC1uZ2lueC1vbi1jZW50b3MtNw==">How to Intsall Nginx on CentOS<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cudHV4dGlwcy5uZXQvaG93LXRvLWluc3RhbGwtbmdpbngtd2ViLXNlcnZlci1vbi1jZW50b3MtNy1saW51eC8=">How to install Nginx web server on CentOS 7 Linux<i class="fa fa-external-link-alt"></i></span></p>
+<h1 id="加密、签名、证书相关概念"><a href="#加密、签名、证书相关概念" class="headerlink" title="加密、签名、证书相关概念"></a>加密、签名、证书相关概念</h1><h2 id="digital-signature数字签名"><a href="#digital-signature数字签名" class="headerlink" title="digital signature数字签名"></a>digital signature数字签名</h2><p>查看<span class="exturl" data-url="aHR0cDovL3d3dy5ydWFueWlmZW5nLmNvbS9ibG9nLzIwMTEvMDgvd2hhdF9pc19hX2RpZ2l0YWxfc2lnbmF0dXJlLmh0bWw=">数字签名是什么<i class="fa fa-external-link-alt"></i></span>，这篇文章解释了数字签名与数字证书。下面是我的一些理解。</p>
+<p>在网络上传输信息的双方，双方各持有一把公钥、一把私钥。公钥和私钥是对偶的，如果破解了一把，另一把自然就被破解了；公钥是私钥的唯一持有者给他的通信对象发送的加密钥匙，公钥可以公开给所有人，私钥需要持有者保密。发送方用公钥加密内容，接收方只能用和发送方匹配的密钥解密内容。</p>
+<blockquote>
+<p>发送信息的双方，各自生成一对公钥和密钥，把公钥分享给对方，私钥自己持有。举个例子，A和B在通信，首先要A生成自己的公钥和密钥，并且B也生成自己的公钥和密钥，A把自己的公钥给B，B也把自己的公钥给A。因此A在通信中会用到：A自己的密钥，B发送过来的公钥。</p>
+</blockquote>
+<p>目前为止，发送方A想要给接收方B发送信息，只要用公钥加密即可。但是C、D、E都可以有公钥，B如何确定发送过来的信息是谁发过来的？因此发送方A采用“数字签名”的形式发送信息。</p>
+<p><strong>数字签名就是发送方A将信息用Hash函数生成信件摘要digest，并用发送方A自己的私钥加密后生成的证明自己是自己的认证。</strong>数字签名会附在原信息内容后，通过接收方B的公钥加密后发送。接收方B在拿到这个信息后，首先用自己的私钥B解密，获得信件正文内容与签名，再将签名用发送方A的公钥解密，获得摘要digest。接收方B为了确认信件征文内容没有被篡改，对信件正文做哈希后与解密后获得的digest做对比，如果一致，说明内容对上了，发送人也对上了。</p>
+<p>「签名」的作用本身也不是用来保证数据的机密性，而是用于验证数据来源的防止数据被篡改的，也就是确认发送者的身份。</p>
+<blockquote>
+<p>为什么是哈希函数？</p>
+<ol>
+<li>如果没有哈希函数，同时原信息又很庞大，对原信息计算数字签名（非对称加密）的运算量十分庞大，耗时。</li>
+<li>哈希函数是不可逆的，无法从摘要反推出原文。</li>
+</ol>
+</blockquote>
+<h2 id="数字证书digital-certificate"><a href="#数字证书digital-certificate" class="headerlink" title="数字证书digital certificate"></a>数字证书digital certificate</h2><p>有了数字签名之后，A和B的对话就能加密进行了，但问题是接收方B持有的公钥怎么就一定是发送方A的？如果C用自己的公钥冒充A发送给B，且B保存下来，之后A反而会被当作冒充者。</p>
+<p>之前我们都在考虑消息是否会被篡改，但是公钥是否会被篡改呢？发送方A没有办法证明自己的公钥就是自己的公钥，因此需要第三方帮自己证明，就像公安局发身份证证明公民身份一样。</p>
+<p>换句话说，数字证书就是「公钥的数字签名」，是为了保证公钥不被篡改而引入的。</p>
+<p>由于我们不能自己证明自己，要找第三方公证，这个第三方就是CA（Certificate Authority），CA会将证书的颁布机构、有效期、公钥、持有者等信息用CA的私钥进行签名，在接收方B收到这个数字证书的时候，用CA的公钥进行验签。</p>
+<blockquote>
+<p>证书颁发的机构有层级关系，下级CA的证书由上级CA签发，根证书签发机构使用自签，自己给自己认证。</p>
+<p>操作系统和浏览器等厂商一般都会预装可靠的根证书。</p>
+</blockquote>
+<h2 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly9zZWdtZW50ZmF1bHQuY29tL2EvMTE5MDAwMDAyNDUyMzc3Mg==">一文彻底搞懂加密、数字签名和数字证书<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cDovL3d3dy5ydWFueWlmZW5nLmNvbS9ibG9nLzIwMTEvMDgvd2hhdF9pc19hX2RpZ2l0YWxfc2lnbmF0dXJlLmh0bWw=">数字签名是什么<i class="fa fa-external-link-alt"></i></span></p>
+<h1 id="为Nginx配置TLS"><a href="#为Nginx配置TLS" class="headerlink" title="为Nginx配置TLS"></a>为Nginx配置TLS</h1><h2 id="openssl生成密钥与证书"><a href="#openssl生成密钥与证书" class="headerlink" title="openssl生成密钥与证书"></a>openssl生成密钥与证书</h2><p>首先创建一个用于存放nginx的密钥、Diffie-Helman key、证书的文件目录，并设置权限。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mkdir /etc/pki/nginx/</span><br><span class="line">chmod 700 /etc/pki/nginx/</span><br></pre></td></tr></table></figure>
+<p>用以下命令生成RSA私钥和自签名证书到上一步创建的目录。其中<code>req</code>是证书请求的子命令，<code>-newkey rsa:2048 -keyout /etc/pki/nginx/private.key</code>表示生成私钥到制定位置/etc/pki/nginx/private.key，<code>-nodes</code>表示私钥不加密，<code>-x509</code>表示输出X509格式的证书，<code>-days 365</code>表示有效期为365天</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/pki/nginx/private.key -out /etc/pki/nginx/certificate.crt</span><br></pre></td></tr></table></figure>
+<p>接着会在命令行要求填写Country Name (2 letter code)至Email Address等证书拥有者信息，其中Common Name填写服务器IP地址或（已购买的）域名。</p>
+<p>用以下命令生成DH key到上一步创建的目录。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">openssl dhparam -out /etc/pki/nginx/dhparam.pem 2048</span><br></pre></td></tr></table></figure>
+<p>至此，<code>/etc/pki/nginx</code>下已有三个文件。（pki=public key infrastructure）</p>
+<p><img src="/2021/03/27/nginx-with-ssl/image-20210327140647189.png" alt="image-20210327140647189" style="zoom:30%;"></p>
+<blockquote>
+<p>也可以向证书与私钥供应商处获取密钥，有很多公司提供这个服务。申请成功后将证书和私钥都复制到特定目录下的.crt与.key后缀的文件中即可。</p>
+<p>另外在同一目录下生成DH密钥交换可以确保密钥交换过程中的安全性。</p>
+<p>图文可以看这篇<span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC9lN2M3YjIzYTkyYjQ=">教程<i class="fa fa-external-link-alt"></i></span>。</p>
+</blockquote>
+<h2 id="为Nginx应用生成的密钥与证书"><a href="#为Nginx应用生成的密钥与证书" class="headerlink" title="为Nginx应用生成的密钥与证书"></a>为Nginx应用生成的密钥与证书</h2><p>在<code>/etc/nginx</code>中包含了关于Nginx的所有配置。在conf.d子目录下创建一个ssl.conf的配置文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/nginx/conf.d/ssl.conf</span><br></pre></td></tr></table></figure>
+<p>内容如下，一定要把<code>server_IP_address</code>改成自己的服务器ip。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">server &#123;</span><br><span class="line">listen 443 http2 ssl;</span><br><span class="line">listen [::]:443 http2 ssl;</span><br><span class="line"></span><br><span class="line">server_name server_IP_address;</span><br><span class="line"></span><br><span class="line">ssl_certificate /etc/pki/nginx/certificate.crt;</span><br><span class="line">ssl_certificate_key /etc/pki/nginx/private.key;</span><br><span class="line">ssl_dhparam /etc/pki/nginx/dhparam.pem;</span><br><span class="line">ssl_protocols TLSv1 TLSv1.1 TLSv1.2;</span><br><span class="line">ssl_prefer_server_ciphers on;</span><br><span class="line">ssl_ciphers &quot;EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH&quot;;</span><br><span class="line">ssl_ecdh_curve secp384r1;</span><br><span class="line">ssl_session_cache shared:SSL:10m;</span><br><span class="line">ssl_session_tickets off;</span><br><span class="line">ssl_stapling on;</span><br><span class="line">ssl_stapling_verify on;</span><br><span class="line">resolver 8.8.8.8 8.8.4.4 valid=300s;</span><br><span class="line">resolver_timeout 5s;</span><br><span class="line"><span class="meta">#</span><span class="bash">add_header Strict-Transport-Security <span class="string">&quot;max-age=63072000; includeSubdomains; preload&quot;</span>;</span></span><br><span class="line">add_header Strict-Transport-Security &quot;max-age=63072000; includeSubdomains&quot;;</span><br><span class="line">add_header X-Frame-Options DENY;</span><br><span class="line">add_header X-Content-Type-Options nosniff;</span><br><span class="line"></span><br><span class="line">root /usr/share/nginx/html;</span><br><span class="line"></span><br><span class="line">location / &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">error_page 404 /404.html;</span><br><span class="line">location = /404.html &#123;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">error_page 500 502 503 504 /50x.html;</span><br><span class="line">location = /50x.html &#123;</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外可以选择将http流量重定向为https流量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vim /etc/nginx/default.d/ssl-redirect.conf</span><br></pre></td></tr></table></figure>
+<p>在这个ssl-redirect.conf文件中放入如下内容。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">return 301 https://$host$request_uri/;</span><br></pre></td></tr></table></figure>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/linux/" rel="tag"># linux</a>
+              <a href="/tags/NGINX/" rel="tag"># NGINX</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/16/word2vec/" rel="prev" title="Word2Vec原理、训练与优化">
+      <i class="fa fa-chevron-left"></i> Word2Vec原理、训练与优化
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx%E7%9A%84%E5%AE%89%E8%A3%85%E3%80%81%E5%90%AF%E5%8A%A8%E3%80%81%E9%AA%8C%E8%AF%81"><span class="nav-number">1.</span> <span class="nav-text">Nginx的安装、启动、验证</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx%E7%9B%B8%E5%85%B3%E5%91%BD%E4%BB%A4"><span class="nav-number">2.</span> <span class="nav-text">Nginx相关命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx%E9%85%8D%E7%BD%AE"><span class="nav-number">2.1.</span> <span class="nav-text">Nginx配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.2.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8A%A0%E5%AF%86%E3%80%81%E7%AD%BE%E5%90%8D%E3%80%81%E8%AF%81%E4%B9%A6%E7%9B%B8%E5%85%B3%E6%A6%82%E5%BF%B5"><span class="nav-number">3.</span> <span class="nav-text">加密、签名、证书相关概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#digital-signature%E6%95%B0%E5%AD%97%E7%AD%BE%E5%90%8D"><span class="nav-number">3.1.</span> <span class="nav-text">digital signature数字签名</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E5%AD%97%E8%AF%81%E4%B9%A6digital-certificate"><span class="nav-number">3.2.</span> <span class="nav-text">数字证书digital certificate</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83-1"><span class="nav-number">3.3.</span> <span class="nav-text">参考</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BANginx%E9%85%8D%E7%BD%AETLS"><span class="nav-number">4.</span> <span class="nav-text">为Nginx配置TLS</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#openssl%E7%94%9F%E6%88%90%E5%AF%86%E9%92%A5%E4%B8%8E%E8%AF%81%E4%B9%A6"><span class="nav-number">4.1.</span> <span class="nav-text">openssl生成密钥与证书</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BANginx%E5%BA%94%E7%94%A8%E7%94%9F%E6%88%90%E7%9A%84%E5%AF%86%E9%92%A5%E4%B8%8E%E8%AF%81%E4%B9%A6"><span class="nav-number">4.2.</span> <span class="nav-text">为Nginx应用生成的密钥与证书</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

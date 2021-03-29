@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="第一部分介绍一下理解Python解释器的必要性。第二部分解释了一下macOS系统自带的各种Python解释器、执行文件的位置、替身的位置、环境变量。第三部分说明了一下conda和homebrew安装python解释器的一些问题。第四部分解释了一下为什么不需要官网python.org下载解释器，如果已经下载了如何删除。最后是一些总结，终端操作上可能遇到的问题说明。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="macOS上的Python解释器与执行环境">
+<meta property="og:url" content="https://drunk99.xyz/2021/01/25/python-envs/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="第一部分介绍一下理解Python解释器的必要性。第二部分解释了一下macOS系统自带的各种Python解释器、执行文件的位置、替身的位置、环境变量。第三部分说明了一下conda和homebrew安装python解释器的一些问题。第四部分解释了一下为什么不需要官网python.org下载解释器，如果已经下载了如何删除。最后是一些总结，终端操作上可能遇到的问题说明。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127105556526.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210125235712385.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210125235753815.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210126000224127.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127110027083.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127110150355.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127132023482.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127132159609.png">
+<meta property="article:published_time" content="2021-01-25T13:01:06.000Z">
+<meta property="article:modified_time" content="2021-01-27T05:40:33.670Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="解释器">
+<meta property="article:tag" content="虚拟环境">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://drunk99.xyz/2021/01/25/python-envs/image-20210127105556526.png">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/01/25/python-envs/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>macOS上的Python解释器与执行环境 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/01/25/python-envs/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          macOS上的Python解释器与执行环境
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-25 21:01:06" itemprop="dateCreated datePublished" datetime="2021-01-25T21:01:06+08:00">2021-01-25</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-27 13:40:33" itemprop="dateModified" datetime="2021-01-27T13:40:33+08:00">2021-01-27</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.9k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">第一部分介绍一下理解Python解释器的必要性。<br>第二部分解释了一下macOS系统自带的各种Python解释器、执行文件的位置、替身的位置、环境变量。<br>第三部分说明了一下conda和homebrew安装python解释器的一些问题。<br>第四部分解释了一下为什么不需要官网python.org下载解释器，如果已经下载了如何删除。<br>最后是一些总结，终端操作上可能遇到的问题说明。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>早年看廖雪峰老师的Python教程，说要安装python解释器，那个时候对命令行，虚拟环境之类的根本都没概念，并且当时并不知道Mac系统自带python解释器。所以，直接去官网安装了官方解释器。在命令行下执行python文件。</p>
+<p>之后用Pycharm的IDE，每次在新建项目选择python解释器的时候都一头雾水，选也选不到正确的路径，都是泪。</p>
+<p>后来为了学习数值计算的课程，安装了anaconda，有了很多anaconda的环境。</p>
+<p>有了brew之后，更乱了。</p>
+<p>因此下定决心捋一捋自己python解释器路径。</p>
+<h1 id="系统中可能存在的Python环境、解释器路径"><a href="#系统中可能存在的Python环境、解释器路径" class="headerlink" title="系统中可能存在的Python环境、解释器路径"></a>系统中可能存在的Python环境、解释器路径</h1><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzMwOTQxMzI5L2Fuc3dlci8xMDg5NDEyMTg=">macOS 上如何切换默认的 Python 版本？ - Steven Liu的回答 - 知乎<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuaWFubWFkZGF1cy5jb20vcG9zdC9tYW5hZ2UtbXVsdGlwbGUtdmVyc2lvbnMtcHl0aG9uLW1hYy8jbWFjLW9zLW5lZWRzLXB5dGhvbg==">Install, Uninstall, and Manage Multiple Versions of Python on a Mac<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="系统自带的-usr-bin-python"><a href="#系统自带的-usr-bin-python" class="headerlink" title="系统自带的/usr/bin/python"></a>系统自带的<code>/usr/bin/python</code></h2><p>Mac系统自带的Python环境的具体依赖为<code>/System/Library/Frameworks/Python.framework/Versions/2.7</code>，对应的解释器就在该目录下的<code>./bin/python2.7</code>。但是Comand Line Tool会在<code>/user/bin/python</code>下去运行这个环境，前后着之间的关系应该是软连接symlink。</p>
+<p>不要删除！系统的功能实现依赖于这些框架。</p>
+<p><img src="/2021/01/25/python-envs/image-20210127105556526.png" alt="image-20210127105556526" style="zoom:50%;"></p>
+<h2 id="系统自带的-usr-bin-python3"><a href="#系统自带的-usr-bin-python3" class="headerlink" title="系统自带的/usr/bin/python3"></a>系统自带的<code>/usr/bin/python3</code></h2><p>参考StackOverflow的回答：<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9xdWVzdGlvbnMvNTg3OTM4MjAvcHl0aG9uLTMtNy0zLWluYWR2ZXJ0ZW50bHktaW5zdGFsbGVkLW9uLW1hYy1vcy0xMC0xNS0xLWluY2x1ZGVkLWluLXhjb2RlLWRldmVs">Python 3.7.3 Inadvertently Installed on Mac OS 10.15.1 - Included in Xcode Developer Tools 11.2 Now?<i class="fa fa-external-link-alt"></i></span></p>
+<p>可以看到<code>/usr/bin/python3</code>（此处是具体的依赖/可执行对象），不是映射或者替身。</p>
+<p><img src="/2021/01/25/python-envs/image-20210125235712385.png" alt="image-20210125235712385" style="zoom:50%;"></p>
+<p>但是<code>/usr/bin/python</code>是一个symlink，指向的具体可执行文件的位置是<code>/System/Library/Frameworks/Python.framework/Versions/2.7</code>。</p>
+<p>注意区别这二者的关系。</p>
+<h2 id="关于commandlinetools下的python文件"><a href="#关于commandlinetools下的python文件" class="headerlink" title="关于commandlinetools下的python文件"></a>关于commandlinetools下的python文件</h2><p>同时在<code>/Applications/Xcode.app/Contents/Developer/Library/Frameworks/Python3.framework</code>中可以找到替身，在<code>/Applications/Xcode.app/Contents/Developer/us r/bin/python3</code>可以找到python3以及python3.8指向python3.framework。</p>
+<p><img src="/2021/01/25/python-envs/image-20210125235753815.png" alt="image-20210125235753815" style="zoom:50%;"></p>
+<p>这几个文件的最终指向都存在于<code>/Applications/Xcode.app/Contents/Developer//Library/Frameworks/Python3.framework/Versions/3.8/Python3</code>这个目录下。</p>
+<p><img src="/2021/01/25/python-envs/image-20210126000224127.png" alt="image-20210126000224127" style="zoom:50%;"></p>
+<h1 id="brew安装的环境"><a href="#brew安装的环境" class="headerlink" title="brew安装的环境"></a>brew安装的环境</h1><h2 id="参考-1"><a href="#参考-1" class="headerlink" title="参考"></a>参考</h2><p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xNDg5OTc2Mjg=">Mac 下 Python 环境总结 ( 非 Anaconda)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuamlhbnNodS5jb20vcC83NzljNGM4ZDVlNTk=">homebrew 安装python3<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="homebrew-Cellar文件夹下安装的Python解释器"><a href="#homebrew-Cellar文件夹下安装的Python解释器" class="headerlink" title="homebrew Cellar文件夹下安装的Python解释器"></a>homebrew Cellar文件夹下安装的Python解释器</h2><blockquote>
+<p>如何查看brew所在目录？在终端输入<code>brew -—prefix</code>，会返回<code>/usr/local</code>，这也就解释了为什么以下的路径都是以此开头。</p>
+</blockquote>
+<p>通过homebrew安装python环境的安装路径为<code>/usr/local/Cellar/</code>，brew里install的brew里uninstall。</p>
+<p>可以在终端输入<code>brew list</code>来显示安装了哪些包，输入<code>open /usr/local/Cellar/</code>在finder中查看。一般来说在<code>/usr/local/Cellar/</code>中安装的包，brew都会自动地在<code>/usr/local/bin/</code>中添加symlink。</p>
+<p>但是我自己在查看<code>/usr/local/bin/</code>中有执行环境的时候并没有找到对应的可执行文件。于是尝试在终端执行<code>brew install python@3.9</code>，返回了一个warning：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Warning: python@3.9 3.9.1_1 is already installed, it&#x27;s just not linked You can use `brew link python@3.9`  to link this version.</span><br></pre></td></tr></table></figure>
+<p>在终端输入<code>brew link python@3.9</code>后，发现<code>/usr/local/bin/</code>中出现了python3.9的symlink。</p>
+<p>在此进入<code>/usr/local/Cellar/python@3.9</code>发现有两个文件夹，应该对应了不同的子版本。</p>
+<p><img src="/2021/01/25/python-envs/image-20210127110027083.png" alt="image-20210127110027083" style="zoom:50%;"></p>
+<p>尝试进入其中某一个，查看bin文件夹下的二进制文件。</p>
+<p><img src="/2021/01/25/python-envs/image-20210127110150355.png" alt="image-20210127110150355" style="zoom:50%;"></p>
+<p>可以看到bin文件夹下的替身都是最终指向<code>/user/local/Cellar/Frameworks/Python.framework/Versions/3.9</code>的文件夹下的可执行文件。</p>
+<p>对比系统自带的python路径<code>/System/Library/Frameworks/Python.framework/Versions/2.7</code>，就可以发现除了Prefix有所不同，从/Framework开始路径都是相同的。只是前缀不同，一个是<code>/Systems/Library</code>，另一个是<code>/usr/local</code>。</p>
+<p>接下来尝试进入<code>/user/local</code>可以得到如下结构，我们可以看到还有一个<code>Framework</code>文件夹，进入查看内容。</p>
+<p><img src="/2021/01/25/python-envs/image-20210127132023482.png" alt="image-20210127132023482" style="zoom:50%;"></p>
+<p>可以发现进入这个目录之后还是Python.frameworks，继续深入又可以看见Versions版本号。</p>
+<p><img src="/2021/01/25/python-envs/image-20210127132159609.png" alt="image-20210127132159609" style="zoom:50%;"></p>
+<p>最重要的是，这里的Python指向的还是homebrew的Cellar文件夹中安装的Python解释器。</p>
+<h1 id="anaconda安装的环境"><a href="#anaconda安装的环境" class="headerlink" title="anaconda安装的环境"></a>anaconda安装的环境</h1><p>用户安装anconda3后，anaconda自带默认的python环境base为<code>/Users/drunk99/anaconda3</code>，对应的解释器就在该目录下的<code>./bin/python</code>。</p>
+<p>如果用户建立了其他anaconda的环境，如名称为myenv，那么python环境为<code>/Users/drunk99/anaconda3/envs/myenv</code>，对应的解释器就是该目录下的<code>./bin/python</code>。</p>
+<p>anaconda会自动把路径配置到<code>～/.zshrc</code>文件中，无需手动添加路径。</p>
+<h1 id="官网pkg安装环境"><a href="#官网pkg安装环境" class="headerlink" title="官网pkg安装环境"></a>官网pkg安装环境</h1><p>通过官网pkg安装的环境，也就是用户安装的python环境为<code>/Library/Frameworks/Python.framework/Versions/3.7</code>。</p>
+<p>对应的解释器就在该目录下的<code>./bin/python3.7</code></p>
+<p>参考<span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzM1MjQ2NjIwL2FydGljbGUvZGV0YWlscy83ODI1MjU0OQ==">CSDN上的卸载教程<i class="fa fa-external-link-alt"></i></span>，以及<span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xMDI3NjE3MjA=">知乎专栏的安装教程<i class="fa fa-external-link-alt"></i></span>。</p>
+<p>分为三步骤。</p>
+<p>第一步：删除框架<code>sudo rm -rf /Library/Frameworks/Python.framework/Versions/x.x</code></p>
+<p>第二步：删除目录应用<code>sudo rm -rf &quot;/Applications/Python x.x&quot;</code></p>
+<p>第三步：删除指向Python的连接<code>cd /usr/local/bin/
+ls -l /usr/local/bin | grep &#39;../Library/Frameworks/Python.framework/Versions/x.x&#39; | awk &#39;&#123;print $9&#125;&#39; | tr -d @ | xargs rm</code></p>
+<p>第四步：在zshrc配置文件中删除python环境路径<code>sudo vim ~/.zshrc</code>进入配置文件，在命令模式下按下<code>dd</code>删除当前光标所在行。退出保存即可。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><ol>
+<li>不要随意变动或者使用<code>/usr/bin</code>下的可执行文件或者是软连接，包括该软连接指向的可执行文件。</li>
+<li>很多情况下并不需要自己再去python.org官网去下载解释器，使用包管理工具更方便。</li>
+<li>在有了anaconda以及homebrew的python包管理工具后，需要区别二者环境。在conda和brew的默认python环境之上，还有可能会有多个虚拟环境，注意区分。</li>
+</ol>
+<h1 id="可能需要用到的终端语句"><a href="#可能需要用到的终端语句" class="headerlink" title="可能需要用到的终端语句"></a>可能需要用到的终端语句</h1><h2 id="查看symlink"><a href="#查看symlink" class="headerlink" title="查看symlink"></a>查看symlink</h2><p>查看目标文件是否是替身、是否指向哪个具体的可执行文件：<code>ls -l /usr/bin/python</code>。</p>
+<p>这句话的意思是，hey终端，给我ls/list以下/usr/bin/python这个路径的文件指向哪个-l/link。</p>
+<h2 id="从终端打开finder"><a href="#从终端打开finder" class="headerlink" title="从终端打开finder"></a>从终端打开finder</h2><p>在finder中查看当前目录的文件：<code>open .</code>。这句话的意思是，hey终端，给我从finder中打开当前路径。</p>
+<p>如果想指定位置，可是输入绝对路径<code>open /System/Library/Frameworks/Python.framework/Versions/2.7</code>。</p>
+<h2 id="查看-修改系统级环境变量"><a href="#查看-修改系统级环境变量" class="headerlink" title="查看/修改系统级环境变量"></a>查看/修改系统级环境变量</h2><p>列出系统内置的环境变量的文件：<code>cat /etc/paths</code>，如果要改动各种路径的默认顺序，使用<code>sudo vim /etc/paths</code>操作。注意，这是系统级环境变量，路径以/etc开始。</p>
+<h2 id="查看-修改用户级环境变量"><a href="#查看-修改用户级环境变量" class="headerlink" title="查看/修改用户级环境变量"></a>查看/修改用户级环境变量</h2><p>查看当前用户级配置好的变量：<code>echo $PATH</code>。</p>
+<p>修改用户环境变量，只需要修改<code>~/.zshrc</code>或者<code>~/.bashrc</code>（看用哪个shell），<code>sudo vim ~./zshrc</code>进入修改界面。</p>
+<p>在文件最底端添加<code>export PATH=&quot;/usr/local/bin:$PATH&quot;</code>，每一个系统变量都是用<code>:</code>分隔开来的。这句话的意思是，hey终端，帮我把<code>/usr/local/bin</code>的添加到原来<code>$PATH</code>变量的前面，并且作为用户级的新$PATH，搜索路径的时候最先搜索它。</p>
+<p>详细请参考<span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNTk3NjA5OQ==">macOS/Linux 环境变量设置<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/%E8%A7%A3%E9%87%8A%E5%99%A8/" rel="tag"># 解释器</a>
+              <a href="/tags/%E8%99%9A%E6%8B%9F%E7%8E%AF%E5%A2%83/" rel="tag"># 虚拟环境</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/15/jan-films/" rel="prev" title="一月观影记录">
+      <i class="fa fa-chevron-left"></i> 一月观影记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/26/python-packages-install/" rel="next" title="关于python包的管理及查看">
+      关于python包的管理及查看 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E4%B8%AD%E5%8F%AF%E8%83%BD%E5%AD%98%E5%9C%A8%E7%9A%84Python%E7%8E%AF%E5%A2%83%E3%80%81%E8%A7%A3%E9%87%8A%E5%99%A8%E8%B7%AF%E5%BE%84"><span class="nav-number">2.</span> <span class="nav-text">系统中可能存在的Python环境、解释器路径</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">2.1.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%B8%A6%E7%9A%84-usr-bin-python"><span class="nav-number">2.2.</span> <span class="nav-text">系统自带的&#x2F;usr&#x2F;bin&#x2F;python</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B3%BB%E7%BB%9F%E8%87%AA%E5%B8%A6%E7%9A%84-usr-bin-python3"><span class="nav-number">2.3.</span> <span class="nav-text">系统自带的&#x2F;usr&#x2F;bin&#x2F;python3</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8Ecommandlinetools%E4%B8%8B%E7%9A%84python%E6%96%87%E4%BB%B6"><span class="nav-number">2.4.</span> <span class="nav-text">关于commandlinetools下的python文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#brew%E5%AE%89%E8%A3%85%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="nav-number">3.</span> <span class="nav-text">brew安装的环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83-1"><span class="nav-number">3.1.</span> <span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#homebrew-Cellar%E6%96%87%E4%BB%B6%E5%A4%B9%E4%B8%8B%E5%AE%89%E8%A3%85%E7%9A%84Python%E8%A7%A3%E9%87%8A%E5%99%A8"><span class="nav-number">3.2.</span> <span class="nav-text">homebrew Cellar文件夹下安装的Python解释器</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#anaconda%E5%AE%89%E8%A3%85%E7%9A%84%E7%8E%AF%E5%A2%83"><span class="nav-number">4.</span> <span class="nav-text">anaconda安装的环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%98%E7%BD%91pkg%E5%AE%89%E8%A3%85%E7%8E%AF%E5%A2%83"><span class="nav-number">5.</span> <span class="nav-text">官网pkg安装环境</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%AF%E8%83%BD%E9%9C%80%E8%A6%81%E7%94%A8%E5%88%B0%E7%9A%84%E7%BB%88%E7%AB%AF%E8%AF%AD%E5%8F%A5"><span class="nav-number">7.</span> <span class="nav-text">可能需要用到的终端语句</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8Bsymlink"><span class="nav-number">7.1.</span> <span class="nav-text">查看symlink</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E7%BB%88%E7%AB%AF%E6%89%93%E5%BC%80finder"><span class="nav-number">7.2.</span> <span class="nav-text">从终端打开finder</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-%E4%BF%AE%E6%94%B9%E7%B3%BB%E7%BB%9F%E7%BA%A7%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">7.3.</span> <span class="nav-text">查看&#x2F;修改系统级环境变量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B-%E4%BF%AE%E6%94%B9%E7%94%A8%E6%88%B7%E7%BA%A7%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="nav-number">7.4.</span> <span class="nav-text">查看&#x2F;修改用户级环境变量</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

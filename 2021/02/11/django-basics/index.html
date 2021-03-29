@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="django项目中基本内容总结。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Django基础">
+<meta property="og:url" content="https://drunk99.xyz/2021/02/11/django-basics/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="django项目中基本内容总结。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211211655708.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211212619133.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211213119932.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211213738432.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211214453465.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211214423260.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211214951351.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211215405760.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211220037732.png">
+<meta property="article:published_time" content="2021-02-11T13:13:05.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:07:55.624Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="Python">
+<meta property="article:tag" content="django">
+<meta property="article:tag" content="Web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://drunk99.xyz/2021/02/11/django-basics/image-20210211211655708.png">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/02/11/django-basics/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Django基础 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/02/11/django-basics/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Django基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-02-11 21:13:05" itemprop="dateCreated datePublished" datetime="2021-02-11T21:13:05+08:00">2021-02-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 15:07:55" itemprop="dateModified" datetime="2021-03-29T15:07:55+08:00">2021-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Python/" itemprop="url" rel="index"><span itemprop="name">Python</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">django项目中基本内容总结。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="项目执行命令"><a href="#项目执行命令" class="headerlink" title="项目执行命令"></a>项目执行命令</h1><h2 id="runserver"><a href="#runserver" class="headerlink" title="runserver"></a>runserver</h2><p><code>python manage.py runserver</code>：在本地查看项目。</p>
+<h2 id="superadmin"><a href="#superadmin" class="headerlink" title="superadmin"></a>superadmin</h2><p><code>python manage.py createsuperuser</code>建立superuser，有权限访问所有后台数据。</p>
+<h2 id="startapp"><a href="#startapp" class="headerlink" title="startapp"></a>startapp</h2><p><code>python manage.py startapp app-name</code>：在当前总项目的项目文件夹新建一个application，django会自动生成一系列初始文件。如下所示。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211211655708.png" alt="image-20210211211655708" style="zoom:30%;"></p>
+<p><code>__init__.py</code>为空。</p>
+<p><code>admin.py</code>用于注册<code>models.py</code>中的数据库的表，让数据库的操作不再依赖于shell中的代码，而是通过GUI操作。</p>
+<p><code>apps.py</code>说明一些和当前app相关的信息，比如在startapp后面跟着的app-name。</p>
+<p><code>models.py</code>用于建立数据库表，一般形式是声明一个class代表一个表，所有数据的类型定义都来自于<code>from django.db import models</code>库。如下所示。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> django.db <span class="keyword">import</span> models</span><br><span class="line"><span class="keyword">from</span> django.utils <span class="keyword">import</span> timezone</span><br><span class="line"><span class="keyword">from</span> django.contrib.auth.models <span class="keyword">import</span> User</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># Create your models here.</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Post</span>(<span class="params">models.Model</span>):</span></span><br><span class="line">    title = models.CharField(max_length=<span class="number">100</span>)</span><br><span class="line">    content = models.TextField()</span><br><span class="line">    date_posted = models.DateTimeField(default=timezone.now)</span><br><span class="line">    author = models.ForeignKey(User, on_delete=models.CASCADE)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__str__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="keyword">return</span> self.title</span><br></pre></td></tr></table></figure>
+<p><code>urls.py</code>决定当前app的路由，和<code>views.py</code>的内容相关联。<code>path(&#39;about/&#39;, views.about, name=&#39;blog-about&#39;)</code>第一个参数是路由路径，第二个参数是<code>views.py</code>中定义的页面，第三个参数是赋予页面的唯一的名称，由这个页面名称可以反向获得页面路径。django中的路由解析是按照分级解析来运行的。在<code>django_project</code>的根目录的下一级同名子目录中可以发现另一个urls.py，这是路径搜索的开始，遇到匹配的就一级一级向其他app延伸。搜索结束<code>django_project</code>中的<code>urls.py</code>后，继续去掉已经搜索的url部分，匹配<code>blog</code>中的<code>urls.py</code>，直到匹配到特定的视图。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211212619133.png" alt="image-20210211212619133" style="zoom:30%;"></p>
+<p><code>views.py</code>中，每一个视图/页面/组件，都以class的形式被声明，并通过<code>from django.shortcuts import render</code>的render函数返回。需要为render函数传入templates文件夹中的html页面，以及<code>models.py</code>中的数据，如<code>return render(request, &#39;blog/about.html&#39;, &#123;&#39;title&#39;: &#39;About&#39;&#125;)</code>。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211213119932.png" alt="image-20210211213119932" style="zoom:30%;"></p>
+<h2 id="migration"><a href="#migration" class="headerlink" title="migration"></a>migration</h2><blockquote>
+<p>为什么需要database migration？</p>
+<p>这让我们在建立一个数据库之后，就算数据库中已经存在数据，我们依然能够修改数据库。如果django项目组没有database migration，而我们有需要对数据库的数据修改，我们需要使用一些sql code去update data structure。</p>
+<p>相当于用python的方式去update sql。</p>
+</blockquote>
+<p><code>python manage.py makemigrations</code>基于项目中models.py的内容变化准备数据库同步，每一次执行makemigrations后migrations文件夹中都会生成<code>XXXX_initial.py</code>，这个文件只在makemigrations的时候生成。（这里的XXXX。是每一次migrations的数字，migration number）</p>
+<p><img src="/2021/02/11/django-basics/image-20210211213738432.png" alt="image-20210211213738432" style="zoom:50%;"></p>
+<p><code>python manage.py migrate</code>将已有的变化同步到数据库，主要就是执行makemigrations的时候生成的<code>XXXX_initial.py</code>文件。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211214453465.png" alt="image-20210211214453465" style="zoom:50%;"></p>
+<p><code>python manage.py sqlmigrate app-name migration-number</code>会自动生成并显示每一次migration会生成的具体的sql代码。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211214423260.png" alt="image-20210211214423260" style="zoom:50%;"></p>
+<h1 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h1><p><code>python manage.py shell</code>可以提供一个python prompt让我们用python的方式去查询数据库。</p>
+<p>首先需要导入数据库中的表。在这里通过<code>from django.contrib.auth.models import User</code>导入User Table。其次，为了查询User Table中的各个项目，使用点访问法找出其内容<code>User.objects</code>。需要注意查询返回的是一个单个的对象，还是包含对象的集合QuerySet。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211214951351.png" alt="image-20210211214951351" style="zoom:50%;"></p>
+<p>为已经导入的表新建一个元组/插入一条新的数据，直接把导入的Table当作函数调用，并传入参数。每一次新建的一个元组都要保存到表才可以查询并显示。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211215405760.png" alt="image-20210211215405760" style="zoom:50%;"></p>
+<p>如何探寻多个表之间的关系？比如上面就是一个User Table，一个Post Table。我们希望找到一个用户发布的所有帖子，该怎么做？这在数据库查询中十分常见。在python shell中，可以直接使用<code>user.post_set</code>，它会返回一个可查询对象，继续对该对象使用<code>all/first/last/filter</code>等查询语句即可返回具体的内容。另外，还可以对该查询对象进行<code>create</code>操作，意思是为该用户新建一条帖子。</p>
+<p><img src="/2021/02/11/django-basics/image-20210211220037732.png" alt="image-20210211220037732" style="zoom:30%;"></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Python/" rel="tag"># Python</a>
+              <a href="/tags/django/" rel="tag"># django</a>
+              <a href="/tags/Web/" rel="tag"># Web</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/26/python-packages-install/" rel="prev" title="关于python包的管理及查看">
+      <i class="fa fa-chevron-left"></i> 关于python包的管理及查看
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/08/feb-films/" rel="next" title="二月观影记录">
+      二月观影记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">项目执行命令</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#runserver"><span class="nav-number">1.1.</span> <span class="nav-text">runserver</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#superadmin"><span class="nav-number">1.2.</span> <span class="nav-text">superadmin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#startapp"><span class="nav-number">1.3.</span> <span class="nav-text">startapp</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#migration"><span class="nav-number">1.4.</span> <span class="nav-text">migration</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#shell"><span class="nav-number">2.</span> <span class="nav-text">shell</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

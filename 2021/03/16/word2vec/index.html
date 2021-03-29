@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="词向量的实现，分别介绍skip-gram模型与CBOW模型总体概念、模型架构、如何训练，以及优化方式。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Word2Vec原理、训练与优化">
+<meta property="og:url" content="https://drunk99.xyz/2021/03/16/word2vec/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="词向量的实现，分别介绍skip-gram模型与CBOW模型总体概念、模型架构、如何训练，以及优化方式。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/16/word2vec/image-20210316140454912.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/16/word2vec/image-20210317141217819.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/16/word2vec/image-20210317143731448.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/16/word2vec/image-20210317145152405.png">
+<meta property="article:published_time" content="2021-03-16T05:47:16.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:15:52.312Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="NLP">
+<meta property="article:tag" content="词向量">
+<meta property="article:tag" content="word2vec">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://drunk99.xyz/2021/03/16/word2vec/image-20210316140454912.png">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/03/16/word2vec/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Word2Vec原理、训练与优化 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/03/16/word2vec/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Word2Vec原理、训练与优化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-16 13:47:16" itemprop="dateCreated datePublished" datetime="2021-03-16T13:47:16+08:00">2021-03-16</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 15:15:52" itemprop="dateModified" datetime="2021-03-29T15:15:52+08:00">2021-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>8.5k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>15 分钟</span>
+            </span>
+            <div class="post-description">词向量的实现，分别介绍skip-gram模型与CBOW模型总体概念、模型架构、如何训练，以及优化方式。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="如何量化一个词"><a href="#如何量化一个词" class="headerlink" title="如何量化一个词"></a>如何量化一个词</h1><p>方法总的来说又两种，分别是one-hot representation与distributional representation。</p>
+<p>one-hot表示方法虽然十分直观，但问题在于如果词汇量很大，每一个单词用向量来表示的dimension就十分大，所有词汇的one-hot向量组成的矩阵是sparse的。</p>
+<p>distributional representation的方法在于它通过在每一个dimension上都有取值，从而实现词向量dimension的降低。并且单词变成词向量后，可以通过向量的加减法来实现词意的变化。</p>
+<p>词向量的算法有skip-gram与Continuous Bag of Words（CBOW）两种。训练方法主要有hierarchical softmax与negative sampling两种。</p>
+<h1 id="给定词的上下文词的概率公式"><a href="#给定词的上下文词的概率公式" class="headerlink" title="给定词的上下文词的概率公式"></a>给定词的上下文词的概率公式</h1><p>自然语言处理当中的原始概率计算公式为：</p>
+<script type="math/tex; mode=display">
+p(o|c) = \frac{\exp(v_o^T v_c)}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)}</script><p>其中$v_c$来表center word的vector representation，$v_o$代表context word（outside word）的vector representation。V代表整个文章的所有词汇。整个式子就是求在已知center word的条件下哦，求context word出现的概率。</p>
+<p>这个式子有何数学含义？分母是两个向量的点积。有$u^Tv=u\cdot v=\sum_{i=1}^nu_iv_i$，结果越大说明两个向量u和v越相似，单词u和v越有关联。点积的结果使用exp是为了保证分子为正。整个式子结合分子分母来看是一个softmax，它的作用是将数字转化为概率分布。</p>
+<blockquote>
+<p>Softmax function: Standard map from $R^V$ to a probability distribution</p>
+<p>softmax为什么叫softmax？soft+max，max因为它将大的值更强化了比重，soft因为它仍然考虑较小的值而不知和max函数一样直接抹去它的存在。它的作用类似于max函数，式子的形式有点像求一个数的exp占总体比例的大小。分母的求和是normalize to give probability。</p>
+</blockquote>
+<h1 id="参数说明"><a href="#参数说明" class="headerlink" title="参数说明"></a>参数说明</h1><p>V/vocabulary：词表中的词数量，$|V|$代表词表中所有词的个数。</p>
+<p>d/dimension：每个词表示为多少维度的向量。</p>
+<p>m：代表window size，每一个center word向前向后考虑m个单词。</p>
+<h1 id="CBOW"><a href="#CBOW" class="headerlink" title="CBOW"></a>CBOW</h1><p>CBOW是用window outside word来预测center word的模型。模型的输入是one-hot context word vector $x^{(c)}$，输出是一个one-hot center word vector $y^{(c)}$。这是已知的量。</p>
+<p>未知的量的定义如下。首先是两个矩阵$W \in \mathbb{R}^{d \times |V|}, W^{‘}\in \mathbb{R}^{|V| \times d}$，其中d是一个定义了embedding space的大小。$W$是input word matrix，$W$的第$i$列就是词表$V$中的第$i$个单词的词向量$v_i$，它的大小是$d \times 1$。同样的$ W^{‘}$是output word matrix，$W^{‘}$的第$j$行就是词表$V$中的第$j$个单词的词向量$v^{‘}_j$。从这里就可以看出，我们实际上为每个单词学习到了两个embeded vector，一个是input word vector $v_i$，另一个是output word vector $v^{‘}_j$。</p>
+<h2 id="模型架构"><a href="#模型架构" class="headerlink" title="模型架构"></a>模型架构</h2><p>第一步，为落在window size中的context word生成one-hot word vector ，共2m个$x^{(c-m)}, …, x^{(c-1)}, x^{(c+1)}, … , x^{(c+m)}$，维度为$(|V|, 1)$。</p>
+<p>第二步，将input word matrix与one-hot context word vector相乘获得embedded word vectors，如单个词的结果为$v^{(c-m)} = W x^{(c-m)}$。</p>
+<p>如果我们把2m个one-hot向量放在一起组成一个维度为$ (|V|, 2m)$的矩阵来考虑，就可以获得$(d, |V|) \times (|V|, 2m) = (d, 2m)$。</p>
+<p>第三步，将所有第二步获得的vectors求平均，$\hat{v} = \frac{x^{(c-m)}+ …,x^{(c-1)}+ x^{(c+1)}+ … +x^{(c+m)}}{2m}$，维度为$(d,1)$。</p>
+<p>第四步，生成一个score vector，$z = W^{‘}\hat{v} = (|V|, d) \times (d, 1) = (|V|, 1)$。</p>
+<p>第五步，将score vector中的每一个cell值用softmax变为probability，$\hat{y} = softmax(z)$。</p>
+<p>第六步，将$\hat{y}$中对应为$y$，就是把最大值所在的cell变为1，其余小值全变为0，这样子变换后输出也是一个one-hot vector。</p>
+<h2 id="如何训练"><a href="#如何训练" class="headerlink" title="如何训练"></a>如何训练</h2><p>现在我们已经知道了在拥有input word matrix和output word matrix的情况下，模型如何运作了。但是如何获得这两个矩阵，如何学习到这些参数呢？通常我们希望从一个实际存在的概率分布中学习到一个概率分布模型，我们通过减小实际分布与概率分布模型的距离来找到最优解。这里使用cross entropy $H(\hat{y}, y)$来measure the distance between two probability distribution。</p>
+<p>对于这个例子，我们输出的向量是一个one-hot向量，可以去掉sum符号。在下面这个式子中，我们用$\hat{y}_c$代表我们希望模型的结果是1的正确的单词。如果预测的$\hat{y}$对应到了应该出现的单词，那么$\hat{y}_c=1$。带入下面这个式子，交叉熵就是0，这种情况没有loss或penalty。但是如果模型预测的很糟糕，假设正确的词所在输出向量的概率为$\hat{y}_c=0.01$，那么带入下面的式子交叉上就会为4.6左右。</p>
+<script type="math/tex; mode=display">
+H(\hat{y}, y) = -\sum_{j=1}^{|V|} y_j \log(\hat{y}_j) = - y_j \log(\hat{y}_j)</script><p>因此我们的目标函数就是：</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll}
+\text{minimize}\space J \\
+= -\log{P(w_c|w^{(c-m)}, …, w^{(c-1)}, w^{(c+1)}, … , w^{(c+m)})} \\
+= -\log P(u_c|\hat{v}) \\
+= - \log \frac{\exp(u_c^T \hat{v})}{\sum_{j=1}^{|V|}\exp(u_j^T \hat{v})} \\
+= - u_c^T \hat{v} + \log \sum_{j=1}^{|V|}\exp(u_j^T \hat{v})
+
+\end{array}</script><h1 id="skip-gram"><a href="#skip-gram" class="headerlink" title="skip-gram"></a>skip-gram</h1><p>skip-gram是用center word来预测window outside word的模型，和CBOW的区别是，CBOW中的输入$x$现在是Skip-Gram的输出$y$。对于skip-gram的输入，我们用$x$来表示，因为center word只有一个，依然是one-hot vector；输出向量用$y^{(j)}$来表示，有多个。同样定义两个矩阵$W \in \mathbb{R}^{d \times |V|}, W^{‘}\in \mathbb{R}^{|V| \times d}$。</p>
+<h2 id="模型架构-1"><a href="#模型架构-1" class="headerlink" title="模型架构"></a>模型架构</h2><p>第一步，生成输入的center word的one-hot vector $x$。</p>
+<p>第二步，将input word matrix $W$与输入向量$x$相乘，获得embedded word vectors。</p>
+<p>第三步，由于输入向量只有一个，不像CBOW一样需要averaging，直接令$\hat{v} = v_c$。</p>
+<p>第四步，用input word matrix $W^{‘}$与$v_c$相乘，即$u=W^{‘}v_c$获得2m个score vectors $u_{c-m},…,u_{c-1},u_{c+1},…,u_{c+m}$。</p>
+<p>第五步，使用softmax将score转为概率$y = \text{softmax} (u)$。</p>
+<p>第六步，我们希望产生的$y^{(c-m)},…,y^{(c-1)},y^{(c+1)}, .., y^{(c+m)} $中概率最大的位置和真实位置相对应。</p>
+<p><img src="/2021/03/16/word2vec/image-20210316140454912.png" alt="image-20210316140454912" style="zoom:50%;"></p>
+<h2 id="如何训练-1"><a href="#如何训练-1" class="headerlink" title="如何训练"></a>如何训练</h2><p>首先定义两种类型的单词，一个是center word $w^t$，另一个是context words。</p>
+<p>以skip-gram为例，我们希望从center word  $w^t$ 推导出他的前后的单词个数。设定一个窗口大小m，窗口的大小决定了我们从center word  $w^t$ 分别向前向后看多少个单词。例如，对于center word  $w^t$ 的前一个位置的单词$w^{t-1}$出现的概率为$P(w^{t-1}|w^{t})$ 。我们要预测的准，就希望前后窗口的所有单词的概率之积最大。即</p>
+<script type="math/tex; mode=display">
+J^{'}(\theta) = \prod_{t=1}^T \prod_{-m \leq j\leq m} P(w^{t+j}|w^{t} ; \theta)</script><p>这里的$\theta$就是我们要求的word2vec的向量表示。</p>
+<p>用log把乘积转变为和，并把max转换成min。</p>
+<script type="math/tex; mode=display">
+J(\theta) = -\frac{1}{T}\sum_{t=1}^T \sum_{-m \leq j\leq m} \log{P(w^{t+j}|w^{t})}</script><p>结合原始概率计算公式，对目标函数的$v_c$求导，暂时不考虑前面的两个求和，从对数函数开始考虑。</p>
+<script type="math/tex; mode=display">
+\begin{array}{ll}
+\frac{\partial}{\partial v_c} \log{\frac{\exp(v_o^T v_c)}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)}} \\ 
+= \frac{\partial}{\partial v_c} \log{\exp(v_o^T v_c)} - \frac{\partial}{\partial v_c} \log{\sum_{w=1}^{V}\exp(v^T_{w} v_c)} \\
+= eq1 - eq2
+\end{array}</script><p>分前后两个式子分别观察，可以看到log和exp是相互抵消的，对矩阵求微分。</p>
+<script type="math/tex; mode=display">
+eq1 = \frac{\partial}{\partial v_c} \log{\exp(v_o^T v_c)} = \frac{\partial}{\partial v_c} v^T_ov_c = v_o</script><p>对于第二个式子，对最外层的log函数使用链式法则，需要注意应用了链式法则的sum中参数由w变为x，因为已经不是同一个了。</p>
+<script type="math/tex; mode=display">
+eq2 = \frac{\partial}{\partial v_c} \log{\sum_{w=1}^{V}\exp(v^T_{w} v_c)} = \frac{1}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)}\frac{\partial}{\partial v_c}{\sum_{x=1}^{V}\exp(v^T_{x} v_c)}</script><p>现在单独考虑partial开始的式子，将partial符号放到sum符号后面，对每一项求partial，并且在此应用链式法则。</p>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial v_c}{\sum_{x=1}^{V}\exp(v^T_{x} v_c)} = \sum_{x=1}^{V}\frac{\partial}{\partial v_c} \exp(v_x^Tv_c) = \sum_{x=1}^{V} \exp(v_x^Tv_c) v_x</script><p>将这个结果放回第二个式子中，可以得到</p>
+<script type="math/tex; mode=display">
+eq2 = \frac{\sum_{x=1}^{V} \exp(v_x^Tv_c) v_x}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)}</script><p>注意到分母是一个常数，因此可以进一步化简为</p>
+<script type="math/tex; mode=display">
+eq2 = \sum_{x=1}^{V} \frac{\exp(v_x^Tv_c) v_x}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)} = \sum_{x=1}^{V} P(x|c)v_x</script><p>我们发现eq2中sum的对象形似softmax，可以看作是所有context vector $u_x$与它出现在center word $v_c$前后的概率的乘积之和，就相当于expectation of all context vectors weighted by their likelihood of occurence.</p>
+<p>总的求偏微分后的结果为</p>
+<script type="math/tex; mode=display">
+\frac{\partial}{\partial v_c} \log{\frac{\exp(v_o^T v_c)}{\sum_{w=1}^{V}\exp(v^T_{w} v_c)}} = v_o - \sum_{x=1}^{V} P(x|c)v_x</script><p>怎么理解这个式子？主要由两部分组成，第一项是正确的target word的positive reinforcement，第二项是词表中所有其他词汇的一个negative reinforcement，意义是服从$P(x|c)$分布的所有词向量$v_x$的期望。这对接下来训练优化方式的的方向至关重要，很多训练优化都致力于让第二项negative reinforcement更容易计算。</p>
+<h1 id="训练优化方式"><a href="#训练优化方式" class="headerlink" title="训练优化方式"></a>训练优化方式</h1><p>我们注意到$|V|$是一个十分大的数，理论上来说，我们要获得词表的socre vectors，即每一个单词的score，还要做summation，这个步骤十分消耗资源。</p>
+<p>下面所有的优化，都在尝试用其他方法逼近softmax的效果。大致有两种方向。第一种是在softmax的基础上改良，如hierarchical softmax。第二种是以sampling为基础的新方法，这种方法完全抛开了softmax层，但效果和softmax一样好，如negative sampling和noise contrastive sampling。</p>
+<blockquote>
+<p>注意！sampling-based approach只能在训练的时候去使用，在验证的时候还是需要老老实实使用softmax。</p>
+<p>While the approaches discussed so far still maintain the overall structure of the softmax, sampling-based approaches on the other hand completely do away with the softmax layer. They do this by approximating the normalization in the denominator of the softmax with some other loss that is cheap to compute. </p>
+</blockquote>
+<h2 id="nce-loss-noise-contrastive-estimation"><a href="#nce-loss-noise-contrastive-estimation" class="headerlink" title="nce loss/noise contrastive estimation"></a>nce loss/noise contrastive estimation</h2><p>NCE loss的直观想法就是把多分类问题转化为二分类问题，词表中的每一个word都代表着一个class，随着词汇量的增多，就要求模型具备从好多个class判断的能力，计算量非常大。为了实现不计算所有class的probability，但同时能在训练时给予一个合理的loss，这就引入了NCE loss。</p>
+<p>NCE做的就是让模型具备区分真实数据和噪声做出来的假数据的能力，和GAN有点相似。对于每一个单词$w_i$，它的context $c_i$由n个单词$w_{t-1}, …, w_{t-n+1}$构成，我们从a noise distribution Q中生成k个噪声样本$\tilde{w}_{ik}$。</p>
+<p>我们要实现一个二分类的任务，因此需要需要给每一个正确的单词$w_i$以及匹配的context $c_i$一个正确的label y=1，来自于训练数据集的真实分布；而噪声样本就是错误的lable y=0，来自于噪声分布。从这两个分布中进行采样。</p>
+<h3 id="NCE-loss-function"><a href="#NCE-loss-function" class="headerlink" title="NCE loss function"></a>NCE loss function</h3><p>因此重新定义目标函数NCE loss function。为了避免计算每一个word的概率，使用蒙特卡洛近似用均值去代替原式子中的期望。</p>
+<p><img src="/2021/03/16/word2vec/image-20210317141217819.png" alt="image-20210317141217819" style="zoom:50%;"></p>
+<p>接下来尝试表示损失函数中的概率P。因为label y可能来自两个分布，并且一个真实的(x,y)对会跟随k个噪声分布产生的虚假的(x, y’)。因此有如下式子：</p>
+<script type="math/tex; mode=display">
+P(y, w|c) = \frac{1}{k+1}P_{\text{train}(w|c)}+\frac{k}{k+1}Q(w)</script><p>于是，可以计算给定$w,c$的条件下，一个采样从$P_{\text{train}}$中获得的条件概率为：</p>
+<script type="math/tex; mode=display">
+P(y=1|w,c) = \frac{P_{\text{train}(w|c)}}{P_{\text{train}(w|c)}+kQ(w)}</script><p>由于是二分类问题，label y=0的概率就是</p>
+<script type="math/tex; mode=display">
+P(y=0|w,c) = 1 - P(y=1|w,c)</script><p>由于实际上我们并无法获得真实训练数据的分布$P_{\text{train}}$，因此考虑用probability of our model $P$去替代。</p>
+<p>因此，可得</p>
+<script type="math/tex; mode=display">
+P(y=1|w,c) = \frac{P(w|c)}{P(w|c)+kQ(w)}</script><p>注意到，$P(w|c)$就是文章最开始提到的给定词的上下文词的概率（the probability of a word given its context c），也是一个softmax公示。</p>
+<script type="math/tex; mode=display">
+P(w|c) = \frac{\exp(h^Tv_{w}^{'})}{\sum_{w_i\in V}\exp(h^Tv_{w_i}^{'})} = \frac{\exp(h^Tv_{w}^{'})}{Z(c)}</script><p>将分母用$Z(c)$代表，而要求分母意味着又要计算每一个单词的概率，如何简化？有两种方式，一种是将$Z(c)$作为一个参数去学习，另一种是直接固定为值1。</p>
+<p>把$Z(c)$固定为1后，重新写出$P(y=1|w,c)$。</p>
+<script type="math/tex; mode=display">
+P(y=1|w,c) = \frac{\exp(h^Tv_{w}^{'})}{\exp(h^Tv_{w}^{'})+kQ(w)}</script><p>代入NCE loss function可以获得最终的结果。</p>
+<p><img src="/2021/03/16/word2vec/image-20210317143731448.png" alt="image-20210317143731448" style="zoom:50%;"></p>
+<blockquote>
+<p>文章存疑？：It can be shown that as we increase the number of noise samples kk, the NCE derivative tends towards the gradient of the softmax function.</p>
+</blockquote>
+<h2 id="negative-sampling-NEG"><a href="#negative-sampling-NEG" class="headerlink" title="negative sampling/NEG"></a>negative sampling/NEG</h2><p>每一个训练阶段，不要遍历所有的词汇，而是采几个负样本。思想是We “sample” from a noise distribution $(P_n(w))$ whose probabilities match the ordering of the frequency of the vocabulary。负采样可以看作是NCE的一种再近似。</p>
+<p>和NCE不同的是，在计算the probability that a word $w$ comes from the empirical training distribution $P_{\text{train}}$ given a context $c$ as</p>
+<script type="math/tex; mode=display">
+P(y=1|w,c) = \frac{\exp(h^Tv_{w}^{'})}{\exp(h^Tv_{w}^{'})+kQ(w)}</script><p>NEG直接把分母的$kQ(w)=1$，为</p>
+<script type="math/tex; mode=display">
+P(y=1|w,c) = \frac{\exp(h^Tv_{w}^{'})}{\exp(h^Tv_{w}^{'})+1} = \frac{1}{1+\exp(-h^Tv_{w}^{'})}</script><p>这么做的根据在哪里？第一，在极限情况$k = |V|$且$Q$为均匀分布/uniform distribution的时候，NEG就等于NCE；其他情况下NEG只是NCE的近似，这意味着NEG并不会直接最优化correct words的likelihood。第二，这种情况下这个条件概率可以上下同时除以exp，获得一个sigmoid形式的结果。并且求label为0的时候的概率表达式也会简单很多。</p>
+<p>最终NEG loss function结果如下。</p>
+<p><img src="/2021/03/16/word2vec/image-20210317145152405.png" alt="image-20210317145152405" style="zoom:50%;"></p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><h2 id="word2vec初步认识"><a href="#word2vec初步认识" class="headerlink" title="word2vec初步认识"></a>word2vec初步认识</h2><p><span class="exturl" data-url="aHR0cHM6Ly9tb2ZhbnB5LmNvbS90dXRvcmlhbHMvbWFjaGluZS1sZWFybmluZy9ubHAvY2Jvdy8=">莫烦 Python教学 Continuous Bag of Words (CBOW)<i class="fa fa-external-link-alt"></i></span></p>
+<p> <span class="exturl" data-url="aHR0cHM6Ly93d3cuY25ibG9ncy5jb20vcGVnaG90eS9wLzM4NTc4MzkuaHRtbA==">word2vec中的数学原理详解<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="word2vec架构解析"><a href="#word2vec架构解析" class="headerlink" title="word2vec架构解析"></a>word2vec架构解析</h2><p><span class="exturl" data-url="aHR0cHM6Ly9jczIyNGQuc3RhbmZvcmQuZWR1L2xlY3R1cmVfbm90ZXMvbm90ZXMxLnBkZg==">cs224d的note<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8zMzU1MDc5Njk=">word2vec训练词向量的转换过程<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzQ0ODMyNDM2L2Fuc3dlci8yNjYwNjg5Njc=">word2vec是如何得到词向量的？ - crystalajj的回答 - 知乎<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="word2vec训练优化"><a href="#word2vec训练优化" class="headerlink" title="word2vec训练优化"></a>word2vec训练优化</h2><p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/41475180/understanding-tf-nn-nce-loss-in-tensorflow">Understanding <code>tf.nn.nce_loss()</code> in tensorflow</a></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3lpbWluZ3NpbGVuY2UvYXJ0aWNsZS9kZXRhaWxzLzEwNTkyMDk4Nw==">通俗易懂的NCE Loss<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9ydWRlci5pby93b3JkLWVtYmVkZGluZ3Mtc29mdG1heC9pbmRleC5odG1sI25vaXNlY29udHJhc3RpdmVlc3RpbWF0aW9u">On word embeddings - Part 2: Approximating the Softmax<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="softmax与交叉熵的关系"><a href="#softmax与交叉熵的关系" class="headerlink" title="softmax与交叉熵的关系"></a>softmax与交叉熵的关系</h2><p><span class="exturl" data-url="aHR0cHM6Ly9jczIzMW4uZ2l0aHViLmlvL2xpbmVhci1jbGFzc2lmeS8jc29mdG1heA==">CS231n课堂笔记sotmax讲解<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+              <a href="/tags/%E8%AF%8D%E5%90%91%E9%87%8F/" rel="tag"># 词向量</a>
+              <a href="/tags/word2vec/" rel="tag"># word2vec</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/13/qcloud-use/" rel="prev" title="腾讯云使用踩坑记录">
+      <i class="fa fa-chevron-left"></i> 腾讯云使用踩坑记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/27/nginx-with-ssl/" rel="next" title="Nginx安装与配置">
+      Nginx安装与配置 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E9%87%8F%E5%8C%96%E4%B8%80%E4%B8%AA%E8%AF%8D"><span class="nav-number">1.</span> <span class="nav-text">如何量化一个词</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%99%E5%AE%9A%E8%AF%8D%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87%E8%AF%8D%E7%9A%84%E6%A6%82%E7%8E%87%E5%85%AC%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">给定词的上下文词的概率公式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E8%AF%B4%E6%98%8E"><span class="nav-number">3.</span> <span class="nav-text">参数说明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CBOW"><span class="nav-number">4.</span> <span class="nav-text">CBOW</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84"><span class="nav-number">4.1.</span> <span class="nav-text">模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83"><span class="nav-number">4.2.</span> <span class="nav-text">如何训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#skip-gram"><span class="nav-number">5.</span> <span class="nav-text">skip-gram</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E6%9E%B6%E6%9E%84-1"><span class="nav-number">5.1.</span> <span class="nav-text">模型架构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E8%AE%AD%E7%BB%83-1"><span class="nav-number">5.2.</span> <span class="nav-text">如何训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96%E6%96%B9%E5%BC%8F"><span class="nav-number">6.</span> <span class="nav-text">训练优化方式</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#nce-loss-noise-contrastive-estimation"><span class="nav-number">6.1.</span> <span class="nav-text">nce loss&#x2F;noise contrastive estimation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NCE-loss-function"><span class="nav-number">6.1.1.</span> <span class="nav-text">NCE loss function</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#negative-sampling-NEG"><span class="nav-number">6.2.</span> <span class="nav-text">negative sampling&#x2F;NEG</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">7.</span> <span class="nav-text">参考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec%E5%88%9D%E6%AD%A5%E8%AE%A4%E8%AF%86"><span class="nav-number">7.1.</span> <span class="nav-text">word2vec初步认识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec%E6%9E%B6%E6%9E%84%E8%A7%A3%E6%9E%90"><span class="nav-number">7.2.</span> <span class="nav-text">word2vec架构解析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#word2vec%E8%AE%AD%E7%BB%83%E4%BC%98%E5%8C%96"><span class="nav-number">7.3.</span> <span class="nav-text">word2vec训练优化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#softmax%E4%B8%8E%E4%BA%A4%E5%8F%89%E7%86%B5%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">7.4.</span> <span class="nav-text">softmax与交叉熵的关系</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>

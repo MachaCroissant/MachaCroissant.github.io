@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="ESLint is a tool for identifying and reporting on patterns found in ECMAScript&#x2F;JavaScript code, with the goal of making code more consistent and avoiding bugs.Prettier is an opinionated code formatter">
+<meta property="og:type" content="article">
+<meta property="og:title" content="eslint与prettier协同工作">
+<meta property="og:url" content="https://drunk99.xyz/2021/01/10/eslint/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="ESLint is a tool for identifying and reporting on patterns found in ECMAScript&#x2F;JavaScript code, with the goal of making code more consistent and avoiding bugs.Prettier is an opinionated code formatter">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-10T13:11:35.000Z">
+<meta property="article:modified_time" content="2021-01-11T12:15:18.948Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="ESLint">
+<meta property="article:tag" content="Prettier">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/01/10/eslint/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>eslint与prettier协同工作 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/01/10/eslint/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          eslint与prettier协同工作
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-10 21:11:35" itemprop="dateCreated datePublished" datetime="2021-01-10T21:11:35+08:00">2021-01-10</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-11 20:15:18" itemprop="dateModified" datetime="2021-01-11T20:15:18+08:00">2021-01-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ESLint/" itemprop="url" rel="index"><span itemprop="name">ESLint</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>7 分钟</span>
+            </span>
+            <div class="post-description">ESLint is a tool for identifying and reporting on patterns found in ECMAScript/JavaScript code, with the goal of making code more consistent and avoiding bugs.<br/>Prettier is an opinionated code formatter.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>在讨论代码风格以及代码格式化之前，一定要注意查看编辑器的个性化配置是否会导致错误。例如，开启VS code中自动对Tab以及空格进行相互转化，这在ESLint与Prettier工作的情况下产生问题！需要区分Tab以及空格。<span class="exturl" data-url="aHR0cHM6Ly9zdGFja292ZXJmbG93LmNvbS9hLzU5MzUzMzU3">参阅StackOverflow的回答<i class="fa fa-external-link-alt"></i></span></p>
+<p>注意文件格式的区别，配置文件既可以是json，也可以是js。</p>
+<h1 id="ESLint"><a href="#ESLint" class="headerlink" title="ESLint"></a>ESLint</h1><p>ESLint提供的不仅是代码格式化，更有控制代码风格，检查代码错误的作用。</p>
+<p><span class="exturl" data-url="aHR0cHM6Ly9lc2xpbnQub3JnL2RlbW8=">ESLint demo<i class="fa fa-external-link-alt"></i></span>以所见即所得的可视化方式提供了rules configuration的各种选项。</p>
+<h2 id="ESLint安装"><a href="#ESLint安装" class="headerlink" title="ESLint安装"></a>ESLint安装</h2><p>在初始化一个npm项目后，—save-dev的形式安装。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install eslint --save-dev</span><br></pre></td></tr></table></figure>
+<p>在项目目录下执行<code>npx eslint --init</code>，会有一个命令行问答面板，根据yes或no的选择，在自动生成的<code>.eslintrc.js</code>文件中给予初始配置。</p>
+<p>ESLint可以对项目中的任何文件执行，只需要<code>npx eslint yourfile.js</code>。命令长指令还有-c/—config，—env，—global等。</p>
+<h2 id="ESLint-配置"><a href="#ESLint-配置" class="headerlink" title="ESLint 配置"></a>ESLint 配置</h2><p>具体查看<span class="exturl" data-url="aHR0cHM6Ly9lc2xpbnQub3JnL2RvY3MvdXNlci1ndWlkZS9jb25maWd1cmluZw==">Table of Contents<i class="fa fa-external-link-alt"></i></span>的链接。</p>
+<p>常用的配置字段有以下几种：</p>
+<h3 id="env"><a href="#env" class="headerlink" title="env"></a>env</h3><blockquote>
+<p>An enviroment defines global variables that are predefined.</p>
+</blockquote>
+<p>明确了env如<code>browser/node/es6</code>等，就能预先知道这些环境中有哪些保留字是自己编写代码的时候不能用的，就算用了ESLint也会报错。</p>
+<h3 id="parser"><a href="#parser" class="headerlink" title="parser"></a>parser</h3><p>如果使用到了babel，需要明确<code>parser: &quot;@babel/eslint-parser&quot;,</code>(这里是js文件格式，而非json)。并且文件目录下要有babel配置文件存在。</p>
+<h3 id="globals"><a href="#globals" class="headerlink" title="globals"></a>globals</h3><p>为什么需要globals？因为ESLint的no-undef rule要求，当一个文件内某个变量defined but not used的时候会报错。在配置文件中利用globals字段说明所有全局变量，并给予<code>writable/readonly</code>的权限。</p>
+<h3 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h3><p>ESLint通过plugins字段来支持第三方插件，在使用一个插件之前，需要通过npm下载。插件的名字都有<code>eslint-plugin-xx</code>的通用格式，在写入plugins字段的时候可以不需要前缀。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">plugins: [<span class="string">&quot;prettier&quot;</span>],</span><br><span class="line"><span class="comment">//npm install --save-dev eslint-plugin-prettier</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>The <code>eslint-plugin-</code> prefix can be omitted for non-scoped packages</p>
+</blockquote>
+<p>plugins本质上就是定义了一些功能的集合，在plugin字段中写入plugin并不会让这些功能生效。还需要在rules字段中启用特定的功能。</p>
+<p>启用和停止plugin中的规则都有相同的形式。</p>
+<p>To configure a rule which is defined within a plugin you have to prefix the rule ID with the plugin name and a <code>/</code>. </p>
+<p>To disable <code>eslint-plugin-example</code>‘s <code>rule-name</code> rule, combine the plugin’s name (<code>example</code>) and the rule’s name (<code>rule-name</code>) into <code>example/rule-name</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">rules: &#123;</span><br><span class="line">    <span class="string">&quot;prettier/prettier&quot;</span>: <span class="string">&quot;error&quot;</span>,</span><br><span class="line">    <span class="comment">// 第一个是plugin插件</span></span><br><span class="line">    <span class="comment">// 第二个是plugin插件中名为prettier的规则</span></span><br><span class="line">    indent: [<span class="string">&quot;error&quot;</span>, <span class="number">2</span>],</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<h3 id="rules"><a href="#rules" class="headerlink" title="rules"></a>rules</h3><p>规则如下：</p>
+<ul>
+<li><code>&quot;off&quot;</code> or <code>0</code> - turn the rule off</li>
+<li><code>&quot;warn&quot;</code> or <code>1</code> - turn the rule on as a warning (doesn’t affect exit code)</li>
+<li><code>&quot;error&quot;</code> or <code>2</code> - turn the rule on as an error (exit code is 1 when triggered)</li>
+</ul>
+<p>形式如<code>&quot;plugin1/rule1&quot;: &quot;error&quot;</code>，冒号后可以是数字或字符串，也可以是字符串或数字组成的数组。</p>
+<h3 id="extends"><a href="#extends" class="headerlink" title="extends"></a>extends</h3><p>extends就是继承的意思，这个字段旨在继承一些已有的，共享的，或者当前目录下的其他配置文件的ESLint配置（也就是一个opinionated rules），而后其他字段的如果另有说明，在这些导入配置的基础之上另作修改。</p>
+<p>rules字段可以对extends字段的base rule settings通过以下方式更改：</p>
+<ul>
+<li>添加其他base rules中没有的规则</li>
+<li>对继承的某条规则，更改规则选项值的先后顺序</li>
+<li>对继承的某条规则，override或disable。</li>
+</ul>
+<p>推荐的extend字段的value有：<code>&quot;extends&quot;: &quot;eslint:recommended&quot;</code>，<code>extends: [&quot;standard&quot;, &quot;prettier&quot;],</code>。另外，还可以使用配置文件路径来引用项目目录中已存在的配置文件。</p>
+<p>注意和plugin一样，这些sharable configuration package都是有<code>eslint-config-</code>前缀，使用时可以省略。<code>standard</code>的配置名就是<code>eslint-config-standard</code>。</p>
+<h3 id="overrides"><a href="#overrides" class="headerlink" title="overrides"></a>overrides</h3><p>有一些场景需要将eslint配置文件应用到指定文件，指定文件的方式就像在命令行中指定文件一样<code>app/**/*.test.js</code>。</p>
+<p>configuration based on glob patterns.</p>
+<h3 id="ESLint忽略特定文件"><a href="#ESLint忽略特定文件" class="headerlink" title="ESLint忽略特定文件"></a>ESLint忽略特定文件</h3><ul>
+<li>ignorePatterns字段</li>
+<li>.eslintignore文件</li>
+</ul>
+<h1 id="Prettier"><a href="#Prettier" class="headerlink" title="Prettier"></a>Prettier</h1><p>文件目录下npm安装Prettier。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev prettier</span><br></pre></td></tr></table></figure>
+<p>手动创建配置文件并书写。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// prettier.config.js or .prettierrc.js</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  trailingComma: <span class="string">&quot;es5&quot;</span>,</span><br><span class="line">  tabWidth: <span class="number">2</span>,</span><br><span class="line">  semi: <span class="literal">false</span>,</span><br><span class="line">  singleQuote: <span class="literal">true</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="可配置的格式化"><a href="#可配置的格式化" class="headerlink" title="可配置的格式化"></a>可配置的格式化</h2><p>PrintWidth决定一行最多可以输入多少个字，超出就换行，默认80。</p>
+<p>TabWidth明确多少个空格用作一级别的缩进，默认2。</p>
+<p>Tabs使用tab还是space来进行缩进，默认false不使用tab缩进。</p>
+<p>semicolons在每一行statement最后都加分好，默认true都加分号。</p>
+<p>trainingComma尾后都好，意思就是数组或者对象的最后一个项目也要加一个都好，默认”es5”。但是在JSON中默认不允许，如果最后一项加了逗号就要报错。</p>
+<p>bracketSpacing默认true，花括号和变量之间有空格。</p>
+<p>arrowParens默认”always”，总给箭头函数的输入加上括号，因为当只有一个参数的时候括号可以省略。</p>
+<h2 id="override"><a href="#override" class="headerlink" title="override"></a>override</h2><p>Prettier borrows ESLint’s <span class="exturl" data-url="aHR0cHM6Ly9lc2xpbnQub3JnL2RvY3MvdXNlci1ndWlkZS9jb25maWd1cmluZyNleGFtcGxlLWNvbmZpZ3VyYXRpb24=">override format<i class="fa fa-external-link-alt"></i></span>.override字段接受一个由对象组成的数组，每一个对象都是一个prettier配置，针对什么文件files，有哪些配置options。</p>
+<h1 id="Prettier-amp-ESLint"><a href="#Prettier-amp-ESLint" class="headerlink" title="Prettier &amp; ESLint"></a>Prettier &amp; ESLint</h1><p>Prettier和ESLint在代码格式化方面有功能重合，但对于同一个问题又有不同的解决办法，因此同时安装二者会报错。通过在ESLint中使用适应Prettier的插件来协调。</p>
+<p>需要两个包来安装。第一个是能够把所有eslint中可能与prettier发生冲突的规则关闭的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3ByZXR0aWVyL2VzbGludC1jb25maWctcHJldHRpZXI=">eslint-config-prettier<i class="fa fa-external-link-alt"></i></span>，第二个是将写在Prettier中的rule当作ESLint规则并且输出ESLint警告的<span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3ByZXR0aWVyL2VzbGludC1wbHVnaW4tcHJldHRpZXI=">eslint-plugin-prettier<i class="fa fa-external-link-alt"></i></span>。</p>
+<blockquote>
+<p>eslint-plugin-prettier: Runs <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3ByZXR0aWVyL3ByZXR0aWVy">Prettier<i class="fa fa-external-link-alt"></i></span> as an <span class="exturl" data-url="aHR0cDovL2VzbGludC5vcmcv">ESLint<i class="fa fa-external-link-alt"></i></span> rule and reports differences as individual ESLint issues.</p>
+<p>Aslant-config-prettier: Turns off all rules that are unnecessary or might conflict with <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL3ByZXR0aWVyL3ByZXR0aWVy">Prettier<i class="fa fa-external-link-alt"></i></span>.</p>
+</blockquote>
+<p>需要下载npm包有：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev eslint-plugin-prettier eslint-config-prettier</span><br></pre></td></tr></table></figure>
+<p>在.eslintrc.js文件的extends字段做以下配置：注意一定要把prettier的plugin放在最后。（这个extends是一些配置的集合，包括了extends字段，plugins字段，rules字段的设置。）</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">extends</span>: [<span class="string">&quot;standard&quot;</span>,</span><br><span class="line">          <span class="string">&quot;plugin:prettier/recommended&quot;</span>,</span><br><span class="line">          <span class="comment">// 其他有可能与prettier发生冲突的插件排除</span></span><br><span class="line">          <span class="string">&quot;prettier/flowtype&quot;</span>,</span><br><span class="line">          <span class="string">&quot;prettier/react&quot;</span>],</span><br></pre></td></tr></table></figure>
+<p>对于其他可能和prettier存在冲突的eslint plugin如eslint-plugin-react，在这之后将这些排除。</p>
+<p>完成后就可以在.prettierrc.js中书写prettier options了。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/ESLint/" rel="tag"># ESLint</a>
+              <a href="/tags/Prettier/" rel="tag"># Prettier</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/10/babel/" rel="prev" title="babel基础">
+      <i class="fa fa-chevron-left"></i> babel基础
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/12/js-closure/" rel="next" title="JavaScript闭包">
+      JavaScript闭包 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ESLint"><span class="nav-number">1.</span> <span class="nav-text">ESLint</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ESLint%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">ESLint安装</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ESLint-%E9%85%8D%E7%BD%AE"><span class="nav-number">1.2.</span> <span class="nav-text">ESLint 配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#env"><span class="nav-number">1.2.1.</span> <span class="nav-text">env</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parser"><span class="nav-number">1.2.2.</span> <span class="nav-text">parser</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#globals"><span class="nav-number">1.2.3.</span> <span class="nav-text">globals</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#plugins"><span class="nav-number">1.2.4.</span> <span class="nav-text">plugins</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rules"><span class="nav-number">1.2.5.</span> <span class="nav-text">rules</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#extends"><span class="nav-number">1.2.6.</span> <span class="nav-text">extends</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#overrides"><span class="nav-number">1.2.7.</span> <span class="nav-text">overrides</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ESLint%E5%BF%BD%E7%95%A5%E7%89%B9%E5%AE%9A%E6%96%87%E4%BB%B6"><span class="nav-number">1.2.8.</span> <span class="nav-text">ESLint忽略特定文件</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prettier"><span class="nav-number">2.</span> <span class="nav-text">Prettier</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%AF%E9%85%8D%E7%BD%AE%E7%9A%84%E6%A0%BC%E5%BC%8F%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">可配置的格式化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#override"><span class="nav-number">2.2.</span> <span class="nav-text">override</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Prettier-amp-ESLint"><span class="nav-number">3.</span> <span class="nav-text">Prettier &amp; ESLint</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

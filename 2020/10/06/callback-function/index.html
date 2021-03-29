@@ -22,17 +22,22 @@
     var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。">
+  <meta name="description" content="通过回调函数理解JavaScript事件处理机制，阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JavaScript中的回调函数">
 <meta property="og:url" content="https://drunk99.xyz/2020/10/06/callback-function/index.html">
 <meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。">
+<meta property="og:description" content="通过回调函数理解JavaScript事件处理机制，阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-10-06T04:07:37.000Z">
-<meta property="article:modified_time" content="2020-10-11T11:41:32.246Z">
+<meta property="article:modified_time" content="2021-01-12T07:19:09.734Z">
 <meta property="article:author" content="徐徐">
 <meta property="article:tag" content="回调函数">
+<meta property="article:tag" content="事件循环">
+<meta property="article:tag" content="macro-task">
+<meta property="article:tag" content="micro-task">
+<meta property="article:tag" content="this">
+<meta property="article:tag" content="执行上下文栈">
 <meta name="twitter:card" content="summary">
 
 <link rel="canonical" href="https://drunk99.xyz/2020/10/06/callback-function/">
@@ -221,7 +226,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-10-11 19:41:32" itemprop="dateModified" datetime="2020-10-11T19:41:32+08:00">2020-10-11</time>
+                <time title="修改时间：2021-01-12 15:19:09" itemprop="dateModified" datetime="2021-01-12T15:19:09+08:00">2021-01-12</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -239,16 +244,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>717</span>
+              <span>3.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>6 分钟</span>
             </span>
-            <div class="post-description">阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。</div>
+            <div class="post-description">通过回调函数理解JavaScript事件处理机制，阅读React官方文档的过程中遇到的JSX回调函数中的this相关问题。</div>
 
         </div>
       </header>
@@ -263,6 +268,37 @@
 <p>回调函数的作用是实现异步操作。程序不需要一直等待某个事件的发生才去执行回调函数，而是等事件发生后再去执行。</p>
 <p>一个比较好理解的回答：</p>
 <p><span class="exturl" data-url="aHR0cHM6Ly93d3cuemhpaHUuY29tL3F1ZXN0aW9uLzE5ODAxMTMxL2Fuc3dlci8xNzMxMjk5NQ==">回调函数（callback）是什么？ - 朱栩的回答 - 知乎<i class="fa fa-external-link-alt"></i></span></p>
+<h1 id="回调函数与JavaScript事件处理机制"><a href="#回调函数与JavaScript事件处理机制" class="headerlink" title="回调函数与JavaScript事件处理机制"></a>回调函数与JavaScript事件处理机制</h1><h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8zMDg5NDAyMg==">JavaScript运行机制:事件驱动编程详解<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNjIzODAzMA==">深入浅出JavaScript事件循环机制(下)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8yNjIyOTI5Mw==">深入浅出Javascript事件循环机制(上)<i class="fa fa-external-link-alt"></i></span></p>
+<p><span class="exturl" data-url="aHR0cHM6Ly92aW1lby5jb20vOTY0MjUzMTI=">Philip Roberts: Help, I’m stuck in an event loop.<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="event-loop-amp-callback-queue"><a href="#event-loop-amp-callback-queue" class="headerlink" title="event loop &amp; callback queue"></a>event loop &amp; callback queue</h2><h3 id="主线程与工作线程"><a href="#主线程与工作线程" class="headerlink" title="主线程与工作线程"></a>主线程与工作线程</h3><p>提高CPU吞吐量的几种方式：多线程+同步I/O，单线程事件循环+异步I/O。</p>
+<p>由于“JavaScript是一门单线程的语言”，因而采用异步IO+事件循环。<strong>这里的单线程，是指JavaScript引擎（如chrome的v8引擎）中负责解释和执行js代码的线程只有一个，称它为主线程。</strong></p>
+<p>但还存在其他由其他API提供的线程，如处理AJAX请求的线程，处理DOM事件的线程，读写文件的线程，这些被称作<strong>工作线程</strong>。</p>
+<h3 id="同步任务、异步任务与事件循环"><a href="#同步任务、异步任务与事件循环" class="headerlink" title="同步任务、异步任务与事件循环"></a>同步任务、异步任务与事件循环</h3><p><strong>在主线程上挨个排队等待执行的任务，被称作同步任务。</strong>这些同步任务构成了<strong>执行栈（execution context stack）</strong>，执行栈中的任务必须等前面一个执行完了，才能执行后面一个。</p>
+<blockquote>
+<p>执行上下文栈（execution context stack）：当JavaScript代码执行的时候，会进入不同的执行上下文，这些执行上下文会构成了一个执行上下文栈（Execution context stack，ECS）。栈底永远都是全局上下文，而栈顶就是当前正在执行的上下文。</p>
+<p>每一个执行上下文都可以抽象为一个拥有三个属性的对象。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">executionContextObj = &#123;</span><br><span class="line">    scopeChain: &#123; <span class="comment">/* 变量对象（variableObject）+ 所有父执行上下文的变量对象*/</span> &#125;, </span><br><span class="line">    variableObject: &#123; <span class="comment">/*函数 arguments/参数，内部变量和函数声明 */</span> &#125;, </span><br><span class="line">    <span class="built_in">this</span>: &#123;&#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>每一次JavaScript解释器调用执行上下文，每次调用都会创建，激活两个阶段。</p>
+<p>创建阶段会依据传入参数、函数声明和变量声明设置执行上下文的上面三个属性，但不涉及具体的值，只把所有声明归纳。创建阶段依次处理顺序为：函数参数arguments，扫描上下文的函数声明，扫描上下文的变量声明并初始化为undefined。因此，就可以理解JavaScript提升了。</p>
+<p>可以看出函数提升优先于变量提升；函数提升是把整个函数的定义与声明提升到最前面，变量只单单提升声明；但是函数表达式的声明是遵循变量提升规则的。因此，也就可以理解函数提升、变量提升的关系了。</p>
+<p>激活阶段会在创建完成后随着代码内部一行行只派变量的值或者函数的引用。</p>
+</blockquote>
+<p><strong>被交由工作线程处理的任务，就是异步任务。</strong>异步任务在工作线程上被运行/处理得出结果后，被放到消息队列callback queue中。不管现在主线程怎么样了，工作线程把异步任务运行出了结果，就会转交这个异步任务到消息队列。</p>
+<p>callback的内容就是告诉主线程：我这边工作线程上的结果出来了哈，作为参数传到了callback function中了，你在执行栈上执行一下回调函数就知道该怎么做了哈。</p>
+<p><strong>主线程上的所有同步任务都被执行完，也就是执行栈为空，执行栈才会去读消息队列，把消息队列中的回调函数放到执行栈中开始执行。</strong>主线程从消息队列中去读消息，这个过程是循环不断的。主线程把一个消息队列上的消息取出来放到执行栈上执行完毕，才去继续取下一个消息队列上的消息，<strong>取一个消息并执行的过程就叫做一次事件循环</strong>。</p>
+<h3 id="对异步任务的再度划分macro0task-micro-task"><a href="#对异步任务的再度划分macro0task-micro-task" class="headerlink" title="对异步任务的再度划分macro0task/micro-task"></a>对异步任务的再度划分macro0task/micro-task</h3><p>要等到执行栈上的同步任务清空，才去消息队列中取异步任务放到执行栈执行。但是有些异步任务要优先解决，等不及被取出后再次被放到消息队列中去，这种情况下该怎么办？细分一下异步任务，可以分为macro-task与micro-task。</p>
+<p>上面提到的同步任务称为task，多个同步任务组成一个task queue。异步任务即macro-task，多个异步任务组成macro-task queue，运行机制为take one item and one item only。而micro-task，是需要在本轮事件循环结束前、本轮事件循环所有task结束后执行的任务，<strong>多个micro-task组成micro-task queue，运行机制为运行直到清空队列（inluding any additional queued items），这种情况下event loop cannot continue until that queue has completely emptied and that is why it blocks rendering。</strong></p>
+<p>用下面的例子解释micro-task queue的运作方式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">(<span class="function"><span class="keyword">function</span> <span class="title">test</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;<span class="built_in">console</span>.log(<span class="number">4</span>)&#125;, <span class="number">0</span>);</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> <span class="title">executor</span>(<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">1</span>);</span><br><span class="line">        <span class="keyword">for</span>( <span class="keyword">var</span> i=<span class="number">0</span> ; i&lt;<span class="number">10000</span> ; i++ ) &#123;</span><br><span class="line">            i == <span class="number">9999</span> &amp;&amp; resolve();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">2</span>);</span><br><span class="line">    &#125;).then(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="number">5</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">3</span>);</span><br><span class="line">&#125;)()</span><br><span class="line"><span class="comment">// 1 2 3 5 4</span></span><br></pre></td></tr></table></figure>
+<p>123的输出属于正常执行栈中同步任务task的执行流程。</p>
+<p>那为什么接下来是5？因为promise.then属于micro-task，他会在本次事件循环结束之前，也就是访问macro-task消息队列之前，被执行。而setTimeout就在macro-task消息队列中等着下一次事件循环被取用。</p>
+<h2 id="常见的task-micro-task-macro-task分类"><a href="#常见的task-micro-task-macro-task分类" class="headerlink" title="常见的task/micro-task/macro-task分类"></a>常见的task/micro-task/macro-task分类</h2><ul>
+<li>每一个同步语句都是task，例如console.log()</li>
+<li>macro-task一般都是异步任务，包括setTimeout、setInterval、setImmediate、I/O, UI rendering等</li>
+<li>micro-task一般都是能够阻止下一次事件循环，从而阻止浏览器渲染的方法，包括process.nextTick、Promises.then、Object.observe等</li>
+</ul>
 <h1 id="回调函数与this"><a href="#回调函数与this" class="headerlink" title="回调函数与this"></a>回调函数与this</h1><p>React官方文档<span class="exturl" data-url="aHR0cHM6Ly96aC1oYW5zLnJlYWN0anMub3JnL2RvY3MvaGFuZGxpbmctZXZlbnRzLmh0bWw=">事件处理<i class="fa fa-external-link-alt"></i></span>一章节给出了一个例子，提到需要谨慎使用JSX回调中的this。</p>
 <p><code>this.handleClick = this.handleClick.bind(this);</code></p>
 <p>一旦删除构造函数中的这句语句：</p>
@@ -292,6 +328,11 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0/" rel="tag"># 回调函数</a>
+              <a href="/tags/%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" rel="tag"># 事件循环</a>
+              <a href="/tags/macro-task/" rel="tag"># macro-task</a>
+              <a href="/tags/micro-task/" rel="tag"># micro-task</a>
+              <a href="/tags/this/" rel="tag"># this</a>
+              <a href="/tags/%E6%89%A7%E8%A1%8C%E4%B8%8A%E4%B8%8B%E6%96%87%E6%A0%88/" rel="tag"># 执行上下文栈</a>
           </div>
 
         
@@ -365,7 +406,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">回调函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E4%B8%8Ethis"><span class="nav-number">2.</span> <span class="nav-text">回调函数与this</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0"><span class="nav-number">1.</span> <span class="nav-text">回调函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E4%B8%8EJavaScript%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E6%9C%BA%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">回调函数与JavaScript事件处理机制</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="nav-number">2.1.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#event-loop-amp-callback-queue"><span class="nav-number">2.2.</span> <span class="nav-text">event loop &amp; callback queue</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BB%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B"><span class="nav-number">2.2.1.</span> <span class="nav-text">主线程与工作线程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%90%8C%E6%AD%A5%E4%BB%BB%E5%8A%A1%E3%80%81%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E4%B8%8E%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.2.2.</span> <span class="nav-text">同步任务、异步任务与事件循环</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E7%9A%84%E5%86%8D%E5%BA%A6%E5%88%92%E5%88%86macro0task-micro-task"><span class="nav-number">2.2.3.</span> <span class="nav-text">对异步任务的再度划分macro0task&#x2F;micro-task</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E7%9A%84task-micro-task-macro-task%E5%88%86%E7%B1%BB"><span class="nav-number">2.3.</span> <span class="nav-text">常见的task&#x2F;micro-task&#x2F;macro-task分类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E4%B8%8Ethis"><span class="nav-number">3.</span> <span class="nav-text">回调函数与this</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -379,18 +420,18 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">80</span>
+          <span class="site-state-item-count">94</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">17</span>
+        <span class="site-state-item-count">22</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">98</span>
+        <span class="site-state-item-count">120</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
@@ -434,12 +475,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">290k</span>
+    <span title="站点总字数">350k</span>
     <span class="post-meta-divider">|</span>
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">8:47</span>
+    <span title="站点阅读时长">10:36</span>
 </div>
   <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
   </div>

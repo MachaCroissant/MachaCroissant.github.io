@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="At its core, webpack is a static module bundler for modern JavaScript applications.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Webpack笔记">
+<meta property="og:url" content="https://drunk99.xyz/2021/01/08/webpack/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="At its core, webpack is a static module bundler for modern JavaScript applications.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-08T02:08:08.000Z">
+<meta property="article:modified_time" content="2021-01-11T12:18:26.547Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="webpack">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/01/08/webpack/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Webpack笔记 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/01/08/webpack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Webpack笔记
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-01-08 10:08:08" itemprop="dateCreated datePublished" datetime="2021-01-08T10:08:08+08:00">2021-01-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-01-11 20:18:26" itemprop="dateModified" datetime="2021-01-11T20:18:26+08:00">2021-01-11</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/webpack/" itemprop="url" rel="index"><span itemprop="name">webpack</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>12k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>22 分钟</span>
+            </span>
+            <div class="post-description">At its core, webpack is a static module bundler for modern JavaScript applications.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="为什么需要webpack"><a href="#为什么需要webpack" class="headerlink" title="为什么需要webpack"></a>为什么需要webpack</h1><p>webpack是前端项目中的一个脚本管理工具，当代码从后端经由网络发布到前端，需要考虑网络环境的拥塞程度以及资源请求的先后顺序。在前度项目的配置中决定如何处理通信资源是webpack要解决的问题。</p>
+<p>webpack所做的就是把项目文件夹webpack-demo/src下的（默认entry point，可自定义）所有内容（包括javascript脚本，css，字体，图片等，只要是loader或plugin支持的文件），按照webpack.config.js中说明的那样，以另一种形式生成到webpack-demo/dist（默认）文件夹下（可以在配置中更改生成路径）。这个过程被称为transcompile（转译）。</p>
+<p>例如，在html中引入script可以改成在js文件中利用import引入其他的script；而html中的script应当指向webpack生成的script。</p>
+<p>默认的配置文件<code>webpack.config.js</code>的出现是为了减少在终端手动输入大量项目配置命令。实际上可以在命令行<code>npx webpack --config webpack.config.js</code>用任何配置去转译当前项目。</p>
+<p>可以在package.json的的scripts字段进行脚本自定义，以更便捷的方式调用webpack。例如以<code>npm run build</code>代替<code>npx webpack --config webpack.config.js</code>。</p>
+<p>以下所有内容均是在<code>webpack.config.js</code>文件中的<code>module.exports = &#123;&#125;</code>对象中定义的。</p>
+<h1 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h1><p>entry point的值是指向某个文件的路径，告诉webpack用哪一个文件开始建立内部的dependency graph（一个文件夹中各个文件的依赖关系，entry point路径的文件应该就是依赖图的根节点）。</p>
+<p>默认值是<code>./src/index.js</code>。可以有一个或者多个。注意这里的路径是当前文件夹下的相对路径。</p>
+<p>entry property可以接受利用缩写接受一个路径，也可以接受一个对象，更可以接受一个数组。</p>
+<h2 id="基础设置single-entry"><a href="#基础设置single-entry" class="headerlink" title="基础设置single entry"></a>基础设置single entry</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// single entry shorthand syntax</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">&#x27;./path/to/my/entry/file.js&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// signle entry non-shorthand syntax</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    main: <span class="string">&#x27;./path/to/my/entry/file.js&#x27;</span></span><br><span class="line">      <span class="comment">// 如果有多个项目就是object syntax</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<h2 id="多入口的代码分离"><a href="#多入口的代码分离" class="headerlink" title="多入口的代码分离"></a>多入口的代码分离</h2><p>如果利用entry写了多个入口起点，那就是手动的去分离了代码，每一个入口起点被转译后的bundle就更小了，更能实现按需加载文件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// multi-main entry with array syntax</span></span><br><span class="line"><span class="comment">// 尽量避免使用多入口的入口</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: [ </span><br><span class="line">    <span class="string">&#x27;./src/file_1.js&#x27;</span>,</span><br><span class="line">    <span class="string">&#x27;./src/file_2.js&#x27;</span></span><br><span class="line">  ]</span><br><span class="line">    <span class="comment">// 传递数组只会生成一个chunk，因此webpack会把数组里的源代码都打包到一个bundle中</span></span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// objecy syntax</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    app: <span class="string">&#x27;./src/app.js&#x27;</span>,</span><br><span class="line">    adminApp: <span class="string">&#x27;./src/adminApp.js&#x27;</span></span><br><span class="line">      <span class="comment">// 对象中几个字段就生成几个chunk</span></span><br><span class="line">      <span class="comment">// 这里会生成两个</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>有几个entry point，就代表webpack需要几个互相独立的依赖图。</p>
+<p>在多个entry的情况下，也需要有多个output bundle。通过引用<code>[name]</code>来实现output.filename匹配到对应entry name。</p>
+<h3 id="多入口代码分离模块重复代码与实例化隐患"><a href="#多入口代码分离模块重复代码与实例化隐患" class="headerlink" title="多入口代码分离模块重复代码与实例化隐患"></a>多入口代码分离模块重复代码与实例化隐患</h3><p>Modules relied on by multiple entry bundles can be extracted into common bundles used across multiple pages.</p>
+<p><strong>Whether extracted or inlined, it’s important that a module never be instantiated multiple times</strong> - both ECMAScript Modules and CommonJS Modules specify that a module must only be instantiated once per JavaScript context. </p>
+<p>但是这种方式的问题在于每一个引用模块的代码都会被实例化多次；如果每一个entry都包含相同的引用模块的代码，会在结果bundle的各个文件中再次重复，增加代码量。</p>
+<p>期望的结果：a module used by two different entry bundles will be instantiated only one time.</p>
+<h3 id="多入口代码分离重复"><a href="#多入口代码分离重复" class="headerlink" title="多入口代码分离重复"></a>多入口代码分离重复</h3><p>防止模块多次实例化的方法可以是在entry字段中的每个entry都添加一个dependOn字段，但是这无法解决输出bundle间代码重复的问题。</p>
+<p>如下：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">   index: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">   another: <span class="string">&#x27;./src/another-module.js&#x27;</span>,</span><br><span class="line">   index: &#123;</span><br><span class="line">     <span class="keyword">import</span>: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">     dependOn: <span class="string">&#x27;shared&#x27;</span>,</span><br><span class="line">   &#125;,</span><br><span class="line">   another: &#123;</span><br><span class="line">     <span class="keyword">import</span>: <span class="string">&#x27;./src/another-module.js&#x27;</span>,</span><br><span class="line">     dependOn: <span class="string">&#x27;shared&#x27;</span>,</span><br><span class="line">   &#125;,</span><br><span class="line">   shared: <span class="string">&#x27;lodash&#x27;</span>,</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>并且如果这些entry生成的bundle都服务于同一个html页面，还需要在webpack.config.js中设置<code>optimization.runtimeChunk: &#39;single&#39;</code>。</p>
+<blockquote>
+<p>This doesn’t prevent Webpack from copying module code between entry points, but it prevents it creating two instances of the same module at runtime, while reducing the number of HTTP requests needed to load modules for a given page.</p>
+</blockquote>
+<h1 id="output"><a href="#output" class="headerlink" title="output"></a>output</h1><p>output告诉webpack在哪个路径下输出他解析这些文件依赖关系后得出的bundles，以及如何命名输出的bundles，因此用一个对象来表示output.path和output.filename。</p>
+<p>默认值是<code>./dist/main.js</code>，其他相关的生成文件bundle都放在<code>./dist</code>文件夹下。</p>
+<h2 id="基础设置single-entry-1"><a href="#基础设置single-entry-1" class="headerlink" title="基础设置single entry"></a>基础设置single entry</h2><p>只需要在output property中指定filename的值。只适用于single entry的情况。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: <span class="string">&#x27;bundle.js&#x27;</span>,</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个语句告诉webpack，把输出的文件放到默认的dist目录的bundle.js中。</p>
+<h2 id="multiple-entry"><a href="#multiple-entry" class="headerlink" title="multiple entry"></a>multiple entry</h2><p>如果有多个entry，那么也会有多个依赖图，也就是多个js文件输出。在output.filename中使用<code>&#39;[name].js&#39;</code>，（可替换模版字符串substitution）这里的name匹配的是entry point的名字。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    app: <span class="string">&#x27;./src/app.js&#x27;</span>,</span><br><span class="line">    search: <span class="string">&#x27;./src/search.js&#x27;</span></span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    filename: <span class="string">&#x27;[name].js&#x27;</span>,</span><br><span class="line">    <span class="comment">// filename: &#x27;[name].[contenthash].js&#x27;,</span></span><br><span class="line">    path: __dirname + <span class="string">&#x27;/dist&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// writes to disk: ./dist/app.js, ./dist/search.js</span></span><br></pre></td></tr></table></figure>
+<p>还有其他的通过带方括号的字符串来模版化文件名的方式。[name]引用entry的名字，[contenthash]根据资源内容创建唯一hash。</p>
+<h2 id="基础用法"><a href="#基础用法" class="headerlink" title="基础用法"></a>基础用法</h2><p>需要注意output.path使用的是执行环境下的相对路径，需要使用path package解析执行环境。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> path = <span class="built_in">require</span>(<span class="string">&#x27;path&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: <span class="string">&#x27;./path/to/my/entry/file.js&#x27;</span>,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">    filename: <span class="string">&#x27;my-first-webpack.bundle.js&#x27;</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h1 id="loaders-in-module-rules"><a href="#loaders-in-module-rules" class="headerlink" title="loaders in module.rules"></a>loaders in module.rules</h1><p>默认情况下，webpack只能理解JavaScript以及JSON文件。但是前端项目中设计其他的语言，比如css，为了使css也能够被bundle并输出到output.path去，需要loaders。</p>
+<blockquote>
+<p>Loaders can transform files from a different language (like TypeScript) to JavaScript or load inline images as data URLs. Loaders even allow you to do things like <code>import</code> CSS files directly from your JavaScript modules!</p>
+</blockquote>
+<p>针对某个类型的文件，需要两个属性。一个是用于鉴别哪一个文件（涉及到<strong>使用正则表达式进行文件匹配</strong>）是当前loader需要转换的test property，另一个是说明需要用到哪些loaders的use property。</p>
+<p><strong>在module内部定义a <code>rules</code> property for a single module with two required properties: <code>test</code> and <code>use</code>.</strong> </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.txt$/</span>, use: <span class="string">&#x27;raw-loader&#x27;</span> &#125;,</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.css$/</span>, use: [<span class="string">&#x27;style-loader&#x27;</span>, <span class="string">&#x27;css-loader&#x27;</span>, <span class="string">&#x27;sass-loader&#x27;</span>] &#125;,</span><br><span class="line">      &#123; <span class="attr">test</span>: <span class="regexp">/\.ts$/</span>, use: <span class="string">&#x27;ts-loader&#x27;</span> &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>以上这些语句告诉webpack compiler在require()/import语句中遇到一个一.txt结尾的文件时，先使用raw-loader把它转换成目标代码，再添加到输出bundle去。</p>
+<p>在使用正则表达式匹配文件的时候，不应当使用单引号或者双引号。<code>/\.txt$/</code>是正确的，告诉webpack去匹配所有以txt结尾的文件；但<code>&quot;/\.txt$/&quot;</code>是错误的，它告诉webpack去匹配绝对路径<code>&#39;.txt&#39;</code>下的某个文件。</p>
+<blockquote>
+<p>Loaders can be chained. A chain is executed in reverse order. </p>
+</blockquote>
+<p>在use中loader是可以被串联起来的，但<strong>loaders的放置先后顺序有讲究</strong>。<strong>loaders都是从右到左/从下到上被执行的。</strong>在test css结尾的文件中，loader执行的顺序先是sass-loader，sass-loader将执行结果传递给css-loader， 最后css-loader的执行结果被传递给style-loader。</p>
+<h2 id="加载CSS"><a href="#加载CSS" class="headerlink" title="加载CSS"></a>加载CSS</h2><p>首先，需要下载npm包style-loader以及css-loader。如果希望压缩css等，需要使用sass-loader，postcss-loader。</p>
+<p>其次，在modules.rules中分别配置test和use。</p>
+<p>然后，就可以在任何文件中通过import语法获取.css文件。</p>
+<h2 id="asset-resource加载图像字体"><a href="#asset-resource加载图像字体" class="headerlink" title="asset/resource加载图像字体"></a>asset/resource加载图像字体</h2><p>webpack5内置的<strong>type: ‘asset/resource’</strong>可以解决图片资源加载的问题。无需借助loader。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  <span class="comment">//...</span></span><br><span class="line">  <span class="built_in">module</span>: &#123;</span><br><span class="line">    rules: [</span><br><span class="line">     &#123;</span><br><span class="line">       test: <span class="regexp">/\.(png|svg|jpg|jpeg|gif)$/i</span>,</span><br><span class="line">       type: <span class="string">&#x27;asset/resource&#x27;</span>,</span><br><span class="line">     &#125;,</span><br><span class="line">     &#123;</span><br><span class="line">       test: <span class="regexp">/\.(woff|woff2|eot|ttf|otf)$/i</span>,</span><br><span class="line">       type: <span class="string">&#x27;asset/resource&#x27;</span>,</span><br><span class="line">     &#125;,</span><br><span class="line">    ],</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="加载数据json-csv-tsv-xml"><a href="#加载数据json-csv-tsv-xml" class="headerlink" title="加载数据json/csv/tsv/xml"></a>加载数据json/csv/tsv/xml</h2><p>由于JOSN文件格式是默认支持的，无需下载loaders。但是csv/tsv/xml需要下载csv-loader以及xml-loader。</p>
+<p>在import时注意json文件只支持export default默认导出。 </p>
+<p>在数据可视化的场景下，直接将数据作为构建时的资源，浏览器就可以直接访问解析后的数据，无需在构建完成后运行时再发送http请求。</p>
+<h1 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h1><p>loader是用来transform certain type of modules的；plugins用途更为广泛，涉及bundle optimization，asset management以及injection of environment variables。</p>
+<h2 id="plugins的实现原理"><a href="#plugins的实现原理" class="headerlink" title="plugins的实现原理"></a>plugins的实现原理</h2><p>webpack也是基于plugin system而建立的。webpack plugin本质上就是一个拥有apply方法的JavaScript对象。apply(compiler)表示这个apply方法是由webpack compiler执行的。</p>
+<h2 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h2><p>plugin需要使用npm安装，并使用require引用。</p>
+<p>在使用特定的plugin之前需要建立一个const指向require()，require的对象就是该plugin。在使用该plugin的时候，是在plugins array中使用new运算符，并传入特定的需求。</p>
+<p>为什么使用new运算符调用一个plugin？因为一个plugin并不是单一功能的，有可能在一个文件中为了各种需求需要多次使用该plugin，因此要使用new运算符在每一次创建的时候都生成一个实例。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>); <span class="comment">//installed via npm</span></span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>); <span class="comment">//to access built-in plugins</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;<span class="attr">template</span>: <span class="string">&#x27;./src/index.html&#x27;</span>&#125;)</span><br><span class="line">  ]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="html-webpack-plugin"><a href="#html-webpack-plugin" class="headerlink" title="html-webpack-plugin"></a>html-webpack-plugin</h2><p>为什么需要HtmlWebpackPlugin？这个plugin的作用是在webpack输出文件夹下依据规则，自动生成index.html，这个index.html还会依据输出的javascript bundle自动引用script，这样就无需手动添加html与引用script了。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> HtmlWebpackPlugin = <span class="built_in">require</span>(<span class="string">&#x27;html-webpack-plugin&#x27;</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   entry: &#123;</span><br><span class="line">     index: <span class="string">&#x27;./src/index.js&#x27;</span>,</span><br><span class="line">     print: <span class="string">&#x27;./src/print.js&#x27;</span>,</span><br><span class="line">   &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      title: <span class="string">&#x27;管理输出&#x27;</span>,</span><br><span class="line">    &#125;),</span><br><span class="line">  ],</span><br><span class="line">  output: &#123;</span><br><span class="line">     filename: <span class="string">&#x27;[name].bundle.js&#x27;</span>,</span><br><span class="line">      <span class="comment">// 生成的html会自动引用这些bundle</span></span><br><span class="line">     path: path.resolve(__dirname, <span class="string">&#x27;dist&#x27;</span>),</span><br><span class="line">  &#125;,</span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="clean-webpack-plugin"><a href="#clean-webpack-plugin" class="headerlink" title="clean-webpack-plugin"></a>clean-webpack-plugin</h2><p>默认每一次不同的配置文件产出在dist下的文件，除非文件名相同，否则是不会覆盖的。因此dist文件夹会相当混乱。clean-webpack-plugin的作用是在每次build前先清理dist文件夹，构建后dist中只会有生成且用得到的文件。</p>
+<h2 id="split-chunks-plugin"><a href="#split-chunks-plugin" class="headerlink" title="split-chunks-plugin"></a>split-chunks-plugin</h2><p>该插件用于代码分离，将公共的依赖模块提取到已有入口的chunk中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   optimization: &#123;</span><br><span class="line">     splitChunks: &#123;</span><br><span class="line">       chunks: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">     &#125;,</span><br><span class="line">   &#125;,</span><br><span class="line">  &#125;;</span><br></pre></td></tr></table></figure>
+<p>该插件自动移除依赖模块，并且依赖模块会被分离到单独的chunk。</p>
+<p>也可以使用该插件提取引导模版extracting boilerpate，即将第三方库，也就是node_modules中涉及的内容提取到单独的vendor chunk文件中，通过split-chunks-plugin的cacheGroups选项实现。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">optimization: &#123;</span><br><span class="line">    moduleIds: <span class="string">&#x27;deterministic&#x27;</span>,</span><br><span class="line">    <span class="comment">// 这是为了保证每一次build生成的依赖库的hashname都一样。</span></span><br><span class="line">    runtimeChunk: <span class="string">&#x27;single&#x27;</span>,</span><br><span class="line">    <span class="comment">// runtimeChunk: &quot;single&quot;会将Webpack在浏览器端运行时需要的代码单独抽离到一个文件</span></span><br><span class="line">    splitChunks: &#123;</span><br><span class="line">      cacheGroups: &#123;</span><br><span class="line">        vendor: &#123;</span><br><span class="line">          test: <span class="regexp">/[\\/]node_modules[\\/]/</span>,</span><br><span class="line">          name: <span class="string">&#x27;vendors&#x27;</span>,</span><br><span class="line">          chunks: <span class="string">&#x27;all&#x27;</span>,</span><br><span class="line">        &#125;,</span><br><span class="line">      &#125;,</span><br><span class="line">    &#125;,</span><br></pre></td></tr></table></figure>
+<p>这部分vedor的代码，很少会被修改，缓存在client端，既减少了想server获取资源的请求，也能保证依赖模块版本一致。</p>
+<p>参考<span class="exturl" data-url="aHR0cHM6Ly9tZWRpdW0uY29tL2l0c29rdG9tYWtlbWlzdGFrZXMvZGVlcC1pbi13ZWJwYWNrLWNhY2hpbmctNTAyYzc1ZDQwNTBh">深入Webpack快取机制<i class="fa fa-external-link-alt"></i></span></p>
+<p>但是要求每一次构建后，vendor hash都保持一致。如何让每一次的hash结果保持一致？影响hash结果的因素有哪些？</p>
+<p>第一是文件的内容，既然是node_moudles第三方库，内容应该是不会改变，因此vendors的hash名称也应当build前后一致。但是实际上并不是这样，这时候需要添加<code>moduleIds: &#39;deterministic&#39;</code>，为什么？由此引入第二个原因。</p>
+<p>但是还有第二个因素就是执行先后顺序，在webpack中执行先后顺序通过依赖图dependency graph来实现。在runtime.js中，记录者所有模module与块chun之间的关系，module id与chunk id默认情况下会在每一次build前后都可能发生变化，而固定module id可以让build前后</p>
+<h1 id="mode"><a href="#mode" class="headerlink" title="mode"></a>mode</h1><p>mode设定可以有<code>devlopment</code>，<code>production</code>，<code>none</code>。默认取值是production。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">&#x27;production&#x27;</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="开发环境下常用工具"><a href="#开发环境下常用工具" class="headerlink" title="开发环境下常用工具"></a>开发环境下常用工具</h2><h3 id="source-map"><a href="#source-map" class="headerlink" title="source-map"></a>source-map</h3><p>有多种形式，可以追踪出错的源码，涉及浏览器开发工具。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  mode: <span class="string">&#x27;development&#x27;</span>,</span><br><span class="line">  devtool: <span class="string">&#x27;inline-source-map&#x27;</span>,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="代码变化后自动编译"><a href="#代码变化后自动编译" class="headerlink" title="代码变化后自动编译"></a>代码变化后自动编译</h2><ul>
+<li>使用watch mode</li>
+</ul>
+<p>通过添加一个用于启动webpack watch mode的npm scripts实现，注意开发时如果不希望clean-webpack-plugin自动删除不使用的文件，可以配置clean-webpack-plugin的选项。</p>
+<ul>
+<li>使用webpack-dev-server</li>
+</ul>
+<p>提供一个简单的web server并实现live reloading。</p>
+<p>需要告知dev Server去哪里查找文件，在webpack.config.js中添加<code>devServer:&#123; contentBase: &#39;./dist&#39;&#125;</code>选项。默认会将dist目录下的文件serve到<code>localhost:8080</code>。</p>
+<p>添加一个用于启动devServer的npm script：<code>&quot;start&quot;: &quot;webpack serve --open&quot;</code></p>
+<ul>
+<li>使用webpack-dev-middleware</li>
+</ul>
+<p>Web pack-dev-server内部就是通过使用webpack-dev-middleware来实现的，直接设置webpack-dev-middleware可以更自定义，比如在哪个端口监听。</p>
+<p>需要同时使用express和webpack-dev-middleware，并在webpack.config.js的output字段添加<code>publicPath: &#39;/&#39;</code>，配置express的server脚本<code>server.js</code>会使用到publicPath。而<strong>webpack-dev-middleware的作用应该就是让server.js能够访问webpack.config.js的内容</strong>。</p>
+<p>server.js的配置如下，在完成server.js的配置后，需要把node server.js配置添加到npm scripts中。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpack = <span class="built_in">require</span>(<span class="string">&#x27;webpack&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> webpackDevMiddleware = <span class="built_in">require</span>(<span class="string">&#x27;webpack-dev-middleware&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"><span class="keyword">const</span> config = <span class="built_in">require</span>(<span class="string">&#x27;./webpack.config.js&#x27;</span>);</span><br><span class="line"><span class="keyword">const</span> compiler = webpack(config);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 告知 express 使用 webpack-dev-middleware，</span></span><br><span class="line"><span class="comment">// 以及将 webpack.config.js 配置文件作为基础配置。</span></span><br><span class="line">app.use(</span><br><span class="line">  webpackDevMiddleware(compiler, &#123;</span><br><span class="line">    publicPath: config.output.publicPath,</span><br><span class="line">  &#125;)</span><br><span class="line">);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将文件 serve 到 port 3000。</span></span><br><span class="line">app.listen(<span class="number">3000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">&#x27;Example app listening on port 3000!\n&#x27;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>而在vue3-demo3中的server.js又是这样的：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> express = <span class="built_in">require</span>(<span class="string">&quot;express&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> history = <span class="built_in">require</span>(<span class="string">&quot;connect-history-api-fallback&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> serveStatic = <span class="built_in">require</span>(<span class="string">&quot;serve-static&quot;</span>);</span><br><span class="line"><span class="keyword">const</span> enforce = <span class="built_in">require</span>(<span class="string">&quot;express-sslify&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> app = express();</span><br><span class="line"></span><br><span class="line">app.use(enforce.HTTPS(&#123; <span class="attr">trustProtoHeader</span>: <span class="literal">true</span> &#125;));</span><br><span class="line">app.use(serveStatic(__dirname + <span class="string">&quot;/dist&quot;</span>));</span><br><span class="line">app.use(history());</span><br><span class="line"></span><br><span class="line">app.listen(process.env.PORT || <span class="number">5000</span>);</span><br></pre></td></tr></table></figure>
+<p>不同之处在于不是通过webpack-dev-middleware来访问webpack.config.js，vue脚手架已经写死了配置，默认路径就是dist。</p>
+<h1 id="约定"><a href="#约定" class="headerlink" title="约定"></a>约定</h1><ul>
+<li>使用<code>require()</code>语法导入其他文件或者npm uitilites</li>
+<li>使用JavaScript control flow expression如?:</li>
+<li>为常用值设置const或者let变量</li>
+<li>为常用的配置建立函数并执行</li>
+</ul>
+<p>不要在一个文件中书写多个configuration，应当把整个项目的configuration写成多个文件multiple .config.js files。</p>
+<h1 id="webpack-module"><a href="#webpack-module" class="headerlink" title="webpack module"></a>webpack module</h1><h2 id="为什么需要模块化与去模块化"><a href="#为什么需要模块化与去模块化" class="headerlink" title="为什么需要模块化与去模块化"></a>为什么需要模块化与去模块化</h2><p>一方面，模块化便于JavaScript在服务器端便于开发，测试，查错。另一方面浏览器只能理解一整个JavaScript文件，因此又要在生产的时候去模块化，将符合模块化规范的代码转换成浏览器支持的代码。因此如browserify与webpack都是从入口模块开始把所有模块打包成一个在浏览器中运行的js文件的模块化工具。</p>
+<h2 id="module-chunk-bundle区分"><a href="#module-chunk-bundle区分" class="headerlink" title="module/chunk/bundle区分"></a>module/chunk/bundle区分</h2><p>webpack是一个模块打包机，一个项目中的任何单一文件，对于webpack而言都是模块。</p>
+<p>chunk是webpack打包过程中，一堆module的集合。一般来说一条entry对应一个chunk，也有异步加载模块与代码分割可以产生chunk。</p>
+<p>A Chunk is a unit of encapsulation <strong>for</strong> Modules. Chunks are “rendered” into bundles that get emitted when the build completes.</p>
+<p>bundle是webpack最终输出的一个或者多个打包文件，在命令行中运行webpack的输出asset的个数就是产生的bundle数。多数情况下，一个chunk产生一个bundle，但也有例外情况。比如在单个文件入口mai n.js以及不设置代码分割的情况下，设置source-map后，依然会产生<code>main.js</code>以及<code>main.js.map</code>两个bundle。</p>
+<p>参考<span class="exturl" data-url="aHR0cHM6Ly9qdWVqaW4uY24vcG9zdC82ODQ0OTAzODg5MzkzNjgwMzky">Webpack理解Chunk<i class="fa fa-external-link-alt"></i></span></p>
+<h2 id="支持模块化语法"><a href="#支持模块化语法" class="headerlink" title="支持模块化语法"></a>支持模块化语法</h2><p>在webpack中，可以使用多种语法来表明module之间的dependency。（按照产生先后顺序）</p>
+<ul>
+<li>Common JS <code>require()</code> </li>
+<li>AMD <code>define</code> and <code>require</code> </li>
+<li>ES2015 <code>import</code> </li>
+<li><code>@import</code> inside of a css/sass/less file 属于</li>
+<li>image url in a stylesheet <code>url(...)</code> or HTML file <code>&lt;img src=...&gt;</code></li>
+</ul>
+<blockquote>
+<p>这些为模块化服务的语法都是怎么产生的？演化路线CommonJS-&gt;AMD/CMD-&gt;ES6 Module。</p>
+<p>参考<span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xMTMwMDk0OTY=">前端科普系列-CommonJS：不是前端却革命了前端<i class="fa fa-external-link-alt"></i></span>。</p>
+</blockquote>
+<h3 id="CommonJS"><a href="#CommonJS" class="headerlink" title="CommonJS"></a>CommonJS</h3><p>Node.js的模块化是在CommonJS基础上实现的，CommonJS是以JavaScript在网页浏览器之外（服务器端backend）创建模块约定的一个项目。CommonJS约定了每个文件就是一个拥有自己作用域的模块。CommonJS规定了两个语法：<code>require</code>语法用于加载某个模块exports导出的值；<code>module</code>以对象代表当前模块，module.exports保存当前模块导出的接口或者变量。</p>
+<p>CommonJS用于服务器端同步加载模块，却不适合浏览器端，不可能每每通过require去发送网络请求，等待资源返回，要是资源一直不返回就阻塞了后面的代码。</p>
+<h3 id="AMD-CMD"><a href="#AMD-CMD" class="headerlink" title="AMD/CMD"></a>AMD/CMD</h3><p>因此就出现了为浏览器端服务的AMD(Asynchroneous Module Definition)，他实现了异步加载模块，利用require.js库。也有CMD(Common Module Definition)，利用sea.js库。</p>
+<h3 id="ES6-Module"><a href="#ES6-Module" class="headerlink" title="ES6 Module"></a>ES6 Module</h3><p>而后续出现的ES6 Module规范成为了浏览器端和服务器端的通用解法。主要有<code>export</code>和<code>import</code>两个命令。import内部的实现是使用了Promise的，因此也就实现了异步加载。</p>
+<p>由于import返回的是一个promise，因此import语句可放在在async function中，等到模块加载完成之后在执行函数内容，从而<strong>实现动态导入模块代码分离</strong>。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/webpack/" rel="tag"># webpack</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/04/heroku-app-deploy/" rel="prev" title="使用Heroku部署网站">
+      <i class="fa fa-chevron-left"></i> 使用Heroku部署网站
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/10/babel/" rel="next" title="babel基础">
+      babel基础 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81webpack"><span class="nav-number">1.</span> <span class="nav-text">为什么需要webpack</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#entry"><span class="nav-number">2.</span> <span class="nav-text">entry</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E7%BD%AEsingle-entry"><span class="nav-number">2.1.</span> <span class="nav-text">基础设置single entry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%9A%E5%85%A5%E5%8F%A3%E7%9A%84%E4%BB%A3%E7%A0%81%E5%88%86%E7%A6%BB"><span class="nav-number">2.2.</span> <span class="nav-text">多入口的代码分离</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%A5%E5%8F%A3%E4%BB%A3%E7%A0%81%E5%88%86%E7%A6%BB%E6%A8%A1%E5%9D%97%E9%87%8D%E5%A4%8D%E4%BB%A3%E7%A0%81%E4%B8%8E%E5%AE%9E%E4%BE%8B%E5%8C%96%E9%9A%90%E6%82%A3"><span class="nav-number">2.2.1.</span> <span class="nav-text">多入口代码分离模块重复代码与实例化隐患</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E5%85%A5%E5%8F%A3%E4%BB%A3%E7%A0%81%E5%88%86%E7%A6%BB%E9%87%8D%E5%A4%8D"><span class="nav-number">2.2.2.</span> <span class="nav-text">多入口代码分离重复</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#output"><span class="nav-number">3.</span> <span class="nav-text">output</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E8%AE%BE%E7%BD%AEsingle-entry-1"><span class="nav-number">3.1.</span> <span class="nav-text">基础设置single entry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#multiple-entry"><span class="nav-number">3.2.</span> <span class="nav-text">multiple entry</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">3.3.</span> <span class="nav-text">基础用法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#loaders-in-module-rules"><span class="nav-number">4.</span> <span class="nav-text">loaders in module.rules</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BDCSS"><span class="nav-number">4.1.</span> <span class="nav-text">加载CSS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#asset-resource%E5%8A%A0%E8%BD%BD%E5%9B%BE%E5%83%8F%E5%AD%97%E4%BD%93"><span class="nav-number">4.2.</span> <span class="nav-text">asset&#x2F;resource加载图像字体</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A0%E8%BD%BD%E6%95%B0%E6%8D%AEjson-csv-tsv-xml"><span class="nav-number">4.3.</span> <span class="nav-text">加载数据json&#x2F;csv&#x2F;tsv&#x2F;xml</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#plugins"><span class="nav-number">5.</span> <span class="nav-text">plugins</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#plugins%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="nav-number">5.1.</span> <span class="nav-text">plugins的实现原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8"><span class="nav-number">5.2.</span> <span class="nav-text">基础使用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#html-webpack-plugin"><span class="nav-number">5.3.</span> <span class="nav-text">html-webpack-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#clean-webpack-plugin"><span class="nav-number">5.4.</span> <span class="nav-text">clean-webpack-plugin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#split-chunks-plugin"><span class="nav-number">5.5.</span> <span class="nav-text">split-chunks-plugin</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mode"><span class="nav-number">6.</span> <span class="nav-text">mode</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E7%8E%AF%E5%A2%83%E4%B8%8B%E5%B8%B8%E7%94%A8%E5%B7%A5%E5%85%B7"><span class="nav-number">6.1.</span> <span class="nav-text">开发环境下常用工具</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#source-map"><span class="nav-number">6.1.1.</span> <span class="nav-text">source-map</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%8F%98%E5%8C%96%E5%90%8E%E8%87%AA%E5%8A%A8%E7%BC%96%E8%AF%91"><span class="nav-number">6.2.</span> <span class="nav-text">代码变化后自动编译</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BA%A6%E5%AE%9A"><span class="nav-number">7.</span> <span class="nav-text">约定</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#webpack-module"><span class="nav-number">8.</span> <span class="nav-text">webpack module</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%A8%A1%E5%9D%97%E5%8C%96%E4%B8%8E%E5%8E%BB%E6%A8%A1%E5%9D%97%E5%8C%96"><span class="nav-number">8.1.</span> <span class="nav-text">为什么需要模块化与去模块化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#module-chunk-bundle%E5%8C%BA%E5%88%86"><span class="nav-number">8.2.</span> <span class="nav-text">module&#x2F;chunk&#x2F;bundle区分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%94%AF%E6%8C%81%E6%A8%A1%E5%9D%97%E5%8C%96%E8%AF%AD%E6%B3%95"><span class="nav-number">8.3.</span> <span class="nav-text">支持模块化语法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CommonJS"><span class="nav-number">8.3.1.</span> <span class="nav-text">CommonJS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AMD-CMD"><span class="nav-number">8.3.2.</span> <span class="nav-text">AMD&#x2F;CMD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ES6-Module"><span class="nav-number">8.3.3.</span> <span class="nav-text">ES6 Module</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript in current and older browsers or environments.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="babel基础">
+<meta property="og:url" content="https://drunk99.xyz/2021/01/10/babel/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript in current and older browsers or environments.">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2021-01-10T11:49:15.000Z">
+<meta property="article:modified_time" content="2021-01-10T13:09:51.451Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="前端">
+<meta property="article:tag" content="babel">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/01/10/babel/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>babel基础 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/01/10/babel/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          babel基础
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2021-01-10 19:49:15 / 修改时间：21:09:51" itemprop="dateCreated datePublished" datetime="2021-01-10T19:49:15+08:00">2021-01-10</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/babel/" itemprop="url" rel="index"><span itemprop="name">babel</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>3.1k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+            <div class="post-description">Babel is a toolchain that is mainly used to convert ECMAScript 2015+ code into a backwards compatible version of JavaScript in current and older browsers or environments.</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>参考<span class="exturl" data-url="aHR0cHM6Ly96aHVhbmxhbi56aGlodS5jb20vcC8xMjkwODkxNTY=">前端科普系列-Babel：把 ES6 送上天的通天塔<i class="fa fa-external-link-alt"></i></span></p>
+<p>Babel是Javascript编译器。可以针对不同类型/版本的浏览器对ECMAScript的支持程度，把原本不支持的代码转化为浏览器全部支持的代码；也就是<strong>Babel的转译基于浏览器环境</strong>。</p>
+<h1 id="依赖包安装"><a href="#依赖包安装" class="headerlink" title="依赖包安装"></a>依赖包安装</h1><p>使用babel需要安装以下依赖包。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @babel/core @babel/cli @babel/preset-env</span><br></pre></td></tr></table></figure>
+<p>@babel/preset-env是预置的常用的转换插件的集合，包含了大部分ES6语法转换常见，如果编译过程中遇到报错，也就是源码使用了不在@babel/preset-env的代码，需要在plugins中手动增加。</p>
+<h1 id="定义脚本"><a href="#定义脚本" class="headerlink" title="定义脚本"></a>定义脚本</h1><p>在npm scripts字段中加入babel脚本或者直接在命令行输入：<code>babel src --out-dir dist</code>。改名了会在工程根目录下的dist文件夹生成编译后的输出文件。</p>
+<h1 id="babel-config-js设置"><a href="#babel-config-js设置" class="headerlink" title="babel.config.js设置"></a>babel.config.js设置</h1><p><strong>在项目根目录添加<code>babel.config.js</code>，主要由presets和plugins两个部分组成。</strong>presets是告诉babel以何种配置编译，比如<strong>debug输出的结果要有babel的工作日志，target转译环境是什么</strong>等；plugins是真正进行语法转换，完成编译的插件。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> presets = [</span><br><span class="line">  [</span><br><span class="line">    <span class="string">&#x27;@babel/env&#x27;</span>,</span><br><span class="line">    &#123;</span><br><span class="line">      debug: <span class="literal">true</span>,</span><br><span class="line">      <span class="comment">// 打印babel工作日志，方便查看转换了哪些语法</span></span><br><span class="line">      targets: &#123;</span><br><span class="line">        chrome: <span class="string">&#x27;58&#x27;</span></span><br><span class="line">        <span class="comment">// targets参数让babel基于环境做转译，浏览器支持的ES6语法就不转译</span></span><br><span class="line">        <span class="comment">// 如果没有target参数，会默认转译所有的ES6语法</span></span><br><span class="line">    &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">]</span><br><span class="line"><span class="keyword">const</span> plugins = []</span><br><span class="line"><span class="built_in">module</span>.exports = &#123; presets, plugins &#125;</span><br></pre></td></tr></table></figure>
+<h2 id="syntax-amp-built-in"><a href="#syntax-amp-built-in" class="headerlink" title="syntax &amp; built-in"></a>syntax &amp; built-in</h2><p>编译的过程经历parser解析源文件，transform转换，generator生成新文件大致三个步骤。babel通过babel.config.js中设置的plugins插件来决定如何进行转换，每一个语法都有一个对应的插件，插件命名格式为<code>@babel/plugin-xxx</code>。</p>
+<p>Babel将ES6标准分为Syntax以及built-in两种类型。</p>
+<p>Syntax就是语法，const，=&gt;，let，class，import等。对于 syntax 类型的语法在转译的过程会在当前模块中注入类似 <code>_classCallCheck</code> 和 <code>_defineProperty</code> 的 helper 函数来实现兼容。（通过查看dist下编译结果就可以知道）</p>
+<p>Built-in就是可以通过改写覆盖的语法（感觉更像是方法），例如includes，promise。对于 built-in 类型的语法通过 <code>require(&quot;core-js/modules/xxxx&quot;)</code> polyfill 的方式来兼容。（通过查看dist下编译结果就可以知道）</p>
+<h2 id="使用core-js处理built-in"><a href="#使用core-js处理built-in" class="headerlink" title="使用core-js处理built-in"></a>使用core-js处理built-in</h2><p>默认babel值转译syntax类型，built-in类型的处理有两种方法：1. @babel/polyfill覆盖ES6中的built-in。2. 使用core-js。</p>
+<p><code>npm install --save core-js</code>注意要用—save方式安装，因为core-js中（需要被使用到的部分或全体，看配置是usage还是entry）是要被注入到源代码中去的，以提供执行环境。</p>
+<p><strong>配置 useBuiltIns</strong><br><strong>在@babel/preset-env中通过useBuiltIns参数来控制 built-in的注入。它可以设置为 ‘entry’、’usage’ 和 <code>false</code> 。默认值为 <code>false</code>，不注入垫片polyfill。</strong>在设置built-in为entry或usage的时候，还要制定corejs版本，否则日志会输出井盖</p>
+<p>设置为’entry’时，在整个项目入口<code>import core-js</code>即可。但是babel会把目标环境不支持的所有built-in都注入，无论是否用到，增加代码浪费空间。</p>
+<p><strong>设置为’usage’时，无需在项目入口处导入，且按需注入源码。</strong></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">  <span class="keyword">const</span> presets = [</span><br><span class="line">  [</span><br><span class="line">    <span class="string">&#x27;@babel/env&#x27;</span>,</span><br><span class="line">    &#123;</span><br><span class="line">      debug: <span class="literal">true</span>,</span><br><span class="line">      useBuiltIns: <span class="string">&#x27;usage&#x27;</span>,</span><br><span class="line">      corejs: <span class="number">3</span>,</span><br><span class="line">      targets: &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h2 id="babel-plugin-transform-runtime"><a href="#babel-plugin-transform-runtime" class="headerlink" title="@babel/plugin-transform-runtime"></a>@babel/plugin-transform-runtime</h2><h3 id="优化syntax"><a href="#优化syntax" class="headerlink" title="优化syntax"></a>优化syntax</h3><p>前面提到babel在编译过程中通过注入helper函数实现syntax语法转换。当项目中的每个模块都被注入重复的helper函数，代码量会增大。因此需要用@babel/plugin-transform-runtime复用helper函数，缩小代码体积；同时避免全局污染。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm install --save-dev @babel/plugin-transform-runtime</span><br><span class="line">npm install --save @babel/runtime</span><br></pre></td></tr></table></figure>
+<p>接着在babel.config.js中配置：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> plugins = [</span><br><span class="line"><span class="string">&#x27;@babel/plugin-proposal-class-properties&#x27;</span>,</span><br><span class="line"><span class="comment">// 这个plugin支持的preset-env中没有的语法转换</span></span><br><span class="line">[</span><br><span class="line"><span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span></span><br><span class="line"><span class="comment">// 开启@babel/plugin-transform-runtime优化syntax</span></span><br><span class="line"><span class="comment">// 编译后之前的helper函数会变成require的形式</span></span><br><span class="line">]</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+<h3 id="built-in全局污染的解决"><a href="#built-in全局污染的解决" class="headerlink" title="built-in全局污染的解决"></a>built-in全局污染的解决</h3><p>polyfill的运作方式是覆盖/修改原来require的模块，也就是对require的模块进行修改，直接修改原型，造成全局污染。</p>
+<p>为了避免这个问题，只需要配置 @babel/plugin-transform-runtime 的参数 corejs。该参数默认为 false，可以设置为 2 或者 3，分别对应 @babel/runtime-corejs2 和 @babel/runtime-corejs3。</p>
+<p><strong>不再需要使用core-js，以及@babel/preset-env 的 useBuiltIns 和 corejs 的配置。</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">npm uninstall @babel/runtime</span><br><span class="line">npm install --save @babel/runtime-corejs3</span><br></pre></td></tr></table></figure>
+<p>Babel.config.js配置如下，</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> plugins = [</span><br><span class="line">    <span class="string">&#x27;@babel/plugin-proposal-class-properties&#x27;</span>,</span><br><span class="line">    [</span><br><span class="line">      <span class="string">&#x27;@babel/plugin-transform-runtime&#x27;</span>,</span><br><span class="line">      &#123;</span><br><span class="line">        corejs: <span class="number">3</span></span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+<p>但是不支持targets设置，也就是无法按需加载。</p>
+<blockquote>
+<p>截至目前为止，对于 built-in 类型的语法的 polyfill，一共有三种方式:</p>
+<ol>
+<li>使用 @babel/preset-env ，useBuiltIns 设置为 ‘entry’</li>
+<li>使用 @babel/preset-env ，useBuiltIns 设置为 ‘usage’</li>
+<li>使用 @babel/plugin-transform-runtime</li>
+</ol>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%89%8D%E7%AB%AF/" rel="tag"># 前端</a>
+              <a href="/tags/babel/" rel="tag"># babel</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/01/08/webpack/" rel="prev" title="Webpack笔记">
+      <i class="fa fa-chevron-left"></i> Webpack笔记
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/01/10/eslint/" rel="next" title="eslint与prettier协同工作">
+      eslint与prettier协同工作 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96%E5%8C%85%E5%AE%89%E8%A3%85"><span class="nav-number">1.</span> <span class="nav-text">依赖包安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%84%9A%E6%9C%AC"><span class="nav-number">2.</span> <span class="nav-text">定义脚本</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#babel-config-js%E8%AE%BE%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">babel.config.js设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#syntax-amp-built-in"><span class="nav-number">3.1.</span> <span class="nav-text">syntax &amp; built-in</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8core-js%E5%A4%84%E7%90%86built-in"><span class="nav-number">3.2.</span> <span class="nav-text">使用core-js处理built-in</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#babel-plugin-transform-runtime"><span class="nav-number">3.3.</span> <span class="nav-text">@babel&#x2F;plugin-transform-runtime</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BC%98%E5%8C%96syntax"><span class="nav-number">3.3.1.</span> <span class="nav-text">优化syntax</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#built-in%E5%85%A8%E5%B1%80%E6%B1%A1%E6%9F%93%E7%9A%84%E8%A7%A3%E5%86%B3"><span class="nav-number">3.3.2.</span> <span class="nav-text">built-in全局污染的解决</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.2.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <meta http-equiv="Cache-Control" content="no-transform">
+  <meta http-equiv="Cache-Control" content="no-siteapp">
+  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="主要介绍Transformer的架构，以及作为优化的Attention如何在Transformer中起作用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Transformer与Attention原理">
+<meta property="og:url" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/index.html">
+<meta property="og:site_name" content="来个抹茶可颂">
+<meta property="og:description" content="主要介绍Transformer的架构，以及作为优化的Attention如何在Transformer中起作用。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312095054825.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312100003027.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312101647082.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312100108330.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312100833992.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312101001794.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312102103142.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312102901562.png">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/transformer_decoding_1.gif">
+<meta property="og:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/transformer_decoding_2.gif">
+<meta property="article:published_time" content="2021-03-11T07:01:26.000Z">
+<meta property="article:modified_time" content="2021-03-29T07:25:03.869Z">
+<meta property="article:author" content="徐徐">
+<meta property="article:tag" content="ML">
+<meta property="article:tag" content="DL">
+<meta property="article:tag" content="NLP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://drunk99.xyz/2021/03/11/illustrated-transformer/image-20210312095054825.png">
+
+<link rel="canonical" href="https://drunk99.xyz/2021/03/11/illustrated-transformer/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Transformer与Attention原理 | 来个抹茶可颂</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">来个抹茶可颂</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2021/03/11/illustrated-transformer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="徐徐">
+      <meta itemprop="description" content="记录，分享。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="来个抹茶可颂">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Transformer与Attention原理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2021-03-11 15:01:26" itemprop="dateCreated datePublished" datetime="2021-03-11T15:01:26+08:00">2021-03-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2021-03-29 15:25:03" itemprop="dateModified" datetime="2021-03-29T15:25:03+08:00">2021-03-29</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/NLP/" itemprop="url" rel="index"><span itemprop="name">NLP</span></a>
+                </span>
+            </span>
+
+          <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>4.2k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+            <div class="post-description">主要介绍Transformer的架构，以及作为优化的Attention如何在Transformer中起作用。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="什么是transformer？"><a href="#什么是transformer？" class="headerlink" title="什么是transformer？"></a>什么是transformer？</h1><p>Transformer是一个使用了注意力机制Attention使训练速度提升的一个模型。Transformer在谷歌发布的Attention is All You Need一篇文章中被提出，并在TensorFlow的Tensor2Tensor库中实现。Transformer最大的特点就是对于一个输入句子，它可以做到并行处理句子中的每一个词。</p>
+<p>把Transformer看作一个黑盒子，他的输入是一句话，输出也是一句话；在这个黑盒子在拆分一下，黑盒内部有Encoders（由许多Encoder顺次连接而成）和Decoders（由许多Decoder顺次连接而成）两部分组成，Input-&gt;Encoders-&gt;Decoders-&gt;Output。</p>
+<p>Encoders中每一个Encoder都在架构上类似，但是权重上不同。每一个Encoder的输入首先进入Self-Attention，再进入Feed Forward Neural Network层。Self-Attention的帮助Encoder在encode某个词语的时候考虑这个句子中的其他词语。Feed Forward Neural Network前馈神经网络由一个输入层，一个浅层网络或多个隐藏层，以及一个输出层构成。每一层与下一层连接，可以有不连接的神经元，如果全部连接就是全连接网络了。例如卷积神经网络CNN就是典型的深度前馈神经网络。</p>
+<p>Decoders中每一个Decoder都在架构上类似，Decoder和Encoder的区别在于，在Decoder的self-Attention层与Feed Forward层之间有一个Encoder-Decoder Attention，这一层attention用于帮助decoder关注input中的相关部分。</p>
+<p>接下来对一个训练好的Transformer模型的工作流程进行讲解。</p>
+<h1 id="准备工作：什么是word2vec"><a href="#准备工作：什么是word2vec" class="headerlink" title="准备工作：什么是word2vec"></a>准备工作：什么是word2vec</h1><p>word2vec又叫词嵌入，适用于把一个词word变成一个向量vector的算法。每一个词都会转变成一个维度为i的向量，i是一个可以设定的参数，通常来说我们会把i设定为训练数据集中最长的句子。</p>
+<p>word2vec会在什么时候派上用场呢？input不会直接就输入到encoder中去，在那之前会进行word2vec，第一个encoder的输入就是词嵌入后维度为i的向量，此后的每一个encoder都接受上一个encoder的输入。</p>
+<p>input中每一个词不是一个一个的进入encoder的，而是一起进入的，虽然在self-attention的时候每一个词的处理是有依赖的，但在feed forward的时候词与词的依赖是不存在的，因此在前馈的部分可以体现transformer并行处理的特征。</p>
+<h1 id="Encoders详解"><a href="#Encoders详解" class="headerlink" title="Encoders详解"></a>Encoders详解</h1><h2 id="Encoder架构：什么是self-attention"><a href="#Encoder架构：什么是self-attention" class="headerlink" title="Encoder架构：什么是self-attention"></a>Encoder架构：什么是self-attention</h2><p>一个句子是会有上下文的，比如“狮子不会吃草，因为它是食肉动物”这里的它指代的是什么，对于人来说这个很好理解，对于代码来说这很难。我们希望模型在处理“它”的时候，将“它”和上文的“狮子”联系起来，这就是self-attention的作用，它会让模型在encoding一个词汇的时候更好的考虑语境。</p>
+<p>那么如何对input计算self-attention呢？运用的本质是还是矩阵运算。</p>
+<h3 id="基础：word-level-self-attention"><a href="#基础：word-level-self-attention" class="headerlink" title="基础：word-level self-attention"></a>基础：word-level self-attention</h3><p>接下来以word level查看对于某一个词的self-attention如何计算。</p>
+<p>第一步，由input embedding vector与三个矩阵$W^Q, W^K, W^V$分别相乘获得a Query vector，a Key vector，a Value vector。三个矩阵$W^Q, W^K, W^V$是模型训练过程中训练获得的，用于将input embedding vector投影为其他的向量。新获得的三种vector维度比input embedding vector小很多，这样做是为了降低每一个attention的运算量，从而让所有attention的运算量不至于过于大。</p>
+<p>第二步，计算每一个词与其他词之间的score，所获的score的高低决定了当模型在encode某一个词$q_i$的时候，句子中的其他词$k_i$的点积决定有多大的重要性要考虑。</p>
+<p>第三步，把获得的score都除以根号下key vectors的dimension，这样做是为了获得更稳定的梯度。</p>
+<p>第四步，将结果传入softmax，是结果全为正且所有结果相加为1。This softmax score determines how much each word will be expressed at this position.</p>
+<p>第五步，将value vector与softmax score的结果相乘，这一步是为了筛选出值得关注的单词并过滤掉没什么价值的单词。相当于每个value vector乘以某个权重。</p>
+<p>第六步，将第五步中的weighted value vectors相加，这个结果就是the output of the self-attention layer at this position(for this word)。这一结果会传递到feed-forward neural network中去。</p>
+<h3 id="矩阵运算：matrix-calculation-self-attention"><a href="#矩阵运算：matrix-calculation-self-attention" class="headerlink" title="矩阵运算：matrix calculation self-attention"></a>矩阵运算：matrix calculation self-attention</h3><p>我们在上一个word-level中以一个单词为基准去计算，如果多个单词的embedding被pack为一个矩阵$X$，那么计算整个句子中的单词的self-attention就很方便。</p>
+<script type="math/tex; mode=display">
+X \times W^Q = Q \\
+X \times W^K = K \\
+X \times W^V = V \\
+Attention(Q, K, V) = softmax(\frac{QK^T}{\sqrt{d_k}})\cdot V\\</script><p>输入矩阵$X$的每一行vector都对应输入句子中的每一个单词，将输入矩阵与权重矩阵$W^Q, W^K, W^V$分别相乘就可以获得$Q, K, V$。这就是Attention的数学公式中的几个量。<br><img src="/2021/03/11/illustrated-transformer/image-20210312095054825.png" alt="Query-Key-Value-relationship" style="zoom:30%;"></p>
+<h3 id="改良：muti-headed-attention"><a href="#改良：muti-headed-attention" class="headerlink" title="改良：muti-headed attention"></a>改良：muti-headed attention</h3><p>muti-headed attention是self-attention的改良。在muti-headed的情况下，可以存在多个随机初始化的Query/Key/Value weight matrices，例如在Transformer中就是用了8个attention head。这些矩阵在训练后，可以用来把我们的embedding input vector映射到多个子空间——project the input embeddings (or vectors from lower encoders/decoders) into a different representation subspace。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312100003027.png" alt="multi-attention-illustration" style="zoom:30%;"></p>
+<p>对于”The animal didn’t cross the street because it was too tried”这句话，特定位置的某个单词如it，在每个字空间中，被认为应当focus on的单词都不一样。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312101647082.png" alt="multi-head-visualization" style="zoom:30%;"></p>
+<p>按照这样的方式重复多次Q，K，V的计算，可以获得8个Attention head。每一个Z我们都要输入的前馈神经网络去，但是问题在于前馈神经网络只希望获得唯一一个矩阵来代表每一个词。因此我们需要尽可能利用这八个矩阵，并压缩为一个。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312100108330.png" alt="why-multi-headed-to-one-head" style="zoom:50%;"></p>
+<p>怎么压缩？首先，把所有attention head按顺序拼接起来，注意每一行一个单词，总共就两行，所以拼接过程中总有第一个维度是不能变的。其次，把拼接后的attention heads与一个与模型一起训练的权重矩阵$W^O$相乘就能获得能够输入到FFNN去的Z matrix。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312100833992.png" alt="how-multi-headed-to-one-head" style="zoom:30%;"></p>
+<p>可以看到这里把muti-head的多个Z的维度又转变了一下。</p>
+<h3 id="总结multi-headed-attention过程"><a href="#总结multi-headed-attention过程" class="headerlink" title="总结multi-headed attention过程"></a>总结multi-headed attention过程</h3><p><img src="/2021/03/11/illustrated-transformer/image-20210312101001794.png" alt="multi-headed-attention-conclusion" style="zoom:50%;"></p>
+<h2 id="细节1：如何确定语句序列"><a href="#细节1：如何确定语句序列" class="headerlink" title="细节1：如何确定语句序列"></a>细节1：如何确定语句序列</h2><p>由于一句话是一个单词的有序排列，我们知道transformer是把每个单词并行输入到FFNN去的，那怎么表示某个单词在句中的位置，或者说怎么判断两个单词在句子中的距离？方法是在输入的单词的embeddings的基础上再加上一个positional encoding。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312102103142.png" alt="word-positional-encoding" style="zoom:50%;"></p>
+<h2 id="细节2：对每层结果归一化"><a href="#细节2：对每层结果归一化" class="headerlink" title="细节2：对每层结果归一化"></a>细节2：对每层结果归一化</h2><p>在Encoder中的每一个self-attention层与ffnn层之后都会有一个Add&amp;Normalize的过程，就是将X与Z相加后使用Layer Normalization归一化。</p>
+<p><img src="/2021/03/11/illustrated-transformer/image-20210312102901562.png" alt="layer-normalization" style="zoom:30%;"></p>
+<h1 id="Decoders详解"><a href="#Decoders详解" class="headerlink" title="Decoders详解"></a>Decoders详解</h1><h2 id="encoders与decoders如何协同"><a href="#encoders与decoders如何协同" class="headerlink" title="encoders与decoders如何协同"></a>encoders与decoders如何协同</h2><p>Encoders的最后一层输出的结果会被转化为一组attention vectors K and V，这些会在decoder的encoder-decoder attention layer中被用来帮助decoder关注序列中的正确位置。</p>
+<p>decoder的encoder-decoder attention layer的运作机制就和muti-headed self-attention类似，只不过他的K和V从encoder来，而Q从它下面的layer获得。</p>
+<p><img src="/2021/03/11/illustrated-transformer/transformer_decoding_1.gif" alt="transformer_decoding_1" style="zoom:30%;"></p>
+<p>在最后一层Decoder输出了一个单词之后，这个单词又会作为输入进入到第一层Decoder。</p>
+<p><img src="/2021/03/11/illustrated-transformer/transformer_decoding_2.gif" alt="transformer_decoding_2" style="zoom:30%;"></p>
+<h2 id="self-attention的区别"><a href="#self-attention的区别" class="headerlink" title="self-attention的区别"></a>self-attention的区别</h2><p>与Encoder中的self-attention不同的是，decoder中的self-attention只允许检查到已经输出的previous output的位置，对于未来的输出的位置将他们设置为-inf进行mask。</p>
+<h1 id="结束工作：Linear-softmax"><a href="#结束工作：Linear-softmax" class="headerlink" title="结束工作：Linear+softmax"></a>结束工作：Linear+softmax</h1><p>decoder的输出就是a vector of floats，如何将这些向量转变为word，是Linear Layer和Softmax Layer的工作。</p>
+<p>Linear Layer是一个简单的全连接网络fully connected neural network。它将decoder输出的vector投影到一个十分巨大的向量，名为logits vector。如果我们的模型经过训练有1w个不同的词汇量，那么logits vector就会是1w维度那么大，每一个维度的数值都对应了词汇量的每一个单词。</p>
+<p>Softmax的工作就是把logits vector的数值转换成对应的概率(all positive, all add up to 1.0)，最大概率的维度会被选中。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><span class="exturl" data-url="aHR0cHM6Ly9qYWxhbW1hci5naXRodWIuaW8vaWxsdXN0cmF0ZWQtdHJhbnNmb3JtZXIv">The Illustrated Transformer<i class="fa fa-external-link-alt"></i></span></p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/ML/" rel="tag"># ML</a>
+              <a href="/tags/DL/" rel="tag"># DL</a>
+              <a href="/tags/NLP/" rel="tag"># NLP</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2021/03/08/mar-films/" rel="prev" title="三月观影记录">
+      <i class="fa fa-chevron-left"></i> 三月观影记录
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2021/03/13/qcloud-use/" rel="next" title="腾讯云使用踩坑记录">
+      腾讯云使用踩坑记录 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFtransformer%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">什么是transformer？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AFword2vec"><span class="nav-number">2.</span> <span class="nav-text">准备工作：什么是word2vec</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Encoders%E8%AF%A6%E8%A7%A3"><span class="nav-number">3.</span> <span class="nav-text">Encoders详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Encoder%E6%9E%B6%E6%9E%84%EF%BC%9A%E4%BB%80%E4%B9%88%E6%98%AFself-attention"><span class="nav-number">3.1.</span> <span class="nav-text">Encoder架构：什么是self-attention</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%EF%BC%9Aword-level-self-attention"><span class="nav-number">3.1.1.</span> <span class="nav-text">基础：word-level self-attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9F%A9%E9%98%B5%E8%BF%90%E7%AE%97%EF%BC%9Amatrix-calculation-self-attention"><span class="nav-number">3.1.2.</span> <span class="nav-text">矩阵运算：matrix calculation self-attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%94%B9%E8%89%AF%EF%BC%9Amuti-headed-attention"><span class="nav-number">3.1.3.</span> <span class="nav-text">改良：muti-headed attention</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93multi-headed-attention%E8%BF%87%E7%A8%8B"><span class="nav-number">3.1.4.</span> <span class="nav-text">总结multi-headed attention过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%86%E8%8A%821%EF%BC%9A%E5%A6%82%E4%BD%95%E7%A1%AE%E5%AE%9A%E8%AF%AD%E5%8F%A5%E5%BA%8F%E5%88%97"><span class="nav-number">3.2.</span> <span class="nav-text">细节1：如何确定语句序列</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%86%E8%8A%822%EF%BC%9A%E5%AF%B9%E6%AF%8F%E5%B1%82%E7%BB%93%E6%9E%9C%E5%BD%92%E4%B8%80%E5%8C%96"><span class="nav-number">3.3.</span> <span class="nav-text">细节2：对每层结果归一化</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Decoders%E8%AF%A6%E8%A7%A3"><span class="nav-number">4.</span> <span class="nav-text">Decoders详解</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#encoders%E4%B8%8Edecoders%E5%A6%82%E4%BD%95%E5%8D%8F%E5%90%8C"><span class="nav-number">4.1.</span> <span class="nav-text">encoders与decoders如何协同</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#self-attention%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">4.2.</span> <span class="nav-text">self-attention的区别</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9D%9F%E5%B7%A5%E4%BD%9C%EF%BC%9ALinear-softmax"><span class="nav-number">5.</span> <span class="nav-text">结束工作：Linear+softmax</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">6.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">徐徐</p>
+  <div class="site-description" itemprop="description">记录，分享。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">94</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">22</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">120</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
+      </span>
+      <span class="links-of-author-item">
+        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2020 – 
+  <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">徐徐</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">350k</span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">10:36</span>
+</div>
+  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+  <script>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
