@@ -210,11 +210,11 @@
     <category term="Python" scheme="https://drunk99.xyz/categories/Python/"/>
     
     
+    <category term="Python" scheme="https://drunk99.xyz/tags/Python/"/>
+    
     <category term="django" scheme="https://drunk99.xyz/tags/django/"/>
     
     <category term="Web" scheme="https://drunk99.xyz/tags/Web/"/>
-    
-    <category term="Python" scheme="https://drunk99.xyz/tags/Python/"/>
     
   </entry>
   
@@ -457,7 +457,7 @@
     <link href="https://drunk99.xyz/2020/12/28/virtual-dom/"/>
     <id>https://drunk99.xyz/2020/12/28/virtual-dom/</id>
     <published>2020-12-28T03:40:52.000Z</published>
-    <updated>2020-12-28T03:52:49.726Z</updated>
+    <updated>2021-04-01T14:47:00.619Z</updated>
     
     <content type="html"><![CDATA[<h1 id="参阅"><a href="#参阅" class="headerlink" title="参阅"></a>参阅</h1><p><a class="link" href="https://v3.vuejs.org/guide/optimizations.html#virtual-dom">Vue3官方文档对此的解释<i class="fas fa-external-link-alt"></i></a></p><p><a class="link" href="https://codepen.io/sdras/pen/RwwQapa">官方文档中动画演示源代码，用于看解释<i class="fas fa-external-link-alt"></i></a></p><p><a class="link" href="https://www.youtube.com/watch?v=e-E0UB-YDRk&amp;ab_channel=Bitfumes">Bitfumes Vue3教程中的Vue Virtual DOM解释<i class="fas fa-external-link-alt"></i></a></p><h1 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h1><p>虚拟DOM是浏览器DOM的一份JavaScript复制。虚拟DOM是一个轻量级的JavaScript对象。</p><p>当用JavaScript去update html DOM的时候，这个操作十分expensive，但是用JavaScript对JavaScript DOM去update相对cheap。</p><p>找出每一个DOM节点并更新是一个十分缓慢的过程，因此不如在虚拟DOM中把所有要更新的DOM节点都找出来，然后vue去比较虚拟DOM和浏览器DOM之间的区别，然后batch calls to re-render/一次完成所有节点更新。</p>]]></content>
     
