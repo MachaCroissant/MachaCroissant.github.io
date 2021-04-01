@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="记录，分享。">
+    <meta name="author" content="徐徐">
+    
+    <title>
+        
+            利用Gunicorn和Nginx在服务器上部署一个Flask API |
+        
+        来个抹茶可颂
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+
+    
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                来个抹茶可颂
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">利用Gunicorn和Nginx在服务器上部署一个Flask API</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/tuotuo.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">徐徐</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-03-29 15:41:47
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E5%BF%85%E5%A4%87%E6%8A%80%E8%83%BD/">必备技能</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/API/">API</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/server/">server</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Gunicorn/">Gunicorn</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/Nginx/">Nginx</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/flask/">flask</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+
+    
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>10 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>在过去，我们部署一个应用的时候，几乎总是要分布在多台机器的。比如，4台HTTP服务器把动态请求分发到两台Application服务器上，并且它们都访问一个数据库服务器。但是随着机器的能力在增强，而互联网应用的覆盖面从业务逻辑极其复杂的银行业电信业到了送盒饭选泡面的小行业，<strong>越来越多的Application服务器和Web服务器合体了</strong>（以django圈子举例，有httpd+mod_wsgi或者Nginx+mod_uwsgi）。而且很多时候这种<strong>小应用的数据库也host在同一台机器</strong>上。</p>
+<h1 id="Nginx是什么"><a href="#Nginx是什么" class="headerlink" title="Nginx是什么"></a>Nginx是什么</h1><p>Nginx是一个处理用户请求、并返回响应的HTTP服务器。</p>
+<p>在网络不稳定的情况下，从客户端发来的请求可以被Nginx缓存，一并发送给Gunicorn。</p>
+<p>在存在多个应用服务器（就是具体处理业务、生成相应内容的服务器，比如Django框架、Flask框架）的情况下，Nginx的反向代理功能让用户客户端不必知道他们真正访问的是哪一个服务器。</p>
+<h1 id="Gunicorn是什么"><a href="#Gunicorn是什么" class="headerlink" title="Gunicorn是什么"></a>Gunicorn是什么</h1><p>Gunicorn is a Python Web Server Gateway Interface(WSGI) HTTP server.</p>
+<blockquote>
+<p>WSGI是什么？它的主要工作是什么？<a class="link" target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000003069785">WSGI简介<i class="fas fa-external-link-alt"></i></a>。</p>
+<p>WSGI是一个规范，定义了Web服务器如何与Python应用程序进行交互，使得使用Python写的Web应用程序可以和Web服务器对接起来。</p>
+<p>WSGI的主要目的有两个：</p>
+<ol>
+<li>让Web服务器知道如何调用Python应用程序，并且把用户的请求告诉应用程序。</li>
+<li>让Python应用程序知道用户的具体请求是什么，以及如何返回结果给Web服务器。</li>
+</ol>
+</blockquote>
+<p>Gunicorn不需要直接处理用户客户端发送过来的请求。Gunicorn首先接受来自Nginx的动态请求；Gunicorn调用应用服务器中的逻辑生成相应内容，返回给Nginx；Nginx把数据再返回给用户。</p>
+<h1 id="三者关系"><a href="#三者关系" class="headerlink" title="三者关系"></a>三者关系</h1><p>借用一个<a class="link" target="_blank" rel="noopener" href="https://serverfault.com/a/887845">简单又形象的回答<i class="fas fa-external-link-alt"></i></a>。</p>
+<p>Nginx面向来自外部的请求，并且Nginx持有当前服务器文件系统中的静态资源文件。然而，Nginx不会直接和Python应用程序有数据交互，此二者之间要有一个桥梁，这个桥梁就是Gunicorn。Gunicorn运行Python应用程序，将来自外部的请求交付Python应用程序处理，并返回数据。</p>
+<p>那么Gunicorn怎么完成这些任务呢？他会生成一个Unix Scoket，利用WSGI协议把Python应用程序得出的响应数据传递给Nginx。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The outside world &lt;-&gt; Nginx &lt;-&gt; The socket &lt;-&gt; Gunicorn</span><br></pre></td></tr></table></figure>
+<h1 id="部署步骤"><a href="#部署步骤" class="headerlink" title="部署步骤"></a>部署步骤</h1><p>先确定服务器系统上安装了必要的依赖内容，比如合适版本的gcc/g++，最新的动态库，git，Nginx，Python版本管理工具与虚拟环境管理工具（如pyenv、pipenv、virtualenv等自行选择）。</p>
+<p>现在本地PyCharm的虚拟环境中完成代码开发，虚拟环境导出必要的库到requirements.txt，使用SFTP将代码部分上传到服务器，在服务器上创建虚拟环境并进入，安装requirements.txt下的依赖。</p>
+<h2 id="Gunicorn配置"><a href="#Gunicorn配置" class="headerlink" title="Gunicorn配置"></a>Gunicorn配置</h2><p>进入虚拟环境，在项目根目录下，安装gunicorn，<code>pipenv install gunicorn</code>。</p>
+<p>在整个项目的启动文件，也就是<code>app = Flask(__name__)</code>所在Python文件的同一目录下，创建一个名为<code>gunicorn.conf.py</code>的Gunicorn的配置文件。</p>
+<blockquote>
+<p>注意<code>gunicorn.conf</code>运行会报错，官网文档要求以.py结尾。</p>
+<p>The third source of configuration information is an optional configuration file <code>gunicorn.conf.py</code> searched in the current working directory or specified using a command line argument.</p>
+</blockquote>
+<p><code>vim gunicorn.conf.py</code>配置文件的内容如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 并行工作线程数</span></span><br><span class="line">workers = <span class="number">4</span></span><br><span class="line"><span class="comment"># 监听内网端口8080【按需要更改】</span></span><br><span class="line">bind = <span class="string">&#x27;127.0.0.1:8080&#x27;</span></span><br><span class="line"><span class="comment"># 设置守护进程【关闭连接时，程序仍在运行】</span></span><br><span class="line">daemon = <span class="literal">True</span></span><br><span class="line"><span class="comment"># 设置超时时间120s，默认为30s。按自己的需求进行设置</span></span><br><span class="line">timeout = <span class="number">120</span></span><br><span class="line"><span class="comment"># 设置访问日志和错误信息日志路径，在项目启动文件夹下提前创建一个logs文件夹，否则后续运行可能会报错</span></span><br><span class="line">accesslog = <span class="string">&#x27;./logs/acess.log&#x27;</span></span><br><span class="line">errorlog = <span class="string">&#x27;./logs/error.log&#x27;</span></span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>关于workers配置的血与泪的教训。如果自己的服务子配置不咋地，像我一样1核2G内存，项目里还有预训练模型要调用的，强烈建议不要多线程……不然运行起来卡到ssh连接建立都要一分钟，无语！</p>
+</blockquote>
+<p>要让Gunicorn处理这个Python应用就在项目启动文件所在目录下执行下面的命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gunicorn -c gunicorn.conf.py  flask_server:app</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>Gunicorn命令的参数解释：</p>
+<p><code>-c</code>：按照指定的Gunicorn配置文件运行。</p>
+<p><code>flask_server:app</code>：项目的启动文件，项目启动文件中flask app的名字（一般都默认叫app，也可以自己定义）。</p>
+<p>当然，配置文件中的参数也可以放在命令行中执行，只是每一次写一长串命令行会很麻烦。如<code>gunicorn -D -w 3 -b 127.0.0.1:8080 main:app</code>中-D 表示后台运行，-w 决定线程个数，-b指定ip和端口。</p>
+</blockquote>
+<p>查看运行的Gunicorn的进程号，并关闭。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 请求gunicorn相关的进程树</span></span><br><span class="line">pstree -ap|grep gunicorn</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 返回的结果</span></span><br><span class="line">(myChatbot) [root@VM-4-13-centos api]# pstree -ap|grep gunicorn</span><br><span class="line">  |-gunicorn,21545 /root/.local/share/virtualenvs/myChatbot-Bk5svUYU/bin/gunicorn -cgunic</span><br><span class="line">  |   |-gunicorn,21548 /root/.local/share/virtualenvs/myChatbot-Bk5svUYU/bin/gunicorn -cgunic</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21578</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21579</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21580</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21589</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21590</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21591</span><br><span class="line"></span><br><span class="line">kill -9 21545</span><br></pre></td></tr></table></figure>
+<h2 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h2><p><a href="https://drunk99.xyz/2021/03/27/nginx-with-ssl/">上一篇博客</a>中，记录一些Nginx配置相关的内容。<code>/etc/nginx/nginx.conf</code>中对http模块中的server模块进行如下更改。因为我们在服务器上既放了web前端的代码（基于Vanilla JS），以及后端api，所以要有多个location分别给予前端和后端。</p>
+<p>经过多次尝试发现以下配置是可行的。</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">        <span class="string">listen</span>       <span class="number">80</span> <span class="string">default_server;</span></span><br><span class="line">        <span class="string">listen</span>       [<span class="string">::</span>]<span class="string">:80</span> <span class="string">default_server;</span></span><br><span class="line">        <span class="string">server_name</span>  <span class="number">121.4</span><span class="number">.67</span><span class="number">.30</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Load configuration files for the default server block.</span></span><br><span class="line">        <span class="string">include</span> <span class="string">/etc/nginx/default.d/*.conf;</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">		<span class="comment"># 这是前端Web页面的路径，里面就css/js/html各一个，两张图</span></span><br><span class="line">        <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">        <span class="string">root</span> <span class="string">/home/myChatbotWebFrontend/QABotFrontend/;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 这是后端Flask API的路径，Nginx会把请求转发给Gunicorn</span></span><br><span class="line">        <span class="string">location</span> <span class="string">/api/</span> &#123;</span><br><span class="line">        <span class="string">proxy_pass</span> <span class="string">http://127.0.0.1:8080/;</span> </span><br><span class="line">        <span class="string">proxy_set_header</span>  <span class="string">X-Real-IP</span>  <span class="string">$remote_addr;</span></span><br><span class="line">        <span class="string">proxy_set_header</span>  <span class="string">X-Forwarded-For</span>  <span class="string">$proxy_add_x_forwarded_for;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Web项目下静态资源的查找</span></span><br><span class="line">        <span class="string">location</span> <span class="string">~*</span> <span class="string">^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)</span>&#123;</span><br><span class="line">        <span class="string">root</span> <span class="string">/home/myChatbotWebFrontend/QABotFrontend/;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 默认的错误页面，可要可不要</span></span><br><span class="line">        <span class="string">error_page</span> <span class="number">404</span> <span class="string">/404.html;</span></span><br><span class="line">        <span class="string">location</span> <span class="string">=</span> <span class="string">/404.html</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">error_page</span> <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span> <span class="string">/50x.html;</span></span><br><span class="line">        <span class="string">location</span> <span class="string">=</span> <span class="string">/50x.html</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>变化就是把root项给删除了，不然会一直显示Welcome to CentOS的欢迎页面。添加了三个location，分别用于指向Web代码，Python代码，以及静态资源（虽然不知道有没有用，但是不想再删了试了）。</p>
+<p>在location项中添加了一个代理配置，将访问server_name121.4.67.30的流量都代理到proxy_pass本机的8080端口，因为我们gunicorn的配置文件中决定了我们的Python应用程序在本机127.0.0.1的8080端口。</p>
+<p>做好这些工作后重启nginx即可。<code>systemctl restart nginx</code>。</p>
+<h2 id="关于Nginx中location和proxy-pass中斜杠的问题"><a href="#关于Nginx中location和proxy-pass中斜杠的问题" class="headerlink" title="关于Nginx中location和proxy_pass中斜杠的问题"></a>关于Nginx中location和proxy_pass中斜杠的问题</h2><p>这主要涉及Nginx匹配的路径与云服务器上多个项目存放路径的问题。</p>
+<p>首先是location的匹配规则，如下。Nginx中的一个location，可以被prefix string，或者被一个regular expression定义。</p>
+<p>为了匹配从用户客户端发来的一个请求地址，nginx首先会校验prefix string，选择最长匹配项目。其次，nginx进行正则匹配。regular expression的匹配是按照它们在配置文件中定义的先后顺序进行的；正则匹配方式一旦匹配到了路径，就不会再继续匹配下去。一边下来发现正则匹配没有匹配的项目，那么nginx就会返回prefix string匹配的项目。查看<a class="link" target="_blank" rel="noopener" href="https://nginx.org/en/docs/http/ngx_http_core_module.html#location">Nginx-Httpcore<i class="fas fa-external-link-alt"></i></a>官方文档，与<a class="link" target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000013267839">文档的中文解读<i class="fas fa-external-link-alt"></i></a>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location [=|~|~*|^~] /uri/ &#123; ... &#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>~*</code>代表使用正则匹配，不区分大小写匹配。</li>
+<li><code>~</code>代表使用正则匹配区分大小写匹配。</li>
+<li><code>=</code>代表使用精确匹配，一定情况下会加速匹配。</li>
+<li><code>^~</code>代表如果符号后的字符是最佳匹配，就采用改方式，不再进行查找。</li>
+</ul>
+<p>对于 URL 中的尾部 <code>/</code> 则是，当有 <code>/</code> 时表示目录，没有时表示文件。当有 <code>/</code> 是服务器会自动去对应目录下找默认文件，而如果没有<code>/</code> 则会优先去匹配文件，如果找不到文件才会重定向到目录，查默认文件。</p>
+<p><code>location</code>中uri是否有斜杠与<code>proxy_pass</code>是否有斜杠，决定了能否正确匹配到路径。关于斜杠的提示，来自这篇<a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/Tanganling/article/details/111033839">配置教程<i class="fas fa-external-link-alt"></i></a>。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">location /api/ &#123;</span><br><span class="line">    proxy_pass http://127.0.0.1:8080/; </span><br><span class="line">    proxy_set_header  X-Real-IP  $remote_addr;</span><br><span class="line">    proxy_set_header  X-Forwarded-For  $proxy_add_x_forwarded_for;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我的理解是，nginx首先会基于<code>server_name  121.4.67.30;</code>，把当前拥有的待匹配对象作为<code>http://121.4.67.30/api/</code>。我从浏览器中输入的请求地址类似于<code>http://121.4.67.30/api/test?ques=你好</code>，nginx会将这个请求uri与带匹配对象做比较，并用<code>proxy_pass</code>中的内容<code>http://127.0.0.1:8080/</code>替换为<code>http://127.0.0.1:8080/test?ques=你好</code>，这样就能顺利访问到本地执行的、由Gunicorn管理的Python Flask API了。</p>
+<p>我们希望Nginx把目标uri转变为实际上我们Python运行的flask api：<code>http://127.0.0.1:8080/test?ques=你好</code>。我们不希望本地访问的地址中有/api/。</p>
+<p>如果<code>proxy_pass</code>中的内容<code>http://127.0.0.1:8080</code>，且<code>location /api/</code>，那么nginx会保留location中路径的部分，替换成了<code>http://127.0.0.1:8080/api/test?ques=你好</code>。</p>
+<p>或有<code>location /api</code>与<code>http://127.0.0.1:8080</code>，替换成<code>http://127.0.0.1:8080/api/test?ques=你好</code>，无法成功搜索。</p>
+<blockquote>
+<p><code>proxy_pass</code>中的内容<code>http://127.0.0.1:8080</code>被成为proxy_pass withput uri(i.e. without path after server:port)。就是单纯的ip地址和端口的组合。</p>
+</blockquote>
+<p>或者<code>location /api</code>，且<code>proxy_pass http://127.0.0.1:8080/;</code>，那么nginx会使用alias的替换方式对请求的url进行替换，如将请求地址<code>http://121.4.67.30/api/test?ques=你好</code>变为<code>http://127.0.0.1:8080//test?ques=你好</code>。</p>
+<p>关于<a class="link" target="_blank" rel="noopener" href="https://www.jianshu.com/p/c751250a5112">Nginx中proxy_pass的斜杠问题<i class="fas fa-external-link-alt"></i></a>，这篇文章中写的很清楚，可以参考。</p>
+<h2 id="无法访问或报错"><a href="#无法访问或报错" class="headerlink" title="无法访问或报错"></a>无法访问或报错</h2><p>遇到无法访问或者报错的情况，去gunicorn配置的logs目录下看日志！一般终端执行这些命令的时候不会有return value。</p>
+<p>比如一开始不知道gunicorn的<code>main:app</code>命令参数代表什么意思，自己和教程乱写，结果怎么也出不了页面，error.log中都记录了下来，才发现是根本没有main模块，别人的main模块在我这边的名称是flask_server。</p>
+<p><img src="/2021/03/29/gunicorn-nginx-flask-api/image-20210329183317198.png" alt="image-20210329183317198" style="zoom:30%;"></p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a class="link" target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/QN7JiZ1hm94NRJRurhQm4Q">AI画家第四弹——利用Flask发布风格迁移API<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://juejin.cn/post/6844903854874558478">AI画家第五弹——从0到1部署你的RESTful API<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://www.cnblogs.com/zongfa/p/12614459.html">falsk中gunicorn的使用<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://blog.csdn.net/piglite/article/details/82766887">使用Nginx和Gunicorn在服务器上部署Flask项目<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：利用Gunicorn和Nginx在服务器上部署一个Flask API</li>
+        <li>本文作者：徐徐</li>
+        <li>创建时间：2021-03-29 15:41:47</li>
+        <li>
+            本文链接：https://drunk99.xyz/2021/03/29/gunicorn-nginx-flask-api/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/03/27/nginx-with-ssl/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">Nginx安装与配置</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'aqAOPQAx86speqYXI4gPuLWx-gzGzoHsz',
+                    appKey: '8fzaXFq8Ikhr5mucbhj3qqUS',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '来一起讨论吧～',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '徐徐';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020-2021</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
+        </div>
+        
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Nginx%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">1.</span> <span class="nav-text">Nginx是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Gunicorn%E6%98%AF%E4%BB%80%E4%B9%88"><span class="nav-number">2.</span> <span class="nav-text">Gunicorn是什么</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%89%E8%80%85%E5%85%B3%E7%B3%BB"><span class="nav-number">3.</span> <span class="nav-text">三者关系</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%83%A8%E7%BD%B2%E6%AD%A5%E9%AA%A4"><span class="nav-number">4.</span> <span class="nav-text">部署步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Gunicorn%E9%85%8D%E7%BD%AE"><span class="nav-number">4.1.</span> <span class="nav-text">Gunicorn配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Nginx%E9%85%8D%E7%BD%AE"><span class="nav-number">4.2.</span> <span class="nav-text">Nginx配置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B3%E4%BA%8ENginx%E4%B8%ADlocation%E5%92%8Cproxy-pass%E4%B8%AD%E6%96%9C%E6%9D%A0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">4.3.</span> <span class="nav-text">关于Nginx中location和proxy_pass中斜杠的问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E6%88%96%E6%8A%A5%E9%94%99"><span class="nav-number">4.4.</span> <span class="nav-text">无法访问或报错</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.5.</span> <span class="nav-text">参考</span></a></li></ol></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+    
+</div>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>

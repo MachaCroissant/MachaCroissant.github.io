@@ -1,265 +1,224 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
-<meta name="theme-color" content="#222">
-<meta name="generator" content="Hexo 5.2.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
-  <meta http-equiv="Cache-Control" content="no-transform">
-  <meta http-equiv="Cache-Control" content="no-siteapp">
-  <meta name="google-site-verification" content="tVwJSEMdWzMip87zOsZkLmhFX8xMeBQ5ixlKyaFiGtE">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="记录，分享。">
+    <meta name="author" content="徐徐">
+    
+    <title>
+        
+            JavaScript基础 |
+        
+        来个抹茶可颂
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
 
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
-
-<script id="hexo-configurations">
-    var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"drunk99.xyz","root":"/","scheme":"Mist","version":"7.8.0","exturl":true,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":true,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":false},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
   </script>
-
-  <meta name="description" content="主要记录一下在MDN上学习JavaScript的笔记。">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript基础">
-<meta property="og:url" content="https://drunk99.xyz/2020/11/21/learn-js/index.html">
-<meta property="og:site_name" content="来个抹茶可颂">
-<meta property="og:description" content="主要记录一下在MDN上学习JavaScript的笔记。">
-<meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2020-11-21T05:34:05.000Z">
-<meta property="article:modified_time" content="2020-12-09T12:16:20.096Z">
-<meta property="article:author" content="徐徐">
-<meta property="article:tag" content="JavaScript">
-<meta name="twitter:card" content="summary">
-
-<link rel="canonical" href="https://drunk99.xyz/2020/11/21/learn-js/">
-
-
-<script id="page-configurations">
-  // https://hexo.io/docs/variables.html
-  CONFIG.page = {
-    sidebar: "",
-    isHome : false,
-    isPost : true,
-    lang   : 'zh-CN'
-  };
-</script>
-
-  <title>JavaScript基础 | 来个抹茶可颂</title>
-  
-
-
-
-
-
-
-  <noscript>
-  <style>
-  .use-motion .brand,
-  .use-motion .menu-item,
-  .sidebar-inner,
-  .use-motion .post-block,
-  .use-motion .pagination,
-  .use-motion .comments,
-  .use-motion .post-header,
-  .use-motion .post-body,
-  .use-motion .collection-header { opacity: initial; }
-
-  .use-motion .site-title,
-  .use-motion .site-subtitle {
-    opacity: initial;
-    top: initial;
-  }
-
-  .use-motion .logo-line-before i { left: initial; }
-  .use-motion .logo-line-after i { right: initial; }
-  </style>
-</noscript>
-
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
 </head>
 
-<body itemscope itemtype="http://schema.org/WebPage">
-  <div class="container use-motion">
-    <div class="headband"></div>
 
-    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
-      <div class="header-inner"><div class="site-brand-container">
-  <div class="site-nav-toggle">
-    <div class="toggle" aria-label="切换导航栏">
-      <span class="toggle-line toggle-line-first"></span>
-      <span class="toggle-line toggle-line-middle"></span>
-      <span class="toggle-line toggle-line-last"></span>
-    </div>
-  </div>
-
-  <div class="site-meta">
-
-    <a href="/" class="brand" rel="start">
-      <span class="logo-line-before"><i></i></span>
-      <h1 class="site-title">来个抹茶可颂</h1>
-      <span class="logo-line-after"><i></i></span>
-    </a>
-  </div>
-
-  <div class="site-nav-right">
-    <div class="toggle popup-trigger">
-        <i class="fa fa-search fa-fw fa-lg"></i>
-    </div>
-  </div>
-</div>
-
-
-
-
-<nav class="site-nav">
-  <ul id="menu" class="main-menu menu">
-        <li class="menu-item menu-item-home">
-
-    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
-
-  </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
-        <li class="menu-item menu-item-categories">
-
-    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
-
-  </li>
-        <li class="menu-item menu-item-archives">
-
-    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-      <li class="menu-item menu-item-search">
-        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
-        </a>
-      </li>
-  </ul>
-</nav>
-
-
-
-  <div class="search-pop-overlay">
-    <div class="popup search-popup">
-        <div class="search-header">
-  <span class="search-icon">
-    <i class="fa fa-search"></i>
-  </span>
-  <div class="search-input-container">
-    <input autocomplete="off" autocapitalize="off"
-           placeholder="搜索..." spellcheck="false"
-           type="search" class="search-input">
-  </div>
-  <span class="popup-btn-close">
-    <i class="fa fa-times-circle"></i>
-  </span>
-</div>
-<div id="search-result">
-  <div id="no-result">
-    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
-  </div>
-</div>
-
-    </div>
-  </div>
-
-</div>
-    </header>
+<body>
+<div class="progress-bar-container">
+    
 
     
-  <div class="back-to-top">
-    <i class="fa fa-arrow-up"></i>
-    <span>0%</span>
-  </div>
+        <span class="pjax-progress-bar"></span>
+        <span class="pjax-progress-icon">
+            <i class="fas fa-circle-notch fa-spin"></i>
+        </span>
+    
+</div>
 
 
-    <main class="main">
-      <div class="main-inner">
-        <div class="content-wrap">
-          
+<main class="page-container">
 
-          <div class="content post posts-expand">
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            <a class="logo-title" href="/">
+                来个抹茶可颂
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/categories"
+                            >
+                                分类
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
             
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/categories">分类</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
 
-    
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://drunk99.xyz/2020/11/21/learn-js/">
+    <div class="window-mask"></div>
 
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="徐徐">
-      <meta itemprop="description" content="记录，分享。">
-    </span>
+</header>
 
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="来个抹茶可颂">
-    </span>
-      <header class="post-header">
-        <h1 class="post-title" itemprop="name headline">
-          JavaScript基础
-        </h1>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-11-21 13:34:05" itemprop="dateCreated datePublished" datetime="2020-11-21T13:34:05+08:00">2020-11-21</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-12-09 20:16:20" itemprop="dateModified" datetime="2020-12-09T20:16:20+08:00">2020-12-09</time>
-              </span>
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-folder"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/JavaScript/" itemprop="url" rel="index"><span itemprop="name">JavaScript</span></a>
-                </span>
-            </span>
-
-          <br>
-            <span class="post-meta-item" title="本文字数">
-              <span class="post-meta-item-icon">
-                <i class="far fa-file-word"></i>
-              </span>
-                <span class="post-meta-item-text">本文字数：</span>
-              <span>22k</span>
-            </span>
-            <span class="post-meta-item" title="阅读时长">
-              <span class="post-meta-item-icon">
-                <i class="far fa-clock"></i>
-              </span>
-                <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>40 分钟</span>
-            </span>
-            <div class="post-description">主要记录一下在MDN上学习JavaScript的笔记。</div>
 
         </div>
-      </header>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">JavaScript基础</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/tuotuo.jpg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">徐徐</span>
+                        
+                            <span class="author-label">Lv5</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2020-11-21 13:34:05
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/JavaScript/">JavaScript</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+        <span class="article-tags article-meta-item">
+            <i class="fas fa-tags"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/tags/JavaScript/">JavaScript</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
 
     
     
     
-    <div class="post-body" itemprop="articleBody">
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>42 分钟</span>
+        </span>
+    
+    
+        <span class="article-pv article-meta-item">
+            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
+        </span>
+    
+</div>
 
-      
-        <h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>变量就是一个用来存储数据类型的容器。</p>
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <h1 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h1><p>变量就是一个用来存储数据类型的容器。</p>
 <h2 id="声明var-amp-let"><a href="#声明var-amp-let" class="headerlink" title="声明var&amp;let"></a>声明<code>var</code>&amp;<code>let</code></h2><p><code>var</code>会被变量提升，但是<code>let</code>没有。因此使用<code>var</code>时，可以根据需要多次声明相同名称的变量，但是<code>let</code>不能。</p>
 <h2 id="声明的意义"><a href="#声明的意义" class="headerlink" title="声明的意义"></a>声明的意义</h2><p>声明但不初始化变量就相当于让容器存在于执行环境中，但里面是“空”的，什么也不放，因而在控制台会返回undefined。</p>
 <p>没有声明也没有初始化的变量相当于执行环境中没有该变量，不存在容器，因而控制台直接会返回报错信息。</p>
@@ -356,9 +315,9 @@
 <p>check the event object’s target property to gain a reference to the actual clicked node.</p>
 <p>虽然事件处理函数添加在父元素上，但通过if语句对事件对象进行条件判断，可以访问父元素及其内部子元素，从而实现特定的相应操作。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(e.target &amp;&amp; e.target.nodeName == <span class="string">&quot;LI&quot;</span>)</span><br></pre></td></tr></table></figure>
-<p>Using the <span class="exturl" data-url="aHR0cHM6Ly9kYXZpZHdhbHNoLm5hbWUvZWxlbWVudC1tYXRjaGVzLXNlbGVjdG9y">Element.matches API<i class="fa fa-external-link-alt"></i></span>, we can see if the element matches our desired target.</p>
+<p>Using the <a class="link" target="_blank" rel="noopener" href="https://davidwalsh.name/element-matches-selector">Element.matches API<i class="fas fa-external-link-alt"></i></a>, we can see if the element matches our desired target.</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (e.target &amp;&amp; e.target.matches(<span class="string">&quot;a.classA&quot;</span>)) </span><br></pre></td></tr></table></figure>
-<p><span class="exturl" data-url="aHR0cHM6Ly9kYXZpZHdhbHNoLm5hbWUvZXZlbnQtZGVsZWdhdGU=">参考<i class="fa fa-external-link-alt"></i></span></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://davidwalsh.name/event-delegate">参考<i class="fas fa-external-link-alt"></i></a></p>
 <h2 id="一些实作的易错点"><a href="#一些实作的易错点" class="headerlink" title="一些实作的易错点"></a>一些实作的易错点</h2><p>关于单引号的双引号的区分。规定自己对于html元素名称或者属性的引用都使用单引号，但对字符串统一使用双引号。如<code>if(btn.getAttribute(&#39;class&#39;) === &quot;dark&quot;)</code>。</p>
 <p>对属性赋值都是赋值字符串，如<code>overlay.style.backgroundColor = &quot;rgba(0, 0, 0, 0.5)&quot;;</code>，如果rgba没有加双引号，那最后javascript编译器会把它当作一个函数，从而报错。</p>
 <h1 id="对象"><a href="#对象" class="headerlink" title="对象"></a>对象</h1><p>对象是一个包含相关数据和方法的集合（通常由一些变量和函数组成，我们称之为对象里面的属性和方法）。</p>
@@ -667,248 +626,365 @@
 <p>对该请求设置一个事件监听操作，一旦在数据库中删除成功，这种变化需要反映到DOM树中去。</p>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">request.oncomplete = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            e.target.parentNode.parentNode.removeChild(e.target.parentNode);</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">&#x27;Note $&#123;noteId&#125; deleted.&#x27;</span>);</span><br><span class="line">	<span class="comment">// 如是删除到最后都是空列表该怎么做</span></span><br><span class="line">    <span class="comment">// 这是没有listitem的默认显示</span></span><br><span class="line">    <span class="keyword">if</span>(!list.firstChild)&#123;</span><br><span class="line">        <span class="keyword">let</span> listItem = <span class="built_in">document</span>.createElement(<span class="string">&#x27;li&#x27;</span>);</span><br><span class="line">        listItem.textContent = <span class="string">&#x27;No notes stored.&#x27;</span>;</span><br><span class="line">        list.appendChild(listItem);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
-    </div>
-
-    
-    
-    
-
-      <footer class="post-footer">
-          <div class="post-tags">
-              <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
-          </div>
+        </div>
 
         
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：JavaScript基础</li>
+        <li>本文作者：徐徐</li>
+        <li>创建时间：2020-11-21 13:34:05</li>
+        <li>
+            本文链接：https://drunk99.xyz/2020/11/21/learn-js/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2020/12/02/react-project-summary/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">简书项目复刻问题集合</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2020/11/19/outputGANevaluation/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">衡量Generator的好坏的方法</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script data-pjax
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script data-pjax>
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'aqAOPQAx86speqYXI4gPuLWx-gzGzoHsz',
+                    appKey: '8fzaXFq8Ikhr5mucbhj3qqUS',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: '来一起讨论吧～',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '徐徐';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('true') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
 
 
         
-    <div class="post-nav">
-      <div class="post-nav-item">
-    <a href="/2020/11/19/outputGANevaluation/" rel="prev" title="衡量Generator的好坏的方法">
-      <i class="fa fa-chevron-left"></i> 衡量Generator的好坏的方法
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2020/12/02/react-project-summary/" rel="next" title="简书项目复刻问题集合">
-      简书项目复刻问题集合 <i class="fa fa-chevron-right"></i>
-    </a></div>
-    </div>
-      </footer>
     
-  </article>
-  
-  
-  
+</div>
+
+            </div>
+        
+    </div>
+</div>
 
 
-
-          </div>
-          
-
-<script>
-  window.addEventListener('tabs:register', () => {
-    let { activeClass } = CONFIG.comments;
-    if (CONFIG.comments.storage) {
-      activeClass = localStorage.getItem('comments_active') || activeClass;
-    }
-    if (activeClass) {
-      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
-      if (activeTab) {
-        activeTab.click();
-      }
-    }
-  });
-  if (CONFIG.comments.storage) {
-    window.addEventListener('tabs:click', event => {
-      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
-      let commentClass = event.target.classList[1];
-      localStorage.setItem('comments_active', commentClass);
-    });
-  }
-</script>
+                
+            </div>
 
         </div>
-          
-  
-  <div class="toggle sidebar-toggle">
-    <span class="toggle-line toggle-line-first"></span>
-    <span class="toggle-line toggle-line-middle"></span>
-    <span class="toggle-line toggle-line-last"></span>
-  </div>
 
-  <aside class="sidebar">
-    <div class="sidebar-inner">
-
-      <ul class="sidebar-nav motion-element">
-        <li class="sidebar-nav-toc">
-          文章目录
-        </li>
-        <li class="sidebar-nav-overview">
-          站点概览
-        </li>
-      </ul>
-
-      <!--noindex-->
-      <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8Evar-amp-let"><span class="nav-number">1.1.</span> <span class="nav-text">声明var&amp;let</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">声明的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">变量类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.</span> <span class="nav-text">循环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#for-loop"><span class="nav-number">2.1.</span> <span class="nav-text">for-loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while-loop"><span class="nav-number">2.2.</span> <span class="nav-text">while loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#do-while-loop"><span class="nav-number">2.3.</span> <span class="nav-text">do-while loop</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%8E%E8%B0%83%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">声明与调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">匿名函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BD%9C%E7%94%A8%E5%9F%9Fscope%E5%92%8C%E5%86%B2%E7%AA%81"><span class="nav-number">3.4.</span> <span class="nav-text">函数作用域scope和冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">3.5.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E7%BD%91%E9%A1%B5%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">响应网页事件的几种机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8%E5%B1%9E%E6%80%A7"><span class="nav-number">4.1.1.</span> <span class="nav-text">事件处理器属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E5%86%85%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8-%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.2.</span> <span class="nav-text">行内事件处理器-不要使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#addEventListener"><span class="nav-number">4.1.3.</span> <span class="nav-text">addEventListener()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.2.</span> <span class="nav-text">事件对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E6%AD%A2%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA"><span class="nav-number">4.3.</span> <span class="nav-text">阻止默认行为</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1%E5%8F%8A%E6%8D%95%E8%8E%B7"><span class="nav-number">4.4.</span> <span class="nav-text">事件冒泡及捕获</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.1.</span> <span class="nav-text">捕获阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.2.</span> <span class="nav-text">冒泡阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.4.3.</span> <span class="nav-text">修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98"><span class="nav-number">4.4.4.</span> <span class="nav-text">事件委托</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9E%E4%BD%9C%E7%9A%84%E6%98%93%E9%94%99%E7%82%B9"><span class="nav-number">4.5.</span> <span class="nav-text">一些实作的易错点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.</span> <span class="nav-text">对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.1.</span> <span class="nav-text">面向对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">5.2.</span> <span class="nav-text">对象字面量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7"><span class="nav-number">5.3.</span> <span class="nav-text">访问对象属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.1.</span> <span class="nav-text">点表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.2.</span> <span class="nav-text">括号表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95%E4%B8%8E%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.3.3.</span> <span class="nav-text">括号表示法与点表示法的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%88%90%E5%91%98%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.4.</span> <span class="nav-text">设置成员对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this"><span class="nav-number">5.5.</span> <span class="nav-text">this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.6.</span> <span class="nav-text">对象与类的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">5.7.</span> <span class="nav-text">创建对象的方式总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%8E%BB%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.1.</span> <span class="nav-text">声明一个对象去创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.2.</span> <span class="nav-text">使用构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Object-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.3.</span> <span class="nav-text">使用Object()构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%8E%B0%E6%9C%89%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.4.</span> <span class="nav-text">基于现有对象创建新对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">原型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype%E5%B1%9E%E6%80%A7"><span class="nav-number">6.1.</span> <span class="nav-text">prototype属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor%E5%B1%9E%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">constructor属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%AD%98%E5%9C%A8%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">6.3.</span> <span class="nav-text">原型存在的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1"><span class="nav-number">6.4.</span> <span class="nav-text">利用原型定义对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E6%93%8D%E4%BD%9C%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">6.5.</span> <span class="nav-text">实际操作中的一些问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5"><span class="nav-number">7.</span> <span class="nav-text">异步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-workers"><span class="nav-number">7.1.</span> <span class="nav-text">Web workers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5callbacks"><span class="nav-number">7.2.</span> <span class="nav-text">异步callbacks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">7.3.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%92%8C%E5%BC%82%E6%AD%A5%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">7.3.1.</span> <span class="nav-text">回调函数和异步的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">7.3.2.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Promises"><span class="nav-number">7.4.</span> <span class="nav-text">Promises</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">7.4.1.</span> <span class="nav-text">基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%80%E5%88%9D%E7%9A%84promise"><span class="nav-number">7.4.1.1.</span> <span class="nav-text">创建最初的promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9Epromise"><span class="nav-number">7.4.1.2.</span> <span class="nav-text">返回promise</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promise%E5%AE%8C%E6%88%90%E5%90%8E%E8%BF%90%E8%A1%8C%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81"><span class="nav-number">7.4.2.</span> <span class="nav-text">promise完成后运行一段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#then-%E5%9D%97%E4%B8%8EAddEventListener"><span class="nav-number">7.4.3.</span> <span class="nav-text">.then()块与AddEventListener()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%90%88%E5%B9%B6"><span class="nav-number">7.4.4.</span> <span class="nav-text">流程合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AApromise%E5%8D%8F%E5%90%8C%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.4.5.</span> <span class="nav-text">多个promise协同工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Promise"><span class="nav-number">7.4.6.</span> <span class="nav-text">自定义Promise</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-await"><span class="nav-number">7.5.</span> <span class="nav-text">async&#x2F;await</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">7.5.1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">7.5.2.</span> <span class="nav-text">await</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">7.5.2.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY"><span class="nav-number">7.5.2.2.</span> <span class="nav-text">WHY</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E6%97%B6%E5%92%8C%E9%97%B4%E9%9A%94"><span class="nav-number">7.6.</span> <span class="nav-text">超时和间隔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setTimeout"><span class="nav-number">7.6.1.</span> <span class="nav-text">setTimeout()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0"><span class="nav-number">7.6.1.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1"><span class="nav-number">7.6.1.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setInterval"><span class="nav-number">7.6.2.</span> <span class="nav-text">setInterval()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0-1"><span class="nav-number">7.6.2.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1-1"><span class="nav-number">7.6.2.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#requestAnimationFrame"><span class="nav-number">7.6.3.</span> <span class="nav-text">requestAnimationFrame()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY-1"><span class="nav-number">7.6.3.1.</span> <span class="nav-text">WHY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-1"><span class="nav-number">7.6.3.2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">7.6.3.3.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API"><span class="nav-number">8.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E6%80%A7"><span class="nav-number">8.1.</span> <span class="nav-text">共性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1"><span class="nav-number">8.1.1.</span> <span class="nav-text">基于对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%AF%86%E5%88%AB%E7%9A%84%E5%85%A5%E5%8F%A3%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">可识别的入口点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%8B%E4%BB%B6%E6%9D%A5%E5%A4%84%E7%90%86%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96"><span class="nav-number">8.1.3.</span> <span class="nav-text">使用事件来处理状态的变化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C%E7%9A%84API"><span class="nav-number">8.2.</span> <span class="nav-text">文档操作的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web%E9%A1%B5%E9%9D%A2%E6%9E%84%E6%88%90"><span class="nav-number">8.2.1.</span> <span class="nav-text">web页面构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM%E6%A0%91"><span class="nav-number">8.2.2.</span> <span class="nav-text">DOM树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9CDOM%E5%85%83%E7%B4%A0"><span class="nav-number">8.2.3.</span> <span class="nav-text">操作DOM元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96"><span class="nav-number">8.2.3.1.</span> <span class="nav-text">获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA-%E6%94%BE%E7%BD%AE"><span class="nav-number">8.2.3.2.</span> <span class="nav-text">新建&#x2F;放置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8-%E5%88%A0%E9%99%A4"><span class="nav-number">8.2.3.3.</span> <span class="nav-text">移动&#x2F;删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%A0%B7%E5%BC%8F"><span class="nav-number">8.2.4.</span> <span class="nav-text">操作样式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84API"><span class="nav-number">8.3.</span> <span class="nav-text">从服务器获取数据的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9API"><span class="nav-number">8.3.1.</span> <span class="nav-text">使用第三方API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-number">8.3.1.1.</span> <span class="nav-text">引入第三方库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EURL%E8%AF%B7%E6%B1%82"><span class="nav-number">8.3.1.2.</span> <span class="nav-text">基于URL请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E7%BB%98%E5%88%B6%E5%92%8C%E6%93%8D%E4%BD%9C%E5%9B%BE%E5%BD%A2%E7%9A%84API"><span class="nav-number">8.4.</span> <span class="nav-text">用于绘制和操作图形的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%87%86%E5%A4%87"><span class="nav-number">8.4.1.</span> <span class="nav-text">基本准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%98%E5%88%B6%E5%9F%BA%E6%9C%AC%E5%BD%A2%E7%8A%B6"><span class="nav-number">8.4.2.</span> <span class="nav-text">绘制基本形状</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB"><span class="nav-number">8.4.3.</span> <span class="nav-text">动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.4.3.1.</span> <span class="nav-text">实现步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%92%8C%E9%9F%B3%E9%A2%91API"><span class="nav-number">8.5.</span> <span class="nav-text">视频和音频API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML5%E4%B8%AD%E7%9A%84%E6%92%AD%E6%94%BE%E5%99%A8"><span class="nav-number">8.5.1.</span> <span class="nav-text">HTML5中的播放器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTML%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.1.</span> <span class="nav-text">HTML部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.2.</span> <span class="nav-text">CSS部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8API"><span class="nav-number">8.5.1.3.</span> <span class="nav-text">使用API</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%82%A8%E5%AD%98"><span class="nav-number">8.6.</span> <span class="nav-text">客户端储存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-Storage-API"><span class="nav-number">8.6.1.</span> <span class="nav-text">Web Storage API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1sessionStorage%E5%92%8ClocalStorage"><span class="nav-number">8.6.1.1.</span> <span class="nav-text">存储对象sessionStorage和localStorage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">8.6.1.2.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">8.6.1.3.</span> <span class="nav-text">数据库的使用</span></a></li></ol></li></ol></li></ol></li></ol></div>
-      </div>
-      <!--/noindex-->
-
-      <div class="site-overview-wrap sidebar-panel">
-        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
-  <p class="site-author-name" itemprop="name">徐徐</p>
-  <div class="site-description" itemprop="description">记录，分享。</div>
-</div>
-<div class="site-state-wrap motion-element">
-  <nav class="site-state">
-      <div class="site-state-item site-state-posts">
-          <a href="/archives/">
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020-2021</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
+        </div>
         
-          <span class="site-state-item-count">94</span>
-          <span class="site-state-item-name">日志</span>
-        </a>
-      </div>
-      <div class="site-state-item site-state-categories">
-            <a href="/categories/">
-          
-        <span class="site-state-item-count">22</span>
-        <span class="site-state-item-name">分类</span></a>
-      </div>
-      <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">120</span>
-        <span class="site-state-item-name">标签</span>
-      </div>
-  </nav>
+            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                    <span id="busuanzi_container_site_uv">
+                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
+                    </span>
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
 </div>
-  <div class="links-of-author motion-element">
-      <span class="links-of-author-item">
-        <span class="exturl" data-url="aHR0cHM6Ly9naXRodWIuY29tL01hY2hhQ3JvaXNzYW50" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;MachaCroissant"><i class="fab fa-github fa-fw"></i>GitHub</span>
-      </span>
-      <span class="links-of-author-item">
-        <span class="exturl" data-url="bWFpbHRvOnh5aHN1OTlAZ21haWwuY29t" title="E-Mail → mailto:xyhsu99@gmail.com"><i class="fa fa-envelope fa-fw"></i>E-Mail</span>
-      </span>
-  </div>
 
+        </div>
+    
 
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
 
-      </div>
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="arrow-up fas fa-arrow-up"></i>
+                <span class="percent"></span>
+            </li>
+        
+    </ul>
+</div>
 
     </div>
-  </aside>
-  <div id="sidebar-dimmer"></div>
 
-
-      </div>
-    </main>
-
-    <footer class="footer">
-      <div class="footer-inner">
-        
-
-        
-
-<div class="copyright">
-  
-  &copy; 2020 – 
-  <span itemprop="copyrightYear">2021</span>
-  <span class="with-love">
-    <i class="fa fa-heart"></i>
-  </span>
-  <span class="author" itemprop="copyrightHolder">徐徐</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-chart-area"></i>
-    </span>
-    <span title="站点总字数">350k</span>
-    <span class="post-meta-divider">|</span>
-    <span class="post-meta-item-icon">
-      <i class="fa fa-coffee"></i>
-    </span>
-    <span title="站点阅读时长">10:36</span>
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F"><span class="nav-number">1.</span> <span class="nav-text">变量</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8Evar-amp-let"><span class="nav-number">1.1.</span> <span class="nav-text">声明var&amp;let</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">1.2.</span> <span class="nav-text">声明的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.3.</span> <span class="nav-text">变量类型</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BE%AA%E7%8E%AF"><span class="nav-number">2.</span> <span class="nav-text">循环</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#for-loop"><span class="nav-number">2.1.</span> <span class="nav-text">for-loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#while-loop"><span class="nav-number">2.2.</span> <span class="nav-text">while loop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#do-while-loop"><span class="nav-number">2.3.</span> <span class="nav-text">do-while loop</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%87%BD%E6%95%B0"><span class="nav-number">3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%8E%E8%B0%83%E7%94%A8"><span class="nav-number">3.1.</span> <span class="nav-text">声明与调用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BF%E5%90%8D%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">匿名函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0"><span class="nav-number">3.3.</span> <span class="nav-text">参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E4%BD%9C%E7%94%A8%E5%9F%9Fscope%E5%92%8C%E5%86%B2%E7%AA%81"><span class="nav-number">3.4.</span> <span class="nav-text">函数作用域scope和冲突</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E5%80%BC"><span class="nav-number">3.5.</span> <span class="nav-text">返回值</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6"><span class="nav-number">4.</span> <span class="nav-text">事件</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%93%8D%E5%BA%94%E7%BD%91%E9%A1%B5%E4%BA%8B%E4%BB%B6%E7%9A%84%E5%87%A0%E7%A7%8D%E6%9C%BA%E5%88%B6"><span class="nav-number">4.1.</span> <span class="nav-text">响应网页事件的几种机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8%E5%B1%9E%E6%80%A7"><span class="nav-number">4.1.1.</span> <span class="nav-text">事件处理器属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%A1%8C%E5%86%85%E4%BA%8B%E4%BB%B6%E5%A4%84%E7%90%86%E5%99%A8-%E4%B8%8D%E8%A6%81%E4%BD%BF%E7%94%A8"><span class="nav-number">4.1.2.</span> <span class="nav-text">行内事件处理器-不要使用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#addEventListener"><span class="nav-number">4.1.3.</span> <span class="nav-text">addEventListener()</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%AF%B9%E8%B1%A1"><span class="nav-number">4.2.</span> <span class="nav-text">事件对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%98%BB%E6%AD%A2%E9%BB%98%E8%AE%A4%E8%A1%8C%E4%B8%BA"><span class="nav-number">4.3.</span> <span class="nav-text">阻止默认行为</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%86%92%E6%B3%A1%E5%8F%8A%E6%8D%95%E8%8E%B7"><span class="nav-number">4.4.</span> <span class="nav-text">事件冒泡及捕获</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%95%E8%8E%B7%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.1.</span> <span class="nav-text">捕获阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%86%92%E6%B3%A1%E9%98%B6%E6%AE%B5%EF%BC%9A"><span class="nav-number">4.4.2.</span> <span class="nav-text">冒泡阶段：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BF%AE%E5%A4%8D"><span class="nav-number">4.4.3.</span> <span class="nav-text">修复</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8B%E4%BB%B6%E5%A7%94%E6%89%98"><span class="nav-number">4.4.4.</span> <span class="nav-text">事件委托</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E4%BA%9B%E5%AE%9E%E4%BD%9C%E7%9A%84%E6%98%93%E9%94%99%E7%82%B9"><span class="nav-number">4.5.</span> <span class="nav-text">一些实作的易错点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.</span> <span class="nav-text">对象</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.1.</span> <span class="nav-text">面向对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">5.2.</span> <span class="nav-text">对象字面量</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7"><span class="nav-number">5.3.</span> <span class="nav-text">访问对象属性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.1.</span> <span class="nav-text">点表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="nav-number">5.3.2.</span> <span class="nav-text">括号表示法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8B%AC%E5%8F%B7%E8%A1%A8%E7%A4%BA%E6%B3%95%E4%B8%8E%E7%82%B9%E8%A1%A8%E7%A4%BA%E6%B3%95%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">5.3.3.</span> <span class="nav-text">括号表示法与点表示法的区别</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%AE%BE%E7%BD%AE%E6%88%90%E5%91%98%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.4.</span> <span class="nav-text">设置成员对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#this"><span class="nav-number">5.5.</span> <span class="nav-text">this</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%B9%E8%B1%A1%E4%B8%8E%E7%B1%BB%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">5.6.</span> <span class="nav-text">对象与类的关系</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1%E7%9A%84%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">5.7.</span> <span class="nav-text">创建对象的方式总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A3%B0%E6%98%8E%E4%B8%80%E4%B8%AA%E5%AF%B9%E8%B1%A1%E5%8E%BB%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.1.</span> <span class="nav-text">声明一个对象去创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.2.</span> <span class="nav-text">使用构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8Object-%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0%E5%88%9B%E5%BB%BA%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.3.</span> <span class="nav-text">使用Object()构造函数创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E7%8E%B0%E6%9C%89%E5%AF%B9%E8%B1%A1%E5%88%9B%E5%BB%BA%E6%96%B0%E5%AF%B9%E8%B1%A1"><span class="nav-number">5.7.4.</span> <span class="nav-text">基于现有对象创建新对象</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B"><span class="nav-number">6.</span> <span class="nav-text">原型</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#prototype%E5%B1%9E%E6%80%A7"><span class="nav-number">6.1.</span> <span class="nav-text">prototype属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#constructor%E5%B1%9E%E6%80%A7"><span class="nav-number">6.2.</span> <span class="nav-text">constructor属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E5%9E%8B%E5%AD%98%E5%9C%A8%E7%9A%84%E6%84%8F%E4%B9%89"><span class="nav-number">6.3.</span> <span class="nav-text">原型存在的意义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%A9%E7%94%A8%E5%8E%9F%E5%9E%8B%E5%AE%9A%E4%B9%89%E5%AF%B9%E8%B1%A1"><span class="nav-number">6.4.</span> <span class="nav-text">利用原型定义对象</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9E%E9%99%85%E6%93%8D%E4%BD%9C%E4%B8%AD%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98"><span class="nav-number">6.5.</span> <span class="nav-text">实际操作中的一些问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5"><span class="nav-number">7.</span> <span class="nav-text">异步</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-workers"><span class="nav-number">7.1.</span> <span class="nav-text">Web workers</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%82%E6%AD%A5callbacks"><span class="nav-number">7.2.</span> <span class="nav-text">异步callbacks</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-number">7.3.</span> <span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E5%92%8C%E5%BC%82%E6%AD%A5%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">7.3.1.</span> <span class="nav-text">回调函数和异步的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">7.3.2.</span> <span class="nav-text">问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Promises"><span class="nav-number">7.4.</span> <span class="nav-text">Promises</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="nav-number">7.4.1.</span> <span class="nav-text">基本流程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%9B%E5%BB%BA%E6%9C%80%E5%88%9D%E7%9A%84promise"><span class="nav-number">7.4.1.1.</span> <span class="nav-text">创建最初的promise</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BF%94%E5%9B%9Epromise"><span class="nav-number">7.4.1.2.</span> <span class="nav-text">返回promise</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#promise%E5%AE%8C%E6%88%90%E5%90%8E%E8%BF%90%E8%A1%8C%E4%B8%80%E6%AE%B5%E4%BB%A3%E7%A0%81"><span class="nav-number">7.4.2.</span> <span class="nav-text">promise完成后运行一段代码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#then-%E5%9D%97%E4%B8%8EAddEventListener"><span class="nav-number">7.4.3.</span> <span class="nav-text">.then()块与AddEventListener()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B5%81%E7%A8%8B%E5%90%88%E5%B9%B6"><span class="nav-number">7.4.4.</span> <span class="nav-text">流程合并</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AApromise%E5%8D%8F%E5%90%8C%E5%B7%A5%E4%BD%9C"><span class="nav-number">7.4.5.</span> <span class="nav-text">多个promise协同工作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%87%AA%E5%AE%9A%E4%B9%89Promise"><span class="nav-number">7.4.6.</span> <span class="nav-text">自定义Promise</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#async-await"><span class="nav-number">7.5.</span> <span class="nav-text">async&#x2F;await</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#async"><span class="nav-number">7.5.1.</span> <span class="nav-text">async</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#await"><span class="nav-number">7.5.2.</span> <span class="nav-text">await</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">7.5.2.1.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY"><span class="nav-number">7.5.2.2.</span> <span class="nav-text">WHY</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E6%97%B6%E5%92%8C%E9%97%B4%E9%9A%94"><span class="nav-number">7.6.</span> <span class="nav-text">超时和间隔</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#setTimeout"><span class="nav-number">7.6.1.</span> <span class="nav-text">setTimeout()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0"><span class="nav-number">7.6.1.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1"><span class="nav-number">7.6.1.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#setInterval"><span class="nav-number">7.6.2.</span> <span class="nav-text">setInterval()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%A0%E5%85%A5%E5%8F%82%E6%95%B0-1"><span class="nav-number">7.6.2.1.</span> <span class="nav-text">传入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%B6%88%E4%BB%BB%E5%8A%A1-1"><span class="nav-number">7.6.2.2.</span> <span class="nav-text">取消任务</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#requestAnimationFrame"><span class="nav-number">7.6.3.</span> <span class="nav-text">requestAnimationFrame()</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#WHY-1"><span class="nav-number">7.6.3.1.</span> <span class="nav-text">WHY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8-1"><span class="nav-number">7.6.3.2.</span> <span class="nav-text">使用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98-1"><span class="nav-number">7.6.3.3.</span> <span class="nav-text">问题</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#API"><span class="nav-number">8.</span> <span class="nav-text">API</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B1%E6%80%A7"><span class="nav-number">8.1.</span> <span class="nav-text">共性</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%AF%B9%E8%B1%A1"><span class="nav-number">8.1.1.</span> <span class="nav-text">基于对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8F%AF%E8%AF%86%E5%88%AB%E7%9A%84%E5%85%A5%E5%8F%A3%E7%82%B9"><span class="nav-number">8.1.2.</span> <span class="nav-text">可识别的入口点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E4%BA%8B%E4%BB%B6%E6%9D%A5%E5%A4%84%E7%90%86%E7%8A%B6%E6%80%81%E7%9A%84%E5%8F%98%E5%8C%96"><span class="nav-number">8.1.3.</span> <span class="nav-text">使用事件来处理状态的变化</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%87%E6%A1%A3%E6%93%8D%E4%BD%9C%E7%9A%84API"><span class="nav-number">8.2.</span> <span class="nav-text">文档操作的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#web%E9%A1%B5%E9%9D%A2%E6%9E%84%E6%88%90"><span class="nav-number">8.2.1.</span> <span class="nav-text">web页面构成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM%E6%A0%91"><span class="nav-number">8.2.2.</span> <span class="nav-text">DOM树</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9CDOM%E5%85%83%E7%B4%A0"><span class="nav-number">8.2.3.</span> <span class="nav-text">操作DOM元素</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%8E%B7%E5%8F%96"><span class="nav-number">8.2.3.1.</span> <span class="nav-text">获取</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B0%E5%BB%BA-%E6%94%BE%E7%BD%AE"><span class="nav-number">8.2.3.2.</span> <span class="nav-text">新建&#x2F;放置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%A7%BB%E5%8A%A8-%E5%88%A0%E9%99%A4"><span class="nav-number">8.2.3.3.</span> <span class="nav-text">移动&#x2F;删除</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%93%8D%E4%BD%9C%E6%A0%B7%E5%BC%8F"><span class="nav-number">8.2.4.</span> <span class="nav-text">操作样式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%8E%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E7%9A%84API"><span class="nav-number">8.3.</span> <span class="nav-text">从服务器获取数据的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%AC%AC%E4%B8%89%E6%96%B9API"><span class="nav-number">8.3.1.</span> <span class="nav-text">使用第三方API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%BC%95%E5%85%A5%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93"><span class="nav-number">8.3.1.1.</span> <span class="nav-text">引入第三方库</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EURL%E8%AF%B7%E6%B1%82"><span class="nav-number">8.3.1.2.</span> <span class="nav-text">基于URL请求</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E7%BB%98%E5%88%B6%E5%92%8C%E6%93%8D%E4%BD%9C%E5%9B%BE%E5%BD%A2%E7%9A%84API"><span class="nav-number">8.4.</span> <span class="nav-text">用于绘制和操作图形的API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E5%87%86%E5%A4%87"><span class="nav-number">8.4.1.</span> <span class="nav-text">基本准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%98%E5%88%B6%E5%9F%BA%E6%9C%AC%E5%BD%A2%E7%8A%B6"><span class="nav-number">8.4.2.</span> <span class="nav-text">绘制基本形状</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8A%A8%E7%94%BB"><span class="nav-number">8.4.3.</span> <span class="nav-text">动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-number">8.4.3.1.</span> <span class="nav-text">实现步骤</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%86%E9%A2%91%E5%92%8C%E9%9F%B3%E9%A2%91API"><span class="nav-number">8.5.</span> <span class="nav-text">视频和音频API</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#HTML5%E4%B8%AD%E7%9A%84%E6%92%AD%E6%94%BE%E5%99%A8"><span class="nav-number">8.5.1.</span> <span class="nav-text">HTML5中的播放器</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#HTML%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.1.</span> <span class="nav-text">HTML部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#CSS%E9%83%A8%E5%88%86"><span class="nav-number">8.5.1.2.</span> <span class="nav-text">CSS部分</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8API"><span class="nav-number">8.5.1.3.</span> <span class="nav-text">使用API</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%A2%E6%88%B7%E7%AB%AF%E5%82%A8%E5%AD%98"><span class="nav-number">8.6.</span> <span class="nav-text">客户端储存</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Web-Storage-API"><span class="nav-number">8.6.1.</span> <span class="nav-text">Web Storage API</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AD%98%E5%82%A8%E5%AF%B9%E8%B1%A1sessionStorage%E5%92%8ClocalStorage"><span class="nav-number">8.6.1.1.</span> <span class="nav-text">存储对象sessionStorage和localStorage</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8"><span class="nav-number">8.6.1.2.</span> <span class="nav-text">方法调用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">8.6.1.3.</span> <span class="nav-text">数据库的使用</span></a></li></ol></li></ol></li></ol></li></ol>
+    </div>
 </div>
-  <div class="powered-by">由 <span class="exturl theme-link" data-url="aHR0cHM6Ly9oZXhvLmlv">Hexo</span> & <span class="exturl theme-link" data-url="aHR0cHM6Ly9taXN0LnRoZW1lLW5leHQub3Jn">NexT.Mist</span> 强力驱动
-  </div>
+        </aside>
+    
 
-        
-
-
-
-
+    <div class="image-viewer-container">
+    <img src="">
+</div>
 
 
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
 
 
-      </div>
-    </footer>
-  </div>
 
-  
-  <script src="/lib/anime.min.js"></script>
-  <script src="/lib/velocity/velocity.min.js"></script>
-  <script src="/lib/velocity/velocity.ui.min.js"></script>
-
-<script src="/js/utils.js"></script>
-
-<script src="/js/motion.js"></script>
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
 
 
-<script src="/js/schemes/muse.js"></script>
-
-
-<script src="/js/next-boot.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
 
 
 
-
-  
-  <script>
-    (function(){
-      var canonicalURL, curProtocol;
-      //Get the <link> tag
-      var x=document.getElementsByTagName("link");
-		//Find the last canonical URL
-		if(x.length > 0){
-			for (i=0;i<x.length;i++){
-				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
-					canonicalURL=x[i].href;
-				}
-			}
-		}
-    //Get protocol
-	    if (!canonicalURL){
-	    	curProtocol = window.location.protocol.split(':')[0];
-	    }
-	    else{
-	    	curProtocol = canonicalURL.split(':')[0];
-	    }
-      //Get current URL if the canonical URL does not exist
-	    if (!canonicalURL) canonicalURL = window.location.href;
-	    //Assign script content. Replace current URL with the canonical URL
-      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
-  </script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
 
 
 
 
-  
-<script src="/js/local-search.js"></script>
+<div class="post-scripts pjax">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+    
+</div>
 
 
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
+<script>
+    window.addEventListener('DOMContentLoaded', () => {
+        const pjax = new Pjax({
+            selectors: [
+                'head title',
+                '.page-container',
+                '.pjax'
+            ],
+            history: true,
+            debug: false,
+            cacheBust: false,
+            timeout: 0,
+            analytics: false,
+            currentUrlFullReload: false,
+            scrollRestoration: false,
+            // scrollTo: true,
+        });
+
+        document.addEventListener('pjax:send', () => {
+            KEEP.utils.pjaxProgressBarStart();
+        });
+
+        document.addEventListener('pjax:complete', () => {
+            KEEP.utils.pjaxProgressBarEnd();
+            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
+            KEEP.refresh();
+        });
+    });
+</script>
 
 
-
-
-
-
-
-
-
-
-
-  
-
-  
-
-  
 
 </body>
 </html>
