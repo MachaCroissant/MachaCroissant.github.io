@@ -11,17 +11,17 @@
         
             JavaScript ES6 语法特征 |
         
-        来个抹茶可颂
+        一通胡编
     </title>
     
 <link rel="stylesheet" href="/css/style.css">
 
     <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
-    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
   </script>
 <meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
@@ -31,12 +31,9 @@
 <body>
 <div class="progress-bar-container">
     
-
+        <span class="scroll-progress-bar"></span>
     
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fas fa-circle-notch fa-spin"></i>
-        </span>
+
     
 </div>
 
@@ -52,8 +49,9 @@
 
     <div class="header-content">
         <div class="left">
+            
             <a class="logo-title" href="/">
-                来个抹茶可颂
+                一通胡编
             </a>
         </div>
 
@@ -159,13 +157,13 @@
         
             <div class="article-header">
                 <div class="avatar">
-                    <img src="/images/tuotuo.jpg">
+                    <img src="/images/tuotuo.jpeg">
                 </div>
                 <div class="info">
                     <div class="author">
                         <span class="name">徐徐</span>
                         
-                            <span class="author-label">摸鱼NLPer</span>
+                            <span class="author-label">抱歉选手</span>
                         
                     </div>
                     <div class="meta-info">
@@ -179,56 +177,21 @@
             <ul>
                 
                     <li>
-                        <a href="/categories/JavaScript/">JavaScript</a>&nbsp;
+                        <a href="/categories/javascript/">javascript</a>&nbsp;
                     </li>
                 
             </ul>
         </span>
     
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/ES6/">ES6</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Promise/">Promise</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Arrow-Function/">Arrow Function</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/class/">class</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Rest-Syntax/">Rest Syntax</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Spread-Syntax/">Spread Syntax</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
     
 
     
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>6 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
         </span>
     
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
     
 </div>
 
@@ -238,53 +201,68 @@
         
 
         <div class="article-content markdown-body">
-            <h1 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h1><p>一共三种变量类型：<code>var</code> <code>let</code> <code>const</code>。</p>
-<p>区别他们主要从</p>
+            <h1 id="变量类型"><a href="#变量类型" class="headerlink" title="变量类型"></a>变量类型</h1><p>区别<code>var</code> <code>let</code> <code>const</code>主要从</p>
 <ul>
-<li><p><code>scope: functional scope?block scope?</code></p>
+<li><p><code>scope: functional scope?block scope?</code>是否是块级作用域</p>
 </li>
-<li><p><code>hoisting or not?</code>是否变量提升</p>
+<li><p><code>hoisting or not?</code>是否存在变量提升</p>
 </li>
-<li><p><code>can be redeclared?</code> </p>
+<li><p><code>can be redeclared?</code> 是否可以重复声明</p>
 </li>
-<li><p><code>can be reassigned?</code></p>
+<li><p><code>can be reassigned?</code> 是否可以重复赋值</p>
 </li>
 </ul>
 <p>这四方面。</p>
+<p>ES6引入let和const主要是为了解决var声明变量造成的</p>
+<ul>
+<li>不可用于定义常量</li>
+<li>可以重复声明变量</li>
+<li>存在变量提升</li>
+<li>不支持会级作用域</li>
+</ul>
+<p>的问题。</p>
+<p>用<code>const</code>定义的原始类型是不可以重新赋值的，但是复杂类型object可以对其属性进行修改。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 不能给常量重新赋值，但如果是引用类型的话可以进行修改。 </span></span><br><span class="line"><span class="keyword">const</span> E = <span class="number">2.718</span>;</span><br><span class="line">E = <span class="number">2.71</span>; </span><br><span class="line"><span class="built_in">console</span>.log(E);</span><br><span class="line">运行结果:</span><br><span class="line">Assignment to constant variable.</span><br><span class="line"></span><br><span class="line"><span class="comment">//  复杂类型</span></span><br><span class="line"><span class="keyword">const</span> LK = &#123;</span><br><span class="line">   name:<span class="string">&#x27;itLike&#x27;</span>, </span><br><span class="line">   intro: <span class="string">&#x27;喜欢IT, 就上撩课(itLike.com)&#x27;</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">LK.name = <span class="string">&#x27;撩课&#x27;</span>;</span><br><span class="line"><span class="built_in">console</span>.log(LK.name)<span class="comment">//itLike;</span></span><br></pre></td></tr></table></figure>
+<p>用<code>var</code>定义的变量通过函数或者闭包拥有作用于；用<code>let</code>定义的变量不仅可以用函数/闭包隔离，还可以通过块级作用域隔离。</p>
+<p>块级作用域就是用一组大括号定义一个块，用<code>let</code>定义的变量在大括号外部访问不到，且<code>let</code>声明不会污染全局作用域。</p>
 <h1 id="箭头函数"><a href="#箭头函数" class="headerlink" title="箭头函数"></a>箭头函数</h1><p>箭头函数(Arrow Functions)适用于需要使用<strong>匿名函数</strong>的地方。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">(multiple/singleParam) =&gt; &#123;statement&#125;</span><br><span class="line">(multiple/singleParam) =&gt; expression</span><br><span class="line">(multiple/singleParam) =&gt; &#123;<span class="keyword">return</span> expression&#125;</span><br><span class="line"><span class="comment">//当只有单一的return语句时可以直接输出expression，没有括号和return语句</span></span><br><span class="line"><span class="comment">//括号既用在多个或单个参数传入</span></span><br><span class="line"><span class="comment">//单个参数传入不适用括号</span></span><br><span class="line">singleParam =&gt; &#123;statement&#125;</span><br><span class="line">() =&gt; &#123;statement&#125;</span><br></pre></td></tr></table></figure>
 <h2 id="箭头函数的书写与花括号圆括号"><a href="#箭头函数的书写与花括号圆括号" class="headerlink" title="箭头函数的书写与花括号圆括号"></a>箭头函数的书写与花括号圆括号</h2><p>箭头左边才有可能出现<code>()</code>，这是参数的圆括号。</p>
 <p>依据箭头函数代码块语句是一句还是多句，可以分成以下两个情况：</p>
 <ul>
-<li><p>箭头的右边出现<code>&#123;&#125;</code>，这是函数体的花括号，代表函数体内部会有多条语句，且会出现return语句。</p>
+<li><p>箭头的右边出现<code>&#123;&#125;</code>，这是函数体的花括号，代表函数体内部会有多条语句，且<strong>会出现return语句</strong>。</p>
 </li>
-<li><p>箭头的右边没有花括号，代表函数体就一条语句，且这条语句自动会被作为箭头函数的return value。</p>
-<p>但如果返回的是一个对象，需要再对象的花括号外层嵌套一个小圆括号，例如<code>() =&gt; (&#123;name: &#39;greg&#39;, id: 12345&#125;)</code>。</p>
+<li><p>箭头的右边没有花括号，代表函数体就一条语句，且这条<strong>语句自动会被作为箭头函数的return value</strong>。</p>
+<p>如果返回的是一个对象，需要再对象的花括号外层嵌套一个小圆括号，例如<code>() =&gt; (&#123;name: &#39;greg&#39;, id: 12345&#125;)</code>。</p>
 </li>
 </ul>
 <h2 id="箭头函数与函数组件"><a href="#箭头函数与函数组件" class="headerlink" title="箭头函数与函数组件"></a>箭头函数与函数组件</h2><p>有的时候会使用匿名函数来创建函数组件，这种形式被称作arrow function component，并且把该匿名函数赋值给一个const变量，同时作为moudle被export出去。形式如下：</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">const</span> TryToLogin = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">        <span class="comment">// 返回的内容是大写的HTML标签构成的JSX对象</span></span><br><span class="line">        <span class="comment">// 必须要有一个根节点包裹，不能同时多个并列标签直接返回</span></span><br><span class="line">    )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>一般函数组件的写法。当不给函数传递参数时，就代表该函数组件起一个组装UI或者路由的作用，比如下面这个顶层App组件。当为函数传递参数时，一般又是要进行数据传递的组件，会需要export。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">function App() &#123;</span><br><span class="line">  return (</span><br><span class="line">      &#x2F;&#x2F; HTML内置标签，定义react component后的标签</span><br><span class="line">      &#x2F;&#x2F; 全部大写</span><br><span class="line">      &#x2F;&#x2F; 路由标签</span><br><span class="line">  )</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<hr>
 <p>class组件与函数组件比较：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">class Welcome extends React.Component &#123;</span><br><span class="line">  render() &#123;</span><br><span class="line">    return (</span><br><span class="line">        &#x2F;&#x2F; UI显示</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>render()&#123; return( )&#125;</code>这个模式在class组件中十分常见，代表的是UI渲染部分。</p>
-<hr>
 <p>在return语句内部本来应该返回的是类HTML语言，但是由于JSX语法的出现，只要我们把类JavaScript的语法放到花括号中，我们就可以在return语句内部写JavaScript。当然JavaScript语法的返回内容本质上还是类HTML语言。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> React <span class="keyword">from</span> <span class="string">&#x27;react&#x27;</span>;</span><br><span class="line"><span class="keyword">const</span> App = <span class="function">() =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">var</span> users = [</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">&#x27;Robin&#x27;</span> &#125;,</span><br><span class="line">    &#123; <span class="attr">name</span>: <span class="string">&#x27;Markus&#x27;</span> &#125;,</span><br><span class="line">  ];</span><br><span class="line">  <span class="keyword">return</span> (</span><br><span class="line">    &lt;ul&gt;</span><br><span class="line">      &#123;users.map(<span class="function"><span class="params">user</span> =&gt;</span> <span class="xml"><span class="tag">&lt;<span class="name">li</span>&gt;</span>&#123;user.name&#125;<span class="tag">&lt;/<span class="name">li</span>&gt;</span></span>)&#125;</span><br><span class="line">      <span class="comment">// 第一层花括号是因为return语句返回的应该是html语言，但是users.map显然是javascript语言，所以我们需要用上花括号。</span></span><br><span class="line">      <span class="comment">// map语句内部表明用第一层花括号括起来的JavaScript语言返回的仍然是html语言/注意li标签。</span></span><br><span class="line">      <span class="comment">// 但是li标签内部又用了一层花括号，因为user.name是javascript语言。</span></span><br><span class="line">    &lt;/ul&gt;</span><br><span class="line">  );</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> App;</span><br></pre></td></tr></table></figure>
 <h2 id="单闭合标签调用与JSX语法引用"><a href="#单闭合标签调用与JSX语法引用" class="headerlink" title="单闭合标签调用与JSX语法引用"></a>单闭合标签调用与JSX语法引用</h2><p>无论组件时函数组件还是class组件，使用匿名函数定义的还是普通名称函数定义的，在调用组件的时候，都是将函数名称/组件名称/或者复制匿名函数到变量的名称（注意都需要大写）以HTML element的单闭合标签来使用。这个过程就好像是在<strong>调用函数，关注组件的return语句部分</strong>。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;TryToLogin &#x2F;&gt;</span><br><span class="line">&lt;Welcome &#x2F;&gt;</span><br><span class="line">&lt;App &#x2F;&gt;</span><br></pre></td></tr></table></figure>
-<hr>
 <p>但是有的时候又很奇怪为什么不用花括号取包裹这些标签，比如说在把模块import到当前文件后，使用<code>&#123;Welcome&#125;/&#123;App&#125;/&#123;TryToLogin&#125;</code>这种语法，需要指出的是，这个花括号只是让我们在HTML中能用JavaScript，如果用花括号包裹着这些内容，那就好像是<strong>把函数声明放在了html文件中</strong>，不会有任何渲染。</p>
-<h1 id="模版字面量"><a href="#模版字面量" class="headerlink" title="模版字面量"></a>模版字面量</h1><p>模版字面量(Template Literals)通过在字符串中引入占位符<code>$&#123;&#125;</code>实现允许嵌入表达式的字符串字面量。</p>
+<h1 id="模版字面量"><a href="#模版字面量" class="headerlink" title="模版字面量"></a>模版字面量</h1><p>模版字面量(Template Literals)通过在模版字符串中引入占位符<code>$&#123;&#125;</code>实现允许嵌入表达式的字符串字面量。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> name = <span class="string">&#x27;小煤球&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> sex = <span class="string">&#x27;公&#x27;</span>;</span><br><span class="line"><span class="keyword">let</span> result = <span class="string">`我叫 <span class="subst">$&#123;name&#125;</span> , 我是 <span class="subst">$&#123;sex&#125;</span> 的`</span>;</span><br><span class="line"><span class="built_in">console</span>.log(result); </span><br><span class="line"><span class="comment">// 我叫 小煤球 , 我是 公 的</span></span><br></pre></td></tr></table></figure>
 <p>功能包括但不限于：</p>
 <ul>
-<li><p>代码中直接换行就能实现字符串输出换行</p>
+<li><p>可以换行，所有的空格和换行都会被保留，代码中直接换行就能实现字符串输出换行</p>
 </li>
 <li><p>占位符中的表达式被直接计算输出</p>
 </li>
 </ul>
+<h1 id="解构赋值"><a href="#解构赋值" class="headerlink" title="解构赋值"></a>解构赋值</h1><p>用于数组结构和对象解构。</p>
+<p>解构数组，最外面用方括号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> foo = [<span class="string">&quot;one&quot;</span>, <span class="string">&quot;two&quot;</span>, <span class="string">&quot;three&quot;</span>, <span class="string">&quot;four&quot;</span>];</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> [one, two, ...rest] = foo;</span><br><span class="line"><span class="built_in">console</span>.log(one); <span class="comment">// &quot;one&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(two); <span class="comment">// &quot;two&quot;</span></span><br><span class="line"><span class="built_in">console</span>.log(rest); <span class="comment">// [&quot;three&quot;, &quot;four&quot;] 解构赋值结合剩余语法</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> x = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>];</span><br><span class="line"><span class="keyword">var</span> [y, z] = x;</span><br><span class="line"><span class="built_in">console</span>.log(y); <span class="comment">// 1</span></span><br><span class="line"><span class="built_in">console</span>.log(z); <span class="comment">// 2</span></span><br></pre></td></tr></table></figure>
+<p>解构对象，最外面用花括号。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = &#123;<span class="attr">p</span>: <span class="number">42</span>, <span class="attr">q</span>: <span class="literal">true</span>&#125;;</span><br><span class="line"><span class="keyword">var</span> &#123;p, q&#125; = o;</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(p); <span class="comment">// 42</span></span><br><span class="line"><span class="built_in">console</span>.log(q); <span class="comment">// true</span></span><br></pre></td></tr></table></figure>
+<p>解构赋值有哪些用？交换变量swap，解析一个从函数返回的数组/对象，忽略函数返回的数组/对象中不需要的值等。<a class="link" target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment">MDN 解构赋值<i class="fas fa-external-link-alt"></i></a></p>
 <h1 id="展开语法"><a href="#展开语法" class="headerlink" title="展开语法"></a>展开语法</h1><p>展开语法(Spread Syntax)可以使可迭代对象在某一处被展开，例如</p>
 <ul>
 <li>在函数调用或数组构造时，将数组表达式在语法层面展开，当作函数参数或数组元素传入</li>
@@ -295,6 +273,10 @@
 <li>在构造对象字面量时，将对象表达式按照key-value展开</li>
 </ul>
 <p><code>let objClone = &#123;...obj&#125;</code>：实现对象字面量的拷贝及连接</p>
+<ul>
+<li>实现数组拼接对象合成</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> arr1 = [ <span class="string">&#x27;a&#x27;</span>, <span class="string">&#x27;b&#x27;</span>, <span class="string">&#x27;c&#x27;</span>];</span><br><span class="line"><span class="keyword">let</span> arr2 = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>];</span><br><span class="line"><span class="keyword">let</span> result = [...arr1, ...arr2];</span><br><span class="line"><span class="built_in">console</span>.log(result); </span><br><span class="line"><span class="comment">//  [ &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, 1, 2, 3 ]</span></span><br><span class="line"></span><br><span class="line"> <span class="keyword">let</span> smallDog = &#123;<span class="attr">name</span>:<span class="string">&#x27;小煤球&#x27;</span>, <span class="attr">age</span>: <span class="number">1</span>&#125;;</span><br><span class="line"> <span class="keyword">let</span> bigDog = &#123;<span class="attr">name</span>: <span class="string">&#x27;Python&#x27;</span>, <span class="attr">age</span>: <span class="number">2</span>&#125;;</span><br><span class="line"> <span class="keyword">let</span> dog = &#123;...smallDog, ...bigDog&#125;;</span><br><span class="line"> <span class="built_in">console</span>.log(dog);  </span><br><span class="line"> <span class="comment">// &#123;name: &quot;Python&quot;, age: 2&#125;</span></span><br><span class="line"><span class="comment">// 注意: 如果对象中的属性一致, 会被覆盖</span></span><br></pre></td></tr></table></figure>
 <h1 id="剩余语法"><a href="#剩余语法" class="headerlink" title="剩余语法"></a>剩余语法</h1><p>剩余语法(Rest Syntax)和展开语法进行的是相反的操作，展开语法将某一东西展开为许多元素，剩余语法将多个元素收集合并成一个东西。</p>
 <p>剩余语法允许我们将不被预期的、多余的（没有对应形参的实参）、不定量的参数收集成一个数组（是真正的<code>Array</code>实例）。</p>
 <p><code>function(a, b, ...theArgs)&#123; &#125;</code></p>
@@ -328,7 +310,7 @@
         <li>本文作者：徐徐</li>
         <li>创建时间：2020-10-05 16:45:30</li>
         <li>
-            本文链接：https://drunk99.xyz/2020/10/05/es6/
+            本文链接：https://machacroissant.github.io/2020/10/05/es6/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -388,10 +370,10 @@
         
             
     <div class="valine-container">
-        <script data-pjax
+        <script 
                 src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
         <div id="vcomments"></div>
-        <script data-pjax>
+        <script >
             function loadValine() {
                 new Valine({
                     el: '#vcomments',
@@ -400,7 +382,7 @@
                     meta: ['nick', 'mail', 'link'],
                     avatar: 'wavatar',
                     enableQQ: true,
-                    placeholder: '来一起讨论吧～',
+                    placeholder: 'Let&#39;s talk!',
                     lang: 'zh-CN'.toLowerCase()
                 });
 
@@ -437,7 +419,7 @@
                 }, 2000);
             }
 
-            if ('true') {
+            if ('false') {
                 const loadValineTimeout = setTimeout(() => {
                     loadValine();
                     clearTimeout(loadValineTimeout);
@@ -476,12 +458,8 @@
             2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
         </div>
         
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
             <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                    </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
@@ -491,7 +469,7 @@
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
         </div>
         
     </div>
@@ -555,6 +533,10 @@
         
 
         
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
 
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
@@ -566,11 +548,6 @@
             <i class="fas fa-cog fa-spin"></i>
         </li>
         
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="arrow-up fas fa-arrow-up"></i>
-                <span class="percent"></span>
-            </li>
-        
     </ul>
 </div>
 
@@ -580,7 +557,7 @@
         <aside class="page-aside">
             <div class="post-toc-wrap">
     <div class="post-toc">
-        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">变量类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">箭头函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E7%9A%84%E4%B9%A6%E5%86%99%E4%B8%8E%E8%8A%B1%E6%8B%AC%E5%8F%B7%E5%9C%86%E6%8B%AC%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">箭头函数的书写与花括号圆括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E4%B8%8E%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">箭头函数与函数组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E9%97%AD%E5%90%88%E6%A0%87%E7%AD%BE%E8%B0%83%E7%94%A8%E4%B8%8EJSX%E8%AF%AD%E6%B3%95%E5%BC%95%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">单闭合标签调用与JSX语法引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E7%89%88%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">模版字面量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%95%E5%BC%80%E8%AF%AD%E6%B3%95"><span class="nav-number">4.</span> <span class="nav-text">展开语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%A9%E4%BD%99%E8%AF%AD%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">剩余语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB-%E7%BB%A7%E6%89%BF"><span class="nav-number">6.</span> <span class="nav-text">类 继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%B1%BB"><span class="nav-number">6.1.</span> <span class="nav-text">定义类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E4%BD%93%E6%96%B9%E6%B3%95"><span class="nav-number">6.2.</span> <span class="nav-text">类体方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extends%E5%AD%90%E7%B1%BB"><span class="nav-number">6.3.</span> <span class="nav-text">extends子类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Promise%E5%AF%B9%E8%B1%A1"><span class="nav-number">7.</span> <span class="nav-text">Promise对象</span></a></li></ol>
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%98%E9%87%8F%E7%B1%BB%E5%9E%8B"><span class="nav-number">1.</span> <span class="nav-text">变量类型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0"><span class="nav-number">2.</span> <span class="nav-text">箭头函数</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E7%9A%84%E4%B9%A6%E5%86%99%E4%B8%8E%E8%8A%B1%E6%8B%AC%E5%8F%B7%E5%9C%86%E6%8B%AC%E5%8F%B7"><span class="nav-number">2.1.</span> <span class="nav-text">箭头函数的书写与花括号圆括号</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%AE%AD%E5%A4%B4%E5%87%BD%E6%95%B0%E4%B8%8E%E5%87%BD%E6%95%B0%E7%BB%84%E4%BB%B6"><span class="nav-number">2.2.</span> <span class="nav-text">箭头函数与函数组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E9%97%AD%E5%90%88%E6%A0%87%E7%AD%BE%E8%B0%83%E7%94%A8%E4%B8%8EJSX%E8%AF%AD%E6%B3%95%E5%BC%95%E7%94%A8"><span class="nav-number">2.3.</span> <span class="nav-text">单闭合标签调用与JSX语法引用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E7%89%88%E5%AD%97%E9%9D%A2%E9%87%8F"><span class="nav-number">3.</span> <span class="nav-text">模版字面量</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%A7%A3%E6%9E%84%E8%B5%8B%E5%80%BC"><span class="nav-number">4.</span> <span class="nav-text">解构赋值</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B1%95%E5%BC%80%E8%AF%AD%E6%B3%95"><span class="nav-number">5.</span> <span class="nav-text">展开语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%A9%E4%BD%99%E8%AF%AD%E6%B3%95"><span class="nav-number">6.</span> <span class="nav-text">剩余语法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%B1%BB-%E7%BB%A7%E6%89%BF"><span class="nav-number">7.</span> <span class="nav-text">类 继承</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E7%B1%BB"><span class="nav-number">7.1.</span> <span class="nav-text">定义类</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B1%BB%E4%BD%93%E6%96%B9%E6%B3%95"><span class="nav-number">7.2.</span> <span class="nav-text">类体方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#extends%E5%AD%90%E7%B1%BB"><span class="nav-number">7.3.</span> <span class="nav-text">extends子类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Promise%E5%AF%B9%E8%B1%A1"><span class="nav-number">8.</span> <span class="nav-text">Promise对象</span></a></li></ol>
     </div>
 </div>
         </aside>
@@ -626,55 +603,23 @@
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
 
 
 
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
 
-<div class="post-scripts pjax">
+
+
+
+<div class="post-scripts">
     
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
     
 </div>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            KEEP.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            KEEP.utils.pjaxProgressBarEnd();
-            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            KEEP.refresh();
-        });
-    });
-</script>
 
 
 

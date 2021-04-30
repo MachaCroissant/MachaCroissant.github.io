@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="记录，分享。">
+    <meta name="author" content="徐徐">
+    
+    <title>
+        
+            IEEE754标准下的浮点数表示 |
+        
+        一通胡编
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                一通胡编
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">IEEE754标准下的浮点数表示</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/tuotuo.jpeg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">徐徐</span>
+                        
+                            <span class="author-label">抱歉选手</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-04-04 14:26:14
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%8E%9F%E7%90%86/">计算机原理</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+
+    
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>8 分钟</span>
+        </span>
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>在十进制中，1/2，1/4，1/5，1/8，1/10可以被准确地表示为小数，但是1/3，1/6，1/7，1/9却都是循环小数，这是为什么？十进制的base是10，10的质因数/prime factor为2和5，可以准确的表示为小数的那些数字的分母都是从10的质因数2和5衍生而来的。</p>
+<p>同理，在二进制中，base是2，2的质因数只有2，因此1/2，1/4，1/8可以被准确地表示为小数，而1/5，1/10是循环小数。</p>
+<p>计算机编程语言中输入的十进制数字，首先会被转化为二进制存储（怎么进行转化，这就是IEEE754规定的标准）在计算机中。由于存储空间有限，循环小数的二进制会在特定的位被舍去/截断。在舍去/截断的二进制基础上再进行各种运算，最后输出的时候又需要转换成十进制输出。因此，二进制无法在有限长度中精确地表示十进制中的0.1和0.2，因此。</p>
+<p>这也就不难怪，在JavaScript中对Number类型进行运算结果会如下。其他类型的语言的输出结果可以查看<a class="link" target="_blank" rel="noopener" href="https://0.30000000000000004.com/">Floating Point Math<i class="fas fa-external-link-alt"></i></a>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="number">0.1</span> + <span class="number">0.2</span></span><br><span class="line">&lt; <span class="number">0.30000000000000004</span></span><br></pre></td></tr></table></figure>
+<p>我们知道计算机无法精确表示0.1和0.2，他们的计算结果也不精确，但是为什么偏偏是0.30000000000000004呢？这就涉及到<strong>IEEE Standard for Floating-Point Arithmetic</strong> (<strong>IEEE 754</strong>)标准，它规定了CPU应该如何存储、运算、表示浮点数。</p>
+<h1 id="常说的单精度和双精度是什么意思？"><a href="#常说的单精度和双精度是什么意思？" class="headerlink" title="常说的单精度和双精度是什么意思？"></a>常说的单精度和双精度是什么意思？</h1><p>在学C语言的时候，老师介绍数据类型，说到浮点数，就说有单精度和双精度两种类型，其实这个双精度和单精度就是IEEE 754规定的小数在CPU当中的存储方式。IEEE 754规定了四种表示浮点数值的方式：32位单精度，64位双精度，53位延伸单精度，80位延伸双精度；这样的规定优点是可以归一化处理整数和小数。</p>
+<p>单精度，占4个byte/字节，32位。</p>
+<p><img src="/2021/04/04/floating-point-arithmetic/2560px-Float_example.svg.png" alt="2560px-Float_example.svg" style="zoom:50%;"></p>
+<p>双精度，占8个byte/字节，64位。</p>
+<p><img src="/2021/04/04/floating-point-arithmetic/IEEE_754_Double_Floating_Point_Format.svg.png" alt="IEEE_754_Double_Floating_Point_Format.svg" style="zoom:50%;"></p>
+<p>可以看到，IEE 754标准的浮点数由三个阈组成，分别是sign bit/符号位，expoennt bias/指数偏移值，fraction/分数值。32位与64位的不同在于exponent bias和fraction的位不同，sign bit都是一位。</p>
+<h1 id="带小数的十进制转二进制"><a href="#带小数的十进制转二进制" class="headerlink" title="带小数的十进制转二进制"></a>带小数的十进制转二进制</h1><p>带小数的十进制转换为二进制，分开处理整数部分和小数部分。</p>
+<p>对于整数部分，除2取余，逆序排列。对于小数部分，称2取整，顺序排列。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">以173.8125为例子</span><br><span class="line">整数部分 10101101</span><br><span class="line">173 / 2 = 86 ... 1</span><br><span class="line">86 / 2 = 43 ... 0</span><br><span class="line">43 / 2 = 21 ... 1   ↑</span><br><span class="line">21 / 2 = 10 ... 1   | 逆序排列</span><br><span class="line">10 / 2 = 5 ... 0    |</span><br><span class="line">5 / 2 = 2 ... 1     |</span><br><span class="line">2 / 2 = 1 ... 0</span><br><span class="line">1 / 2 = 0 ... 1</span><br><span class="line"></span><br><span class="line">小数部分 1101</span><br><span class="line">0.8125 * 2 = 1.625  |</span><br><span class="line">0.625 * 2 = 1.25    | 顺序排列</span><br><span class="line">0.25 * 2 = 0.5      |</span><br><span class="line">0.5 * 2 = 1         ↓</span><br><span class="line"></span><br><span class="line">结果 10101101.1101</span><br></pre></td></tr></table></figure>
+<p>二进制的科学计数法，以十进制173.8125为例子，科学计数法1.738125 X 10^2，底数为10。对应二进制10101101.1101的科学计数法为1.01011011101 X 2^7，底数为2。</p>
+<h1 id="IEEE-754-双精度-64位"><a href="#IEEE-754-双精度-64位" class="headerlink" title="IEEE 754 双精度 64位"></a>IEEE 754 双精度 64位</h1><p>JavaScript中Number类型采用了IEEE 754 双精度标准，既可以表示整数，也可以表示小数。</p>
+<p>64位双精度分别由：</p>
+<ul>
+<li>1位符号位sign，正数0，负数1</li>
+<li>11位指数偏移位exponent，范围是0～2^11-1（2047），等于固定偏移值加上指数实际值的11位二进制表示。在64位中，固定偏移值为1023。</li>
+<li>52位分数位fraction</li>
+</ul>
+<p>一个浮点数（Value）就能表示为：</p>
+<script type="math/tex; mode=display">
+\text{Value} = \text{Sign} \times \text{exponent} \times \text{fraction}</script><h2 id="具体例子-0-1和0-2"><a href="#具体例子-0-1和0-2" class="headerlink" title="具体例子 0.1和0.2"></a>具体例子 0.1和0.2</h2><p>以0.1和0.2为例子，将其转换为64位双精度浮点数。</p>
+<p>第一步，将0.1转换为二进制为0.0 0011 0011 0011 0011……无限重复0011。</p>
+<p>第二步，将0.1的二进制表示转换为科学计数法为2^-4 X 1. 1001 1001 ……重复1001无限次。</p>
+<p>第三步，对科学计数法的0.1二进制按照IEEE 754标准转换为浮点数。</p>
+<ul>
+<li>sign为0</li>
+<li>exponent为-4+1023(64位固定值)=1019，转换为11位二进制为01111111011</li>
+<li>fraction为小数点后面的52位，1001……1001（52位，13个1001）｜（要从这里发生截断）1001，由于第53位是1，会产生进位，因为会变为1001……1001（48位，12个1001）1010。</li>
+</ul>
+<p>最终，0.1的存储序列为</p>
+<p><img src="/2021/04/04/floating-point-arithmetic/image-20210404165921322.png" alt="image-20210404165921322" style="zoom:20%;"></p>
+<p>同理，0.2的存储序列为</p>
+<p><img src="/2021/04/04/floating-point-arithmetic/image-20210404170016561.png" alt="image-20210404170016561" style="zoom:20%;"></p>
+<h2 id="精度丢失发生在哪里"><a href="#精度丢失发生在哪里" class="headerlink" title="精度丢失发生在哪里"></a>精度丢失发生在哪里</h2><p>通过上面0.1和0.2的双精度表示，可以发现实际上是上述两个二进制数字在做运算。<strong>每个数字表示成二进制就只有52位能够储存，后面的小数都被截断了，这是第一处精度丢失的地方。</strong></p>
+<p><strong>第二处丢失精度的地方发生在两个双精度浮点数参与计算，对阶的时候。</strong>这里的对阶，就是要令参与运算的两个双精度浮点数的exponent一样的过程，exponent的值就是阶。在加法时，小的的指数域要转化为大的指数域，必然要小数点左移，一旦小数点左移，52位fraction的最左边0变多了，最右边的数字又被挤出去了，又一次精度丢失。</p>
+<h2 id="固定偏移值"><a href="#固定偏移值" class="headerlink" title="固定偏移值"></a>固定偏移值</h2><p>这一部分会回答下面两个问题。</p>
+<ul>
+<li><p>固定偏移值怎么计算？</p>
+</li>
+<li><p>为什么要加上固定偏移值？</p>
+</li>
+</ul>
+<p>固定偏移值的计算方法为$2^{e-1}-1$，$e$是存储指数的比特长度。在双精度表示中，是11位，因此固定偏移值位1023。在单精度表示中，是8位，因此固定偏移值为128。</p>
+<p>在双精度浮点数中，exponent的存储范围位1～2046（0和2047有特殊意义），减去1023的偏移，实际范围位-1022～+1023。</p>
+<p>由于实际指数值可能为负，所以11比特中需要有一位拿来表示符号，虽然补码（two’s complement）常用来表示带符号的二进制，但会使二进制数字比较大小很麻烦。因此将expoent存储为unsigned value来使比较大小简单一些。</p>
+<blockquote>
+<p>The exponent field is an 11-bit unsigned integer from 0 to 2047, in <a class="link" target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Exponent_bias">biased form<i class="fas fa-external-link-alt"></i></a>: an exponent value of 1023 represents the actual zero. Exponents range from −1022 to +1023 because exponents of −1023 (all 0s) and +1024 (all 1s) are reserved for special numbers.</p>
+</blockquote>
+<p>为什么选1023而不是1024？11位就是2^11，可以表示2048个数，劈开一半作偏移，就是1024，但是因为要去掉有特殊作用0和2048，就剩下2046/2=1023了，因此1023作偏移。</p>
+<h2 id="为什么console-log-0-1-输出就是0-1"><a href="#为什么console-log-0-1-输出就是0-1" class="headerlink" title="为什么console.log(0.1)输出就是0.1"></a>为什么console.log(0.1)输出就是0.1</h2><p>我们知道，0.1在储存的时候就是丢失了精度的，因为他转换为2进制是是无限循环的，之所以得到0.1是因为console.log()在输出的时候JavaScript自动做了截断。</p>
+<p>双精度浮点数输出的截断按照如下规则：</p>
+<blockquote>
+<p>The 53-bit significand precision gives from 15 to 17 <a class="link" target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Significant_figures">significant decimal digits<i class="fas fa-external-link-alt"></i></a> precision (2−53 ≈ 1.11 × 10−16). If a decimal string with at most 15 significant digits is converted to IEEE 754 double-precision representation, and then converted back to a decimal string with the same number of digits, the final result should match the original string. If an IEEE 754 double-precision number is converted to a decimal string with at least 17 significant digits, and then converted back to double-precision representation, the final result must match the original number.</p>
+</blockquote>
+<p>因为64位双精度浮点数的表示能力最多到十进制小数点的第十六位，因此</p>
+<ul>
+<li><p>如果十进制小数点位数至多15位，不会截断，按照样子输出。</p>
+</li>
+<li><p>如果十进制小数点位数至少17位，最终以转化为到二进制的53位为止的双精度浮点数。</p>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&gt; <span class="number">0.1</span> == <span class="number">0.1000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">001</span>(<span class="number">15</span>)</span><br><span class="line">&lt; <span class="literal">false</span></span><br><span class="line">&gt; <span class="number">0.1</span> == <span class="number">0.1000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0001</span>(<span class="number">16</span>)</span><br><span class="line">&lt; <span class="literal">false</span></span><br><span class="line">&gt; <span class="number">0.1</span> == <span class="number">0.1000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">1</span>(<span class="number">17</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="number">0.1</span> == <span class="number">0.1000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">01</span>(<span class="number">18</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br><span class="line">&gt; <span class="number">0.1</span> === <span class="number">0.1000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">0000</span> <span class="number">01</span>(<span class="number">18</span>)</span><br><span class="line">&lt; <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+<h1 id="在编程中处理双精度浮点数"><a href="#在编程中处理双精度浮点数" class="headerlink" title="在编程中处理双精度浮点数"></a>在编程中处理双精度浮点数</h1><p>在处理双精度浮点数相关的编程时，不要使用相等，而应该设置一个容许的误差范围，因为双精度浮点数的运算本就不能完全精确。</p>
+<p>不要使用<code>if(x==y) &#123;...&#125;</code>来比较两个浮点数，而是使用<code>if (abs(x-y) &lt; myToleranceValue) &#123;…&#125;</code>，一般都会把这个myToleranceValue称作epsilon，注意这个epsilon和语言中内置的epsilon constants是不一样的。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a class="link" target="_blank" rel="noopener" href="https://0.30000000000000004.com/">Floating Point Math<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://draveness.me/whys-the-design-floating-point-arithmetic/">为什么 0.1 + 0.2 = 0.300000004<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/351127362">javascript 双精度浮点数剖析<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000009084877">该死的IEEE-754浮点数，说「约」就「约」，你的底线呢？以JS的名义来好好查查你<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Double-precision_floating-point_format">Double-precision floating-point format<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://www.zhihu.com/question/26022206/answer/212820636">单精度与双精度是什么意思，有什么区别？ - 叛逆者的回答 - 知乎<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://segmentfault.com/q/1010000016401244/a-1020000016446375">IEEE 754浮点数标准中64为浮点数为什么指数偏移量是1023？<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="http://bartaz.github.io/ieee754-visualization/">IEEE754的可视化<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：IEEE754标准下的浮点数表示</li>
+        <li>本文作者：徐徐</li>
+        <li>创建时间：2021-04-04 14:26:14</li>
+        <li>
+            本文链接：https://machacroissant.github.io/2021/04/04/floating-point-arithmetic/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/04/js-func-parameter/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JavaScript参数传递</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/04/js-principle/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">JavaScript执行机制、事件循环</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script >
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'aqAOPQAx86speqYXI4gPuLWx-gzGzoHsz',
+                    appKey: '8fzaXFq8Ikhr5mucbhj3qqUS',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: 'Let&#39;s talk!',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '徐徐';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('false') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%B8%E8%AF%B4%E7%9A%84%E5%8D%95%E7%B2%BE%E5%BA%A6%E5%92%8C%E5%8F%8C%E7%B2%BE%E5%BA%A6%E6%98%AF%E4%BB%80%E4%B9%88%E6%84%8F%E6%80%9D%EF%BC%9F"><span class="nav-number">1.</span> <span class="nav-text">常说的单精度和双精度是什么意思？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%B8%A6%E5%B0%8F%E6%95%B0%E7%9A%84%E5%8D%81%E8%BF%9B%E5%88%B6%E8%BD%AC%E4%BA%8C%E8%BF%9B%E5%88%B6"><span class="nav-number">2.</span> <span class="nav-text">带小数的十进制转二进制</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IEEE-754-%E5%8F%8C%E7%B2%BE%E5%BA%A6-64%E4%BD%8D"><span class="nav-number">3.</span> <span class="nav-text">IEEE 754 双精度 64位</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E4%BE%8B%E5%AD%90-0-1%E5%92%8C0-2"><span class="nav-number">3.1.</span> <span class="nav-text">具体例子 0.1和0.2</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%B2%BE%E5%BA%A6%E4%B8%A2%E5%A4%B1%E5%8F%91%E7%94%9F%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="nav-number">3.2.</span> <span class="nav-text">精度丢失发生在哪里</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%BA%E5%AE%9A%E5%81%8F%E7%A7%BB%E5%80%BC"><span class="nav-number">3.3.</span> <span class="nav-text">固定偏移值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88console-log-0-1-%E8%BE%93%E5%87%BA%E5%B0%B1%E6%98%AF0-1"><span class="nav-number">3.4.</span> <span class="nav-text">为什么console.log(0.1)输出就是0.1</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9C%A8%E7%BC%96%E7%A8%8B%E4%B8%AD%E5%A4%84%E7%90%86%E5%8F%8C%E7%B2%BE%E5%BA%A6%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">4.</span> <span class="nav-text">在编程中处理双精度浮点数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">5.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

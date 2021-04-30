@@ -11,17 +11,17 @@
         
             ES6导入导出声明 |
         
-        来个抹茶可颂
+        一通胡编
     </title>
     
 <link rel="stylesheet" href="/css/style.css">
 
     <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
-    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
   </script>
 <meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
@@ -31,12 +31,9 @@
 <body>
 <div class="progress-bar-container">
     
-
+        <span class="scroll-progress-bar"></span>
     
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fas fa-circle-notch fa-spin"></i>
-        </span>
+
     
 </div>
 
@@ -52,8 +49,9 @@
 
     <div class="header-content">
         <div class="left">
+            
             <a class="logo-title" href="/">
-                来个抹茶可颂
+                一通胡编
             </a>
         </div>
 
@@ -159,13 +157,13 @@
         
             <div class="article-header">
                 <div class="avatar">
-                    <img src="/images/tuotuo.jpg">
+                    <img src="/images/tuotuo.jpeg">
                 </div>
                 <div class="info">
                     <div class="author">
                         <span class="name">徐徐</span>
                         
-                            <span class="author-label">摸鱼NLPer</span>
+                            <span class="author-label">抱歉选手</span>
                         
                     </div>
                     <div class="meta-info">
@@ -179,7 +177,7 @@
             <ul>
                 
                     <li>
-                        <a href="/categories/JavaScript/">JavaScript</a>&nbsp;
+                        <a href="/categories/javascript/">javascript</a>&nbsp;
                     </li>
                 
             </ul>
@@ -191,15 +189,15 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/ES6/">ES6</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/import/">import</a>&nbsp;
+                        <a href="/tags/import/">import</a>&nbsp;
                     </li>
                 
                     <li>
                         | <a href="/tags/export/">export</a>&nbsp;
+                    </li>
+                
+                    <li>
+                        | <a href="/tags/ES6/">ES6</a>&nbsp;
                     </li>
                 
             </ul>
@@ -210,13 +208,9 @@
     
     
         <span class="article-min2read article-meta-item">
-            <i class="fas fa-clock"></i>&nbsp;<span>4 分钟</span>
+            <i class="fas fa-clock"></i>&nbsp;<span>5 分钟</span>
         </span>
     
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
     
 </div>
 
@@ -227,6 +221,16 @@
 
         <div class="article-content markdown-body">
             <p>模块是自动运行在严格模式下且没有办法退出运行的JavaScript代码。</p>
+<blockquote>
+<p>注意ES6模块与CommonJS模块完全不同。</p>
+<p>区别：</p>
+<ul>
+<li>CommonJS  Module是对模块的浅拷贝；ES6 Moudle是对模块的引用，只存只读。可以对Common JS模块重新赋值如<code>var myPromose = require(&#39;./testpromise&#39;)</code>，但不能对ES6 Module赋值。</li>
+<li>CommonJS Module在运行时加载<code>module.exports</code>属性，ES6 模块是编译时输出接口，这个接口不是对象，而是静态定义。</li>
+<li>CommonJS 模块的<code>require()</code>是同步加载模块，ES6 模块的<code>import</code>命令是异步加载，有一个独立的模块依赖的解析阶段。</li>
+</ul>
+<p><a class="link" target="_blank" rel="noopener" href="https://es6.ruanyifeng.com/#docs/module-loader#ES6-%E6%A8%A1%E5%9D%97%E4%B8%8E-CommonJS-%E6%A8%A1%E5%9D%97%E7%9A%84%E5%B7%AE%E5%BC%82">ES6模块与CommonJS模块的差异<i class="fas fa-external-link-alt"></i></a></p>
+</blockquote>
 <p>import和export都是静态关键字。模块的导入和导出有一个重要的限制/原则，必须在在其他语句和函数之外使用，不能动态的通过if语句之类的语法去进行导入导出。</p>
 <h1 id="导出语法"><a href="#导出语法" class="headerlink" title="导出语法"></a>导出语法</h1><p>可以导出任何该js文件中的变量、函数、类。</p>
 <h2 id="定义时导出声明"><a href="#定义时导出声明" class="headerlink" title="定义时导出声明"></a>定义时导出声明</h2><p>这种导出方法要求导出的函数或者类声明有名称。</p>
@@ -284,7 +288,7 @@
         <li>本文作者：徐徐</li>
         <li>创建时间：2020-12-15 11:12:45</li>
         <li>
-            本文链接：https://drunk99.xyz/2020/12/15/import-export-es6/
+            本文链接：https://machacroissant.github.io/2020/12/15/import-export-es6/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -317,7 +321,7 @@
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2020/12/14/JWT-explaination/"
+                           href="/2020/12/14/jwt-explaination/"
                         >
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">JWT介绍</span>
@@ -344,10 +348,10 @@
         
             
     <div class="valine-container">
-        <script data-pjax
+        <script 
                 src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
         <div id="vcomments"></div>
-        <script data-pjax>
+        <script >
             function loadValine() {
                 new Valine({
                     el: '#vcomments',
@@ -356,7 +360,7 @@
                     meta: ['nick', 'mail', 'link'],
                     avatar: 'wavatar',
                     enableQQ: true,
-                    placeholder: '来一起讨论吧～',
+                    placeholder: 'Let&#39;s talk!',
                     lang: 'zh-CN'.toLowerCase()
                 });
 
@@ -393,7 +397,7 @@
                 }, 2000);
             }
 
-            if ('true') {
+            if ('false') {
                 const loadValineTimeout = setTimeout(() => {
                     loadValine();
                     clearTimeout(loadValineTimeout);
@@ -432,12 +436,8 @@
             2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
         </div>
         
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
             <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                    </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
@@ -447,7 +447,7 @@
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
         </div>
         
     </div>
@@ -511,6 +511,10 @@
         
 
         
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
 
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
@@ -521,11 +525,6 @@
         <li class="tools-item tool-toggle-show flex-center">
             <i class="fas fa-cog fa-spin"></i>
         </li>
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="arrow-up fas fa-arrow-up"></i>
-                <span class="percent"></span>
-            </li>
         
     </ul>
 </div>
@@ -582,55 +581,23 @@
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
 
 
 
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
 
-<div class="post-scripts pjax">
+
+
+
+<div class="post-scripts">
     
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
     
 </div>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            KEEP.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            KEEP.utils.pjaxProgressBarEnd();
-            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            KEEP.refresh();
-        });
-    });
-</script>
 
 
 

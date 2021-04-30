@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="keywords" content="Hexo Theme Keep">
+    <meta name="description" content="记录，分享。">
+    <meta name="author" content="徐徐">
+    
+    <title>
+        
+            Bert下游任务 |
+        
+        一通胡编
+    </title>
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
+    <script id="hexo-configurations">
+    let KEEP = window.KEEP || {};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
+    KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
+  </script>
+<meta name="generator" content="Hexo 5.2.0"><style>mjx-container[jax="SVG"] {
+  direction: ltr;
+}
+
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}
+
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  text-align: center;
+  margin: 1em 0;
+}
+
+mjx-container[jax="SVG"][justify="left"] {
+  text-align: left;
+}
+
+mjx-container[jax="SVG"][justify="right"] {
+  text-align: right;
+}
+
+g[data-mml-node="merror"] > g {
+  fill: red;
+  stroke: red;
+}
+
+g[data-mml-node="merror"] > rect[data-background] {
+  fill: yellow;
+  stroke: none;
+}
+
+g[data-mml-node="mtable"] > line[data-line] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > rect[data-frame] {
+  stroke-width: 70px;
+  fill: none;
+}
+
+g[data-mml-node="mtable"] > .mjx-dashed {
+  stroke-dasharray: 140;
+}
+
+g[data-mml-node="mtable"] > .mjx-dotted {
+  stroke-linecap: round;
+  stroke-dasharray: 0,140;
+}
+
+g[data-mml-node="mtable"] > svg {
+  overflow: visible;
+}
+
+[jax="SVG"] mjx-tool {
+  display: inline-block;
+  position: relative;
+  width: 0;
+  height: 0;
+}
+
+[jax="SVG"] mjx-tool > mjx-tip {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+mjx-tool > mjx-tip {
+  display: inline-block;
+  padding: .2em;
+  border: 1px solid #888;
+  font-size: 70%;
+  background-color: #F8F8F8;
+  color: black;
+  box-shadow: 2px 2px 5px #AAAAAA;
+}
+
+g[data-mml-node="maction"][data-toggle] {
+  cursor: pointer;
+}
+
+mjx-status {
+  display: block;
+  position: fixed;
+  left: 1em;
+  bottom: 1em;
+  min-width: 25%;
+  padding: .2em .4em;
+  border: 1px solid #888;
+  font-size: 90%;
+  background-color: #F8F8F8;
+  color: black;
+}
+
+foreignObject[data-mjx-xml] {
+  font-family: initial;
+  line-height: normal;
+  overflow: visible;
+}
+
+.MathJax path {
+  stroke-width: 3;
+}
+
+mjx-container[display="true"] {
+  overflow: auto hidden;
+}
+
+mjx-container[display="true"] + br {
+  display: none;
+}
+</style><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
+</head>
+
+
+<body>
+<div class="progress-bar-container">
+    
+        <span class="scroll-progress-bar"></span>
+    
+
+    
+</div>
+
+
+<main class="page-container">
+
+    
+
+    <div class="page-main-content">
+
+        <div class="page-main-content-top">
+            <header class="header-wrapper">
+
+    <div class="header-content">
+        <div class="left">
+            
+            <a class="logo-title" href="/">
+                一通胡编
+            </a>
+        </div>
+
+        <div class="right">
+            <div class="pc">
+                <ul class="menu-list">
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/"
+                            >
+                                首页
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/archives"
+                            >
+                                归档
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/tags"
+                            >
+                                标签
+                            </a>
+                        </li>
+                    
+                        <li class="menu-item">
+                            <a class=""
+                               href="/about"
+                            >
+                                关于
+                            </a>
+                        </li>
+                    
+                    
+                        <li class="menu-item search search-popup-trigger">
+                            <i class="fas fa-search"></i>
+                        </li>
+                    
+                </ul>
+            </div>
+            <div class="mobile">
+                
+                    <div class="icon-item search search-popup-trigger"><i class="fas fa-search"></i></div>
+                
+                <div class="icon-item menu-bar">
+                    <div class="menu-bar-middle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="header-drawer">
+        <ul class="drawer-menu-list">
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/">首页</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/archives">归档</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/tags">标签</a>
+                </li>
+            
+                <li class="drawer-menu-item flex-center">
+                    <a class=""
+                       href="/about">关于</a>
+                </li>
+            
+        </ul>
+    </div>
+
+    <div class="window-mask"></div>
+
+</header>
+
+
+        </div>
+
+        <div class="page-main-content-middle">
+
+            <div class="main-content">
+
+                
+                    <div class="fade-in-down-animation">
+    <div class="article-content-container">
+
+        <div class="article-title">
+            <span class="title-hover-animation">Bert下游任务</span>
+        </div>
+
+        
+            <div class="article-header">
+                <div class="avatar">
+                    <img src="/images/tuotuo.jpeg">
+                </div>
+                <div class="info">
+                    <div class="author">
+                        <span class="name">徐徐</span>
+                        
+                            <span class="author-label">抱歉选手</span>
+                        
+                    </div>
+                    <div class="meta-info">
+                        <div class="article-meta-info">
+    <span class="article-date article-meta-item">
+        <i class="fas fa-edit"></i>&nbsp;2021-04-08 17:22:35
+    </span>
+    
+        <span class="article-categories article-meta-item">
+            <i class="fas fa-folder"></i>&nbsp;
+            <ul>
+                
+                    <li>
+                        <a href="/categories/nlp/">nlp</a>&nbsp;
+                    </li>
+                
+            </ul>
+        </span>
+    
+    
+
+    
+    
+    
+        <span class="article-min2read article-meta-item">
+            <i class="fas fa-clock"></i>&nbsp;<span>7 分钟</span>
+        </span>
+    
+    
+</div>
+
+                    </div>
+                </div>
+            </div>
+        
+
+        <div class="article-content markdown-body">
+            <p>Bert的预训练任务有两个。第一，Masked Language Model(MLM)，也就是让模型预测masked word。第二，Next Sentence Prediction(NSP)，也就是让模型判断句子A后面否是直接跟着句子B。执行这些任务的模块最终都会从预训练模型中移除，所需要的只是训练权重，因此这些预训练任务又被叫做fake tasks。</p>
+<p>所谓下游任务（Downstream Task），就是在Bert等预训练模型之后接一些针对特定任务的网络结构，在训练的时候微调（fine-tune）已有参数，即可适应当前任务。</p>
+<h1 id="文本二分类Demo"><a href="#文本二分类Demo" class="headerlink" title="文本二分类Demo"></a>文本二分类Demo</h1><p>使用SST2数据集进行文本二分类，数据格式如下：</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>sentence</th>
+<th>label</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>a stirring , funny and finally transporting re imagining of beauty and the beast and 1930s horror films</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>我们希望使用DistilbBert的预训练模型（已经训练好了权重），后接一个scikit-learn提供的二分类器，输出与label相匹配，1代表positive，0代表negative。</p>
+<p><img src="/2021/04/08/bert-downstream-task/distilbert-bert-sentiment-classifier.png" alt="distilbert-bert-sentiment-classifier" style="zoom:33%;"></p>
+<p>使用transformer库加载预训练模型，可以使用<code>from_pretrained()</code>方法实例化一个预训练模型的权重与预训练模型的分词器。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> transformers <span class="keyword">as</span> ppb</span><br><span class="line"><span class="comment"># For DistilBERT: 这里的pretrained_weights是一个字符串，代表有预训练模型的名称，稍后传入pre_trained函数，就能识别特定的预训练模型</span></span><br><span class="line">model_class, tokenizer_class, pretrained_weights = (ppb.DistilBertModel, ppb.DistilBertTokenizer, <span class="string">'distilbert-base-uncased'</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment">## Want BERT instead of distilBERT? Uncomment the following line:</span></span><br><span class="line"><span class="comment">#model_class, tokenizer_class, pretrained_weights = (ppb.BertModel, ppb.BertTokenizer, 'bert-base-uncased')</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Load pretrained model/tokenizer</span></span><br><span class="line">tokenizer = tokenizer_class.from_pretrained(pretrained_weights)</span><br><span class="line">model = model_class.from_pretrained(pretrained_weights)</span><br></pre></td></tr></table></figure>
+<p>预训练的DistilBert会将SST2中的sentence都变成setence embedding，需要如下步骤：</p>
+<ol>
+<li>将句子转变为token</li>
+<li>在句子中添加<code>[CLS]</code>和<code>[SEP]</code>这样的special tokens，他们会随着模型一起训练，其实最后做分类的时候，分类的结果就是<code>[CLS]</code>。</li>
+<li>从embedding table中将每一个token都用对应的id替换，替换后的句向量（其实算不上句向量，这只是词向量的简单拼接，并没有语义）就能作为DistilBert的输入了。</li>
+</ol>
+<blockquote>
+<p>token是怎么对应到id的？id又怎么映射到768维度的向量？</p>
+<p>实际上bert拥有自己的词汇量，这个词汇量是一个词典dictionary，该词典的key就是每个token的id，该词典的value就是与该token对应的vector。假设bert有30k的词汇量，那么bert在做tokenize的时候就会从一个储存了30k个维度为768向量的词典中去对应该token的id。</p>
+<p>如果某个单词不在bert的词汇量内怎么办？subword tokenization会让复杂单词先分解再去查表找id。</p>
+</blockquote>
+<p><img src="/2021/04/08/bert-downstream-task/bert-distilbert-tokenization-2-token-ids.png" alt="bert-distilbert-tokenization-2-token-ids" style="zoom:33%;"></p>
+<p>以上三个步骤对应到代码就只有简短的一句话：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">tokenizer.encode(<span class="string">"a visually stunning rumination on love"</span>, add_special_tokens=<span class="literal">True</span>)</span><br><span class="line"><span class="comment"># 这里的tokenizer是DistilBert预训练模型的一部分。</span></span><br></pre></td></tr></table></figure>
+<p>我们输入的数据是形状为2000*2的矩阵batch_1，其中2000代表有200条数据，2代表有两列，第一列index=0是sentence，第二列index=1是label。对这个矩阵做完tokenize前后的内容分别是：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># tokenize前</span><br><span class="line">a stirring, funny and finally transporting re imagining of beauty and the beast and 1930s horror films</span><br><span class="line"># tokenize后</span><br><span class="line">[101, 1037, 18385, 1010, 6057, 1998, 2633, 18276, 2128, 16603, 1997, 5053, 1998, 1996, 6841, 1998, 5687, 5469, 3152, 102]</span><br><span class="line"># tokenize后的长度</span><br><span class="line">20</span><br></pre></td></tr></table></figure>
+<p>由于句子长度本身就不一样，tokenize后句子长短不一，因此要做padding，找出这2000条句子中tokenize后长度最长的作为总长度，不满这个长度的每条句子后面就补满0，获得padded矩阵。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[<span class="number">101</span> <span class="number">1037</span> <span class="number">18385</span> <span class="number">1010</span> <span class="number">6057</span> <span class="number">1998</span> <span class="number">2633</span> <span class="number">18276</span> <span class="number">2128</span> <span class="number">16603</span> <span class="number">1997</span> <span class="number">5053</span> <span class="number">1998</span> <span class="number">1996</span> <span class="number">6841</span> <span class="number">1998</span> <span class="number">5687</span> <span class="number">5469</span> <span class="number">3152</span> <span class="number">102</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>     <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span> <span class="number">0</span>]</span><br><span class="line"><span class="comment"># padding后的长度</span></span><br><span class="line"><span class="number">59</span></span><br></pre></td></tr></table></figure>
+<p>但是padding后的张量不能直接传入BERT，这会影响attention的计算结果，因此我们要创建一个mask矩阵，让预训练模型忽略padding的部分。这个attention-mask矩阵就是一个维度和padded矩阵完全相同的1-0矩阵。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">array([<span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>, <span class="number">0</span>])</span><br></pre></td></tr></table></figure>
+<p>输入进预训练模型的句子，最终输出的每一个token都是同一个emb_size=768，且padded后的长度59，那么一个句子就要用59个维度位768的向量来表示。</p>
+<p><img src="/2021/04/08/bert-downstream-task/bert-model-input-output-1.png" alt="bert-model-input-output-1" style="zoom:33%;"></p>
+<p>这样的句子有2000个，也就是2000个768行66列的矩阵从上往下堆叠在一起。<strong>顶层标有数字的从前向后的那一行，就是训练好的CLS，它可以看作是整个句子的句向量</strong>；它的后一行就是第一个句子的第一个单词的词向量，维度为768。</p>
+<p><img src="/2021/04/08/bert-downstream-task/bert-output.png" alt="bert-output" style="zoom:30%;"></p>
+<h1 id="阅读理解Demo"><a href="#阅读理解Demo" class="headerlink" title="阅读理解Demo"></a>阅读理解Demo</h1><p>这里引入了segment embedding的概念。参考自文章<a class="link" target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1gYfsjxiXOtJMbMZYZiTK1lPEyFM6cEkk?usp=sharing">Question Answering with a Fine-Tuned BERT<i class="fas fa-external-link-alt"></i></a>，youtube也有视频，colab中也有代码。</p>
+<p>在使用Bert做阅读理解的时候，句子对输入由问题和包含答案的文本组成，形式为<code>[CLS] query [SEP] reference</code>，这一部分输入称为token embeddings。还有segment embeddings，主要用于区分两种句子，有0和1组成；对于只有一个句子的任务，用来区分真正的句子和句子padding的内容。还有position embeddings，用于保留每个token的位置信息。</p>
+<p><img src="/2021/04/08/bert-downstream-task/image-20210409152126275.png" alt="image-20210409152126275" style="zoom:50%;"></p>
+<blockquote>
+<p>BERT在训练的时候，input embeddings就是token embeddings, segmentation embeddings和position embeddings的总和。</p>
+<p>BERT的output 是每个token的encoding vector。</p>
+</blockquote>
+<h1 id="tokenizer方式总结"><a href="#tokenizer方式总结" class="headerlink" title="tokenizer方式总结"></a>tokenizer方式总结</h1><p>在跟着二文本分类的Demo做的时候我就发现，图中演示的Tokenize的过程，并不是直接将句子变成words，也就是说token并不等于words，比如rumination就被拆分成了rum和##ination两个部分。<strong>token只是按照某种规则将句子拆分多个部分的结果——spliting a text into smaller chunks。</strong></p>
+<p>一种最简单的tokenize就是利用空格分词，将标点符号也作为一个token；如果直接把puctuation标点与单词放在一起，就会出现同一个单词有不同的embedding的问题（如Transofrmer? &amp; Transformer.）。这被叫做space and punctuation tokenization/词粒度。</p>
+<p>还有一种方式就是利用字母分词——tokenize on characters/字粒度。虽然这样很简单且能降低复杂度，但是这对模型学习语义没有好处。</p>
+<p>Transformer中用到的tokenize的方式就是取上面两种方法的混合—— a hybrid between word-level and character-level tokenization called <strong>subword</strong> tokenization，也就是subword tokenization/subword粒度。</p>
+<p>subword tokenization的准则就是常用词不会被分为更小的chunk，少见词应当被分解为有意义的subword。例如annoyingly可以被理解为annoying和ly这两个subword的组成。</p>
+<p>例如BertTokenizer会将“I have a new GPU”变为如下分词。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&gt;&gt;&gt; from transformers import BertTokenizer</span><br><span class="line">&gt;&gt;&gt; tokenizer = BertTokenizer.from_pretrained("bert-base-uncased")</span><br><span class="line">&gt;&gt;&gt; tokenizer.tokenize("I have a new GPU!")</span><br><span class="line">["i", "have", "a", "new", "gp", "##u", "!"]</span><br></pre></td></tr></table></figure>
+<p>其中，GPU被分解为gp和##u，##代表了这个subword前面要跟着其他subword才能组成有意义的单词。</p>
+<p>所有的subword都以<code>##</code>开头。</p>
+<p>为了更好地理解BERT Vocabulary，可以参考这个代码笔记<a class="link" target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1jzxgWGcHI0n1JaFm1fw1_dgSGY-d6KeL?usp=sharing">Inspect BERT Vocabulary<i class="fas fa-external-link-alt"></i></a>。在加载开源的BERT预训练模型的时候可以载入与该模型匹配的Tokenizer，通过<code>for token intokenizer.vocab.keys()</code>循环输出就可以得到BERT的所有词汇量，共计30552个。组成如下：1-999号分别是保留位，除了特殊意义的<code>1-[PAD],101-[UNK],102-[CLS],103-[SEP],104-[MASK]</code>，其他都是unused；1000-1996号都是单个char；从1997开始的所有单词似乎都是按照出现频率由高到低排序的，如the就在1997号。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a class="link" target="_blank" rel="noopener" href="https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/">A Visual Guide to Using BERT for the First Time<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://huggingface.co/transformers/tokenizer_summary.html">Summary of the tokenizers<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://www.zhihu.com/question/64984731/answer/1649125549">NLP领域中的token和tokenization到底指的是什么？ - ICY星星的回答 - 知乎<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1gYfsjxiXOtJMbMZYZiTK1lPEyFM6cEkk?usp=sharing">Question Answering with a Fine-Tuned BERT<i class="fas fa-external-link-alt"></i></a></p>
+<p><a class="link" target="_blank" rel="noopener" href="https://colab.research.google.com/drive/1jzxgWGcHI0n1JaFm1fw1_dgSGY-d6KeL?usp=sharing">Inspect BERT Vocabulary<i class="fas fa-external-link-alt"></i></a></p>
+
+        </div>
+
+        
+            <div class="post-copyright-info">
+                <div class="article-copyright-info-container">
+    <ul>
+        <li>本文标题：Bert下游任务</li>
+        <li>本文作者：徐徐</li>
+        <li>创建时间：2021-04-08 17:22:35</li>
+        <li>
+            本文链接：https://machacroissant.github.io/2021/04/08/bert-downstream-task/
+        </li>
+        <li>
+            版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
+        </li>
+    </ul>
+</div>
+
+            </div>
+        
+
+        
+            <div class="article-nav">
+                
+                
+                    <div class="article-next">
+                        <a class="next"
+                           rel="next"
+                           href="/2021/04/07/browser-principle/"
+                        >
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">浏览器</span>
+                                <span class="post-nav-item">下一篇</span>
+                            </span>
+                            <span class="right arrow-icon flex-center">
+                              <i class="fas fa-chevron-right"></i>
+                            </span>
+                        </a>
+                    </div>
+                
+            </div>
+        
+
+        
+            <div class="comment-container">
+                <div class="comments-container">
+    <div id="comment-anchor"></div>
+    <div class="comment-area-title">
+        <i class="fas fa-comments">&nbsp;评论</i>
+    </div>
+    
+
+        
+            
+    <div class="valine-container">
+        <script 
+                src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
+        <div id="vcomments"></div>
+        <script >
+            function loadValine() {
+                new Valine({
+                    el: '#vcomments',
+                    appId: 'aqAOPQAx86speqYXI4gPuLWx-gzGzoHsz',
+                    appKey: '8fzaXFq8Ikhr5mucbhj3qqUS',
+                    meta: ['nick', 'mail', 'link'],
+                    avatar: 'wavatar',
+                    enableQQ: true,
+                    placeholder: 'Let&#39;s talk!',
+                    lang: 'zh-CN'.toLowerCase()
+                });
+
+                function getAuthor(language) {
+                    switch (language) {
+                        case 'en':
+                            return 'Author';
+                        case 'zh-CN':
+                            return '博主';
+                        default:
+                            return 'Master';
+                    }
+                }
+
+                // Add "Author" identify
+                const getValineDomTimer = setInterval(() => {
+                    const vcards = document.querySelectorAll('#vcomments .vcards .vcard');
+                    if (vcards.length > 0) {
+                        let author = '徐徐';
+
+                        if (author) {
+                            for (let vcard of vcards) {
+                                const vnick_dom = vcard.querySelector('.vhead .vnick');
+                                const vnick = vnick_dom.innerHTML;
+                                if (vnick === author) {
+                                    vnick_dom.innerHTML = `${vnick} <span class="author">${getAuthor(KEEP.hexo_config.language)}</span>`
+                                }
+                            }
+                        }
+                        clearInterval(getValineDomTimer);
+                    } else {
+                        clearInterval(getValineDomTimer);
+                    }
+                }, 2000);
+            }
+
+            if ('false') {
+                const loadValineTimeout = setTimeout(() => {
+                    loadValine();
+                    clearTimeout(loadValineTimeout);
+                }, 1000);
+            } else {
+                window.addEventListener('DOMContentLoaded', loadValine);
+            }
+        </script>
+    </div>
+
+
+
+        
+    
+</div>
+
+            </div>
+        
+    </div>
+</div>
+
+
+                
+            </div>
+
+        </div>
+
+        <div class="page-main-content-bottom">
+            <footer class="footer">
+    <div class="info-container">
+        <div class="copyright-info info-item">
+            &copy;
+            
+              <span>2020</span>&nbsp;-&nbsp;
+            
+            2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
+        </div>
+        
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <div class="website-count info-item">
+                
+                
+                    <span id="busuanzi_container_site_pv">
+                        总访问量&nbsp;<span id="busuanzi_value_site_pv"></span>
+                    </span>
+                
+            </div>
+        
+        <div class="theme-info info-item">
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+    </div>
+
+    
+        <div class="post-tools">
+            <div class="post-tools-container">
+    <ul class="tools-list">
+        <!-- TOC aside toggle -->
+        
+            <li class="tools-item page-aside-toggle">
+                <i class="fas fa-outdent"></i>
+            </li>
+        
+
+        <!-- go comment -->
+        
+            <li class="go-comment">
+                <i class="fas fa-comment"></i>
+            </li>
+        
+    </ul>
+</div>
+
+        </div>
+    
+
+    <div class="right-bottom-side-tools">
+        <div class="side-tools-container">
+    <ul class="side-tools-list">
+        <li class="tools-item tool-font-adjust-plus flex-center">
+            <i class="fas fa-search-plus"></i>
+        </li>
+
+        <li class="tools-item tool-font-adjust-minus flex-center">
+            <i class="fas fa-search-minus"></i>
+        </li>
+
+        <li class="tools-item tool-expand-width flex-center">
+            <i class="fas fa-arrows-alt-h"></i>
+        </li>
+
+        <li class="tools-item tool-dark-light-toggle flex-center">
+            <i class="fas fa-moon"></i>
+        </li>
+
+        <!-- rss -->
+        
+            <li class="tools-item rss flex-center">
+                <a class="flex-center"
+                   href="/atom.xml"
+                   target="_blank"
+                >
+                    <i class="fas fa-rss"></i>
+                </a>
+            </li>
+        
+
+        
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
+
+        <li class="tools-item tool-scroll-to-bottom flex-center">
+            <i class="fas fa-arrow-down"></i>
+        </li>
+    </ul>
+
+    <ul class="exposed-tools-list">
+        <li class="tools-item tool-toggle-show flex-center">
+            <i class="fas fa-cog fa-spin"></i>
+        </li>
+        
+    </ul>
+</div>
+
+    </div>
+
+    
+        <aside class="page-aside">
+            <div class="post-toc-wrap">
+    <div class="post-toc">
+        <ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E4%BA%8C%E5%88%86%E7%B1%BBDemo"><span class="nav-number">1.</span> <span class="nav-text">文本二分类Demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%98%85%E8%AF%BB%E7%90%86%E8%A7%A3Demo"><span class="nav-number">2.</span> <span class="nav-text">阅读理解Demo</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#tokenizer%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">tokenizer方式总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol>
+    </div>
+</div>
+        </aside>
+    
+
+    <div class="image-viewer-container">
+    <img src="">
+</div>
+
+
+    
+        <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+          <span class="search-input-field-pre">
+            <i class="fas fa-keyboard"></i>
+          </span>
+            <div class="search-input-container">
+                <input autocomplete="off"
+                       autocorrect="off"
+                       autocapitalize="off"
+                       placeholder="搜索..."
+                       spellcheck="false"
+                       type="search"
+                       class="search-input"
+                >
+            </div>
+            <span class="popup-btn-close">
+                <i class="fas fa-times"></i>
+            </span>
+        </div>
+        <div id="search-result">
+            <div id="no-result">
+                <i class="fas fa-spinner fa-pulse fa-5x fa-fw"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+
+</main>
+
+
+
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
+
+
+
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
+
+
+
+
+<div class="post-scripts">
+    
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
+    
+</div>
+
+
+
+</body>
+</html>

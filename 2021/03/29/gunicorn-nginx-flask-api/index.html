@@ -11,17 +11,17 @@
         
             利用Gunicorn和Nginx在服务器上部署一个Flask API |
         
-        来个抹茶可颂
+        一通胡编
     </title>
     
 <link rel="stylesheet" href="/css/style.css">
 
     <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
-    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
   </script>
 <meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="来个抹茶可颂" type="application/atom+xml">
@@ -31,12 +31,9 @@
 <body>
 <div class="progress-bar-container">
     
-
+        <span class="scroll-progress-bar"></span>
     
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fas fa-circle-notch fa-spin"></i>
-        </span>
+
     
 </div>
 
@@ -52,8 +49,9 @@
 
     <div class="header-content">
         <div class="left">
+            
             <a class="logo-title" href="/">
-                来个抹茶可颂
+                一通胡编
             </a>
         </div>
 
@@ -159,13 +157,13 @@
         
             <div class="article-header">
                 <div class="avatar">
-                    <img src="/images/tuotuo.jpg">
+                    <img src="/images/tuotuo.jpeg">
                 </div>
                 <div class="info">
                     <div class="author">
                         <span class="name">徐徐</span>
                         
-                            <span class="author-label">摸鱼NLPer</span>
+                            <span class="author-label">抱歉选手</span>
                         
                     </div>
                     <div class="meta-info">
@@ -191,7 +189,7 @@
             <ul>
                 
                     <li>
-                        <a href="/tags/API/">API</a>&nbsp;
+                        <a href="/tags/nginx/">nginx</a>&nbsp;
                     </li>
                 
                     <li>
@@ -199,11 +197,7 @@
                     </li>
                 
                     <li>
-                        | <a href="/tags/Gunicorn/">Gunicorn</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/Nginx/">Nginx</a>&nbsp;
+                        | <a href="/tags/gunicorn/">gunicorn</a>&nbsp;
                     </li>
                 
                     <li>
@@ -221,10 +215,6 @@
             <i class="fas fa-clock"></i>&nbsp;<span>10 分钟</span>
         </span>
     
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
     
 </div>
 
@@ -276,7 +266,7 @@
 </blockquote>
 <p>查看运行的Gunicorn的进程号，并关闭。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 请求gunicorn相关的进程树</span></span><br><span class="line">pstree -ap|grep gunicorn</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 返回的结果</span></span><br><span class="line">(myChatbot) [root@VM-4-13-centos api]# pstree -ap|grep gunicorn</span><br><span class="line">  |-gunicorn,21545 /root/.local/share/virtualenvs/myChatbot-Bk5svUYU/bin/gunicorn -cgunic</span><br><span class="line">  |   |-gunicorn,21548 /root/.local/share/virtualenvs/myChatbot-Bk5svUYU/bin/gunicorn -cgunic</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21578</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21579</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21580</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21589</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21590</span><br><span class="line">  |   |   |-&#123;gunicorn&#125;,21591</span><br><span class="line"></span><br><span class="line">kill -9 21545</span><br></pre></td></tr></table></figure>
-<h2 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h2><p><a href="https://drunk99.xyz/2021/03/27/nginx-with-ssl/">上一篇博客</a>中，记录一些Nginx配置相关的内容。<code>/etc/nginx/nginx.conf</code>中对http模块中的server模块进行如下更改。因为我们在服务器上既放了web前端的代码（基于Vanilla JS），以及后端api，所以要有多个location分别给予前端和后端。</p>
+<h2 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h2><p><a class="link" target="_blank" rel="noopener" href="https://drunk99.xyz/2021/03/27/nginx-with-ssl/">上一篇博客<i class="fas fa-external-link-alt"></i></a>中，记录一些Nginx配置相关的内容。<code>/etc/nginx/nginx.conf</code>中对http模块中的server模块进行如下更改。因为我们在服务器上既放了web前端的代码（基于Vanilla JS），以及后端api，所以要有多个location分别给予前端和后端。</p>
 <p>经过多次尝试发现以下配置是可行的。</p>
 <figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">server</span> &#123;</span><br><span class="line">        <span class="string">listen</span>       <span class="number">80</span> <span class="string">default_server;</span></span><br><span class="line">        <span class="string">listen</span>       [<span class="string">::</span>]<span class="string">:80</span> <span class="string">default_server;</span></span><br><span class="line">        <span class="string">server_name</span>  <span class="number">121.4</span><span class="number">.67</span><span class="number">.30</span><span class="string">;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">        <span class="comment"># Load configuration files for the default server block.</span></span><br><span class="line">        <span class="string">include</span> <span class="string">/etc/nginx/default.d/*.conf;</span></span><br><span class="line">        </span><br><span class="line">        </span><br><span class="line">		<span class="comment"># 这是前端Web页面的路径，里面就css/js/html各一个，两张图</span></span><br><span class="line">        <span class="string">location</span> <span class="string">/</span> &#123;</span><br><span class="line">        <span class="string">root</span> <span class="string">/home/myChatbotWebFrontend/QABotFrontend/;</span></span><br><span class="line">        <span class="string">index</span> <span class="string">index.html</span> <span class="string">index.htm;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 这是后端Flask API的路径，Nginx会把请求转发给Gunicorn</span></span><br><span class="line">        <span class="string">location</span> <span class="string">/api/</span> &#123;</span><br><span class="line">        <span class="string">proxy_pass</span> <span class="string">http://127.0.0.1:8080/;</span> </span><br><span class="line">        <span class="string">proxy_set_header</span>  <span class="string">X-Real-IP</span>  <span class="string">$remote_addr;</span></span><br><span class="line">        <span class="string">proxy_set_header</span>  <span class="string">X-Forwarded-For</span>  <span class="string">$proxy_add_x_forwarded_for;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># Web项目下静态资源的查找</span></span><br><span class="line">        <span class="string">location</span> <span class="string">~*</span> <span class="string">^.+\.(jpg|jpeg|gif|png|ico|css|js|pdf|txt)</span>&#123;</span><br><span class="line">        <span class="string">root</span> <span class="string">/home/myChatbotWebFrontend/QABotFrontend/;</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment"># 默认的错误页面，可要可不要</span></span><br><span class="line">        <span class="string">error_page</span> <span class="number">404</span> <span class="string">/404.html;</span></span><br><span class="line">        <span class="string">location</span> <span class="string">=</span> <span class="string">/404.html</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="string">error_page</span> <span class="number">500</span> <span class="number">502</span> <span class="number">503</span> <span class="number">504</span> <span class="string">/50x.html;</span></span><br><span class="line">        <span class="string">location</span> <span class="string">=</span> <span class="string">/50x.html</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <p>变化就是把root项给删除了，不然会一直显示Welcome to CentOS的欢迎页面。添加了三个location，分别用于指向Web代码，Python代码，以及静态资源（虽然不知道有没有用，但是不想再删了试了）。</p>
@@ -322,7 +312,7 @@
         <li>本文作者：徐徐</li>
         <li>创建时间：2021-03-29 15:41:47</li>
         <li>
-            本文链接：https://drunk99.xyz/2021/03/29/gunicorn-nginx-flask-api/
+            本文链接：https://machacroissant.github.io/2021/03/29/gunicorn-nginx-flask-api/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -335,6 +325,21 @@
 
         
             <div class="article-nav">
+                
+                    <div class="article-prev">
+                        <a class="prev"
+                           rel="prev"
+                           href="/2021/04/02/apr-films/"
+                        >
+                            <span class="left arrow-icon flex-center">
+                              <i class="fas fa-chevron-left"></i>
+                            </span>
+                            <span class="title flex-center">
+                                <span class="post-nav-title-item">四月观影</span>
+                                <span class="post-nav-item">上一篇</span>
+                            </span>
+                        </a>
+                    </div>
                 
                 
                     <div class="article-next">
@@ -367,10 +372,10 @@
         
             
     <div class="valine-container">
-        <script data-pjax
+        <script 
                 src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
         <div id="vcomments"></div>
-        <script data-pjax>
+        <script >
             function loadValine() {
                 new Valine({
                     el: '#vcomments',
@@ -379,7 +384,7 @@
                     meta: ['nick', 'mail', 'link'],
                     avatar: 'wavatar',
                     enableQQ: true,
-                    placeholder: '来一起讨论吧～',
+                    placeholder: 'Let&#39;s talk!',
                     lang: 'zh-CN'.toLowerCase()
                 });
 
@@ -416,7 +421,7 @@
                 }, 2000);
             }
 
-            if ('true') {
+            if ('false') {
                 const loadValineTimeout = setTimeout(() => {
                     loadValine();
                     clearTimeout(loadValineTimeout);
@@ -455,12 +460,8 @@
             2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
         </div>
         
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
             <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                    </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
@@ -470,7 +471,7 @@
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
         </div>
         
     </div>
@@ -534,6 +535,10 @@
         
 
         
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
 
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
@@ -544,11 +549,6 @@
         <li class="tools-item tool-toggle-show flex-center">
             <i class="fas fa-cog fa-spin"></i>
         </li>
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="arrow-up fas fa-arrow-up"></i>
-                <span class="percent"></span>
-            </li>
         
     </ul>
 </div>
@@ -605,55 +605,23 @@
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
 
 
 
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
 
-<div class="post-scripts pjax">
+
+
+
+<div class="post-scripts">
     
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
     
 </div>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            KEEP.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            KEEP.utils.pjaxProgressBarEnd();
-            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            KEEP.refresh();
-        });
-    });
-</script>
 
 
 

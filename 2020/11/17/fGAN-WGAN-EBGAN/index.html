@@ -9,19 +9,19 @@
     
     <title>
         
-            fGAN+WGAN+EBGAN |
+            fGAN+WGAN+EBGAN解读 |
         
-        来个抹茶可颂
+        一通胡编
     </title>
     
 <link rel="stylesheet" href="/css/style.css">
 
     <link rel="shortcut icon" href="/images/favicon-32x32-next.png">
-    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/css/font-awesome.min.css">
     <script id="hexo-configurations">
     let KEEP = window.KEEP || {};
-    KEEP.hexo_config = {"hostname":"drunk99.xyz","root":"/","language":"zh-CN","path":"search.json"};
-    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":false,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":false},"percent":{"enable":true}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":true},"lazyload":{"enable":false},"version":"3.4.2"};
+    KEEP.hexo_config = {"hostname":"machacroissant.github.io","root":"/","language":"zh-CN","path":"search.json"};
+    KEEP.theme_config = {"toc":{"enable":true,"number":true,"expand_all":false,"init_open":true},"style":{"primary_color":"#0066CC","avatar":"/images/tuotuo.jpeg","favicon":"/images/favicon-32x32-next.png","article_img_align":"left","left_side_width":"260px","content_max_width":"920px","hover":{"shadow":true,"scale":true},"first_screen":{"enable":true,"background_img":"/images/bg.svg","description":"记录，分享。"},"scroll":{"progress_bar":{"enable":true},"percent":{"enable":false}}},"local_search":{"enable":true,"preload":false},"code_copy":{"enable":true,"style":"mac"},"pjax":{"enable":false},"lazyload":{"enable":false},"version":"3.4.3"};
     KEEP.language_ago = {"second":"%s 秒前","minute":"%s 分钟前","hour":"%s 小时前","day":"%s 天前","week":"%s 周前","month":"%s 月前","year":"%s 年前"};
   </script>
 <meta name="generator" content="Hexo 5.2.0"><style>mjx-container[jax="SVG"] {
@@ -143,12 +143,9 @@ mjx-container[display="true"] + br {
 <body>
 <div class="progress-bar-container">
     
-
+        <span class="scroll-progress-bar"></span>
     
-        <span class="pjax-progress-bar"></span>
-        <span class="pjax-progress-icon">
-            <i class="fas fa-circle-notch fa-spin"></i>
-        </span>
+
     
 </div>
 
@@ -164,8 +161,9 @@ mjx-container[display="true"] + br {
 
     <div class="header-content">
         <div class="left">
+            
             <a class="logo-title" href="/">
-                来个抹茶可颂
+                一通胡编
             </a>
         </div>
 
@@ -265,19 +263,19 @@ mjx-container[display="true"] + br {
     <div class="article-content-container">
 
         <div class="article-title">
-            <span class="title-hover-animation">fGAN+WGAN+EBGAN</span>
+            <span class="title-hover-animation">fGAN+WGAN+EBGAN解读</span>
         </div>
 
         
             <div class="article-header">
                 <div class="avatar">
-                    <img src="/images/tuotuo.jpg">
+                    <img src="/images/tuotuo.jpeg">
                 </div>
                 <div class="info">
                     <div class="author">
                         <span class="name">徐徐</span>
                         
-                            <span class="author-label">摸鱼NLPer</span>
+                            <span class="author-label">抱歉选手</span>
                         
                     </div>
                     <div class="meta-info">
@@ -291,27 +289,12 @@ mjx-container[display="true"] + br {
             <ul>
                 
                     <li>
-                        <a href="/categories/GAN/">GAN</a>&nbsp;
+                        <a href="/categories/gan/">gan</a>&nbsp;
                     </li>
                 
             </ul>
         </span>
     
-    
-        <span class="article-tags article-meta-item">
-            <i class="fas fa-tags"></i>&nbsp;
-            <ul>
-                
-                    <li>
-                        <a href="/tags/ML/">ML</a>&nbsp;
-                    </li>
-                
-                    <li>
-                        | <a href="/tags/GAN/">GAN</a>&nbsp;
-                    </li>
-                
-            </ul>
-        </span>
     
 
     
@@ -321,10 +304,6 @@ mjx-container[display="true"] + br {
             <i class="fas fa-clock"></i>&nbsp;<span>5 分钟</span>
         </span>
     
-    
-        <span class="article-pv article-meta-item">
-            <i class="fas fa-eye"></i>&nbsp;<span id="busuanzi_value_page_pv"></span>
-        </span>
     
 </div>
 
@@ -340,15 +319,15 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
 <p>当你选择<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.466ex" xmlns="http://www.w3.org/2000/svg" width="10.495ex" height="2.061ex" role="img" focusable="false" viewbox="0 -705 4638.9 911"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"/></g><g data-mml-node="mo" transform="translate(827.8, 0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"/></g><g data-mml-node="mi" transform="translate(1883.6, 0)"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"/></g><g data-mml-node="mi" transform="translate(2622.2, 0)"><path data-c="6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"/><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(278, 0)"/><path data-c="67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z" transform="translate(778, 0)"/></g><g data-mml-node="mo" transform="translate(3900.2, 0)"><path data-c="2061" d=""/></g><g data-mml-node="mi" transform="translate(4066.9, 0)"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"/></g></g></g></svg></mjx-container>，其实就是KL Divergence。</p>
 <p>当你选择<mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.466ex" xmlns="http://www.w3.org/2000/svg" width="10.961ex" height="2.061ex" role="img" focusable="false" viewbox="0 -705 4844.9 911"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"/></g><g data-mml-node="mo" transform="translate(827.8, 0)"><path data-c="3D" d="M56 347Q56 360 70 367H707Q722 359 722 347Q722 336 708 328L390 327H72Q56 332 56 347ZM56 153Q56 168 72 173H708Q722 163 722 153Q722 140 707 133H70Q56 140 56 153Z"/></g><g data-mml-node="mo" transform="translate(1883.6, 0)"><path data-c="2212" d="M84 237T84 250T98 270H679Q694 262 694 250T679 230H98Q84 237 84 250Z"/></g><g data-mml-node="mi" transform="translate(2828.2, 0)"><path data-c="6C" d="M42 46H56Q95 46 103 60V68Q103 77 103 91T103 124T104 167T104 217T104 272T104 329Q104 366 104 407T104 482T104 542T103 586T103 603Q100 622 89 628T44 637H26V660Q26 683 28 683L38 684Q48 685 67 686T104 688Q121 689 141 690T171 693T182 694H185V379Q185 62 186 60Q190 52 198 49Q219 46 247 46H263V0H255L232 1Q209 2 183 2T145 3T107 3T57 1L34 0H26V46H42Z"/><path data-c="6F" d="M28 214Q28 309 93 378T250 448Q340 448 405 380T471 215Q471 120 407 55T250 -10Q153 -10 91 57T28 214ZM250 30Q372 30 372 193V225V250Q372 272 371 288T364 326T348 362T317 390T268 410Q263 411 252 411Q222 411 195 399Q152 377 139 338T126 246V226Q126 130 145 91Q177 30 250 30Z" transform="translate(278, 0)"/><path data-c="67" d="M329 409Q373 453 429 453Q459 453 472 434T485 396Q485 382 476 371T449 360Q416 360 412 390Q410 404 415 411Q415 412 416 414V415Q388 412 363 393Q355 388 355 386Q355 385 359 381T368 369T379 351T388 325T392 292Q392 230 343 187T222 143Q172 143 123 171Q112 153 112 133Q112 98 138 81Q147 75 155 75T227 73Q311 72 335 67Q396 58 431 26Q470 -13 470 -72Q470 -139 392 -175Q332 -206 250 -206Q167 -206 107 -175Q29 -140 29 -75Q29 -39 50 -15T92 18L103 24Q67 55 67 108Q67 155 96 193Q52 237 52 292Q52 355 102 398T223 442Q274 442 318 416L329 409ZM299 343Q294 371 273 387T221 404Q192 404 171 388T145 343Q142 326 142 292Q142 248 149 227T179 192Q196 182 222 182Q244 182 260 189T283 207T294 227T299 242Q302 258 302 292T299 343ZM403 -75Q403 -50 389 -34T348 -11T299 -2T245 0H218Q151 0 138 -6Q118 -15 107 -34T95 -74Q95 -84 101 -97T122 -127T170 -155T250 -167Q319 -167 361 -139T403 -75Z" transform="translate(778, 0)"/></g><g data-mml-node="mo" transform="translate(4106.2, 0)"><path data-c="2061" d=""/></g><g data-mml-node="mi" transform="translate(4272.9, 0)"><path data-c="1D465" d="M52 289Q59 331 106 386T222 442Q257 442 286 424T329 379Q371 442 430 442Q467 442 494 420T522 361Q522 332 508 314T481 292T458 288Q439 288 427 299T415 328Q415 374 465 391Q454 404 425 404Q412 404 406 402Q368 386 350 336Q290 115 290 78Q290 50 306 38T341 26Q378 26 414 59T463 140Q466 150 469 151T485 153H489Q504 153 504 145Q504 144 502 134Q486 77 440 33T333 -11Q263 -11 227 52Q186 -10 133 -10H127Q78 -10 57 16T35 71Q35 103 54 123T99 143Q142 143 142 101Q142 81 130 66T107 46T94 41L91 40Q91 39 97 36T113 29T132 26Q168 26 194 71Q203 87 217 139T245 247T261 313Q266 340 266 352Q266 380 251 392T217 404Q177 404 142 372T93 290Q91 281 88 280T72 278H58Q52 284 52 289Z"/></g></g></g></svg></mjx-container>，其实就是Reverse KL。</p>
 <h2 id="Fenchel-Conjugate"><a href="#Fenchel-Conjugate" class="headerlink" title="Fenchel Conjugate"></a>Fenchel Conjugate</h2><p>因为<em>f-divergence</em>中的function <mjx-container class="MathJax" jax="SVG"><svg style="vertical-align: -0.464ex" xmlns="http://www.w3.org/2000/svg" width="1.244ex" height="2.059ex" role="img" focusable="false" viewbox="0 -705 550 910"><g stroke="currentColor" fill="currentColor" stroke-width="0" transform="matrix(1 0 0 -1 0 0)"><g data-mml-node="math"><g data-mml-node="mi"><path data-c="1D453" d="M118 -162Q120 -162 124 -164T135 -167T147 -168Q160 -168 171 -155T187 -126Q197 -99 221 27T267 267T289 382V385H242Q195 385 192 387Q188 390 188 397L195 425Q197 430 203 430T250 431Q298 431 298 432Q298 434 307 482T319 540Q356 705 465 705Q502 703 526 683T550 630Q550 594 529 578T487 561Q443 561 443 603Q443 622 454 636T478 657L487 662Q471 668 457 668Q445 668 434 658T419 630Q412 601 403 552T387 469T380 433Q380 431 435 431Q480 431 487 430T498 424Q499 420 496 407T491 391Q489 386 482 386T428 385H372L349 263Q301 15 282 -47Q255 -132 212 -173Q175 -205 139 -205Q107 -205 81 -186T55 -132Q55 -95 76 -78T118 -61Q162 -61 162 -103Q162 -122 151 -136T127 -157L118 -162Z"/></g></g></g></svg></mjx-container>是convex，所以他有conjugate function(共轭函数)。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117095651200.png" alt="image-20201117095651200" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117095651200.png" alt="image-20201117095651200" style="zoom:40%;"></p>
 <p>上面的括号里，意思就是给定了p(x)/q(x)/f*()，我们要穷举所有的t，来让括号内的式子最大。</p>
 <h2 id="Conjugate-f-divergence-amp-GAN"><a href="#Conjugate-f-divergence-amp-GAN" class="headerlink" title="Conjugate f-divergence & GAN"></a>Conjugate f-divergence &amp; GAN</h2><p>现在由于我们有了Discriminator，我们就不需要去穷举t去解这个max-problem。</p>
 <p>虽然任意一个Discriminator不能和上式画等号。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117100141272.png" alt="image-20201117100141272" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117100141272.png" alt="image-20201117100141272" style="zoom:40%;"></p>
 <p>但是我们找到的那个最好的Discriminator就可以解决这个问题。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117100218719.png" alt="image-20201117100218719" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117100218719.png" alt="image-20201117100218719" style="zoom:40%;"></p>
 <p>我们在之前的GAN模型</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/drunk99/machacroissant/source/_posts/2020-11-17-fGAN-WGAN-EBGAN/image-20201117100454088.png" alt="image-20201117100454088" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/drunk99/machacroissant/source/_posts/2020-11-17-fGAN-WGAN-EBGAN/image-20201117100454088.png" alt="image-20201117100454088" style="zoom:40%;"></p>
 <h2 id="Solution-to-Mode-Dropping"><a href="#Solution-to-Mode-Dropping" class="headerlink" title="Solution to Mode Dropping"></a>Solution to Mode Dropping</h2><p>Mode Collapse：Gnerator产生的图看起来都一样。PG的分布与Pdata中的某一个距离过近。</p>
 <p>Mode Dropping：Gnerator产生的图都是某一类图，也就是PG的分布与Pdata中的某一类距离过近。Generator switches mode during training。</p>
 <p>以上问题出现的一个猜测就是我们的KL divergence选得不够好，选择不同的divergence可能会减轻以上问题，所以这就是<em>f-divergence</em>的应用意义。</p>
@@ -357,46 +336,46 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
 <p>一方面如果两个分布没有overlap，那么JS divergence总是log2。从直觉上来看，JS Divergence就是一个binary classifier，如果两个分布没有overlap，那么分类器总能把他们分辨开，即100% accuracy。</p>
 <p>另一方面，low-dim manifold in high-dim space，数据分布的overlap几乎是可以被忽略的的；就算他们有overlap，我们在对Pdata做sampling的时候如果做的不好PG和Pdata依然会没有overlap。</p>
 <h1 id="Least-Square-GAN-LSGAN"><a href="#Least-Square-GAN-LSGAN" class="headerlink" title="Least Square GAN(LSGAN)"></a>Least Square GAN(LSGAN)</h1><p>在Discriminator是一个Binary Classifier的时候，我们的output会经过一个Sigmoid Function，如下图所示。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117114326905.png" alt="image-20201117114326905" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117114326905.png" alt="image-20201117114326905" style="zoom:40%;"></p>
 <p>蓝色的数据点就代表PG，绿色的数据点就代表Pdata。我们的generator要让蓝色的数据点往右移动与绿色的数据点尽可能重合。问题是这个Sigmoid Function在一开始微分很小，难以移动。</p>
 <p>解决办法就是Replace Sigmoid with Linear(replace classification with regression)</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117114616901.png" alt="image-20201117114616901" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117114616901.png" alt="image-20201117114616901" style="zoom:40%;"></p>
 <h1 id="Wasserstein-GAN-WGAN"><a href="#Wasserstein-GAN-WGAN" class="headerlink" title="Wasserstein GAN(WGAN)"></a>Wasserstein GAN(WGAN)</h1><p>WGAN用Earth Mover‘s Distance/Wasserstein Distance来衡量PG和Pdata两个分布的距离。（但不是<em>f-divergence</em>的一种）</p>
 <h2 id="W-Distance"><a href="#W-Distance" class="headerlink" title="W Distance"></a>W Distance</h2><p>现在有两堆土，你把一堆土铲倒目标位置去所走的平均距离就是W Distance。</p>
 <p>铲土的方法有很多种，哪一个才是最好的？穷举所有possible “moving plans”, Using the “moving plan” with the smallest average distance to define the earth mover’s distance.</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117115807976.png" alt="image-20201117115807976" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117115807976.png" alt="image-20201117115807976" style="zoom:40%;"></p>
 <h2 id="Definition"><a href="#Definition" class="headerlink" title="Definition"></a>Definition</h2><p>Evaluate Wassertein distance between Pdata and PG</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117120600885.png" alt="image-20201117120600885" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117120600885.png" alt="image-20201117120600885" style="zoom:40%;"></p>
 <p>下面有约束条件D必须是一个Lipschitz Function，这要求D足够的平滑smooth enough。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117120713059.png" alt="image-20201117120713059" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117120713059.png" alt="image-20201117120713059" style="zoom:40%;"></p>
 <p>1-Lipschitz constraint要求Discriminator这个函数输出的变化不能大于输入的变化。</p>
 <h2 id="如何实现1-Lipschitz-Constraint"><a href="#如何实现1-Lipschitz-Constraint" class="headerlink" title="如何实现1-Lipschitz Constraint"></a>如何实现1-Lipschitz Constraint</h2><h3 id="Weight-Clipping"><a href="#Weight-Clipping" class="headerlink" title="Weight Clipping"></a>Weight Clipping</h3><p>原始W-GAN中做法，用gradient asent去train。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117121328299.png" alt="image-20201117121328299" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117121328299.png" alt="image-20201117121328299" style="zoom:40%;"></p>
 <h3 id="Improved-WGAN-WGAN-GP"><a href="#Improved-WGAN-WGAN-GP" class="headerlink" title="Improved WGAN(WGAN-GP)"></a>Improved WGAN(WGAN-GP)</h3><h4 id="Approximation1"><a href="#Approximation1" class="headerlink" title="Approximation1"></a>Approximation1</h4><p>将1-Lipschitz constraint等价成(if and only if)另一个不等式。这个不等式的意思是我们要D是一个满足1-Lipschitz的function，就相当于对于任何一个x，D对x的微分的norm都要小于等于1。</p>
 <p>在原来的V后面加一个penalize的项，如果gradient的norm大于1的话，积分出有结果有penalty，如果graident的norm小于1的话，被积分的那个式子就是0，结果没有penalty。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117152236486.png" alt="image-20201117152236486" style="zoom:30%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117152236486.png" alt="image-20201117152236486" style="zoom:30%;"></p>
 <h4 id="Approximation2"><a href="#Approximation2" class="headerlink" title="Approximation2"></a>Approximation2</h4><p>问题在于我们不可能对所有x做积分，因为我们是在做sampling。</p>
 <p>再做一次近似，假设x是从某一个事先定义好的distribution P-penalty里sample出来的，我们只保证1-Lipschitz constraint只在P-penalty这个distribution里面成立。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117153055104.png" alt="image-20201117153055104" style="zoom:50%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117153055104.png" alt="image-20201117153055104" style="zoom:50%;"></p>
 <hr>
 <p>那么如何确定P-penalty的distribution呢？</p>
 <p>从Pdata中sample一个点，从PG中sample一个点，在这两个点的连线上做一个random sample，这个sample出来的x就当作是从P-penalty中sample出来的。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117153645013.png" alt="image-20201117153645013" style="zoom:30%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117153645013.png" alt="image-20201117153645013" style="zoom:30%;"></p>
 <p>为什么只在蓝色部分给penalty可行？我们希望PG中的点慢慢往左移动到Pdata的位置，generator是看着discriminator给出的gradient的方向update参数的。Only give gradient constraint to the region between Pdata and PG because they influence how PG moves to Pdata 。</p>
-<h4 id="Approximation3"><a href="#Approximation3" class="headerlink" title="Approximation3"></a>Approximation3</h4><p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117154405563.png" alt="image-20201117154405563" style="zoom:30%;"></p>
+<h4 id="Approximation3"><a href="#Approximation3" class="headerlink" title="Approximation3"></a>Approximation3</h4><p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117154405563.png" alt="image-20201117154405563" style="zoom:30%;"></p>
 <h3 id="Spectrum-Norm"><a href="#Spectrum-Norm" class="headerlink" title="Spectrum Norm"></a>Spectrum Norm</h3><p>Keep gradient norm smaller than 1 everywhere</p>
 <h2 id="W-GAN-Algorithm"><a href="#W-GAN-Algorithm" class="headerlink" title="W-GAN Algorithm"></a>W-GAN Algorithm</h2><p>一共要更改四个地方。</p>
 <p>训练Discriminator的时候，目标函数改成从两个分布的期望相减。可增加penalty或者weight clipping来满足1-Lipschtz constraint。对于D的输出，没有sigmoid，用linear。</p>
 <p>训练Generator的时候，目标函数对应修改。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117155157601.png" alt="image-20201117155157601" style="zoom:50%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117155157601.png" alt="image-20201117155157601" style="zoom:50%;"></p>
 <h1 id="Energy-based-GAN-EBGAN"><a href="#Energy-based-GAN-EBGAN" class="headerlink" title="Energy-based GAN(EBGAN)"></a>Energy-based GAN(EBGAN)</h1><p>Using an auto-encoder as discriminator D。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117160028165.png" alt="image-20201117160028165" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117160028165.png" alt="image-20201117160028165" style="zoom:40%;"></p>
 <p>Auto-encoder作为discriminator的一个想法就是丢一张image进去，它的reconstruction error可以通过autoencoder算出来。一张图片越容易被reconstruct就说明它是一张high quality image。</p>
 <h2 id="WHY-EBGAN"><a href="#WHY-EBGAN" class="headerlink" title="WHY EBGAN"></a>WHY EBGAN</h2><p>EBGAN的意义在于用auto-encoder实现的discriminator可以用positive examples被pre-train，一开始的discriminator就会很强。</p>
 <p>我们一开始用binary-classfier实现discriminator的问题在于要train好一个二元分类器，你要同时拥有好的negative example和positive example。在一开始generator生成的negative example很弱，得到的discriminator也很弱；discriminator要等generator慢慢变强后，才能够变强。</p>
 <h2 id="Training-TIPs"><a href="#Training-TIPs" class="headerlink" title="Training TIPs"></a>Training TIPs</h2><p>discriminator的output reconstruction error越靠近0说明图片质量越好，就是要让他们的output越大越好（注意结果经过了一个负号）。</p>
 <p>但是你要注意不能让generated example的output越小越好。对于那些output不靠近0的图片，难道图片质量很差，我们就要让他变成很大的negative的值吗？这些很大的negative的值会拖着靠近0的值往下走，因为要求discriminator平滑。我们的训练目的不是minimize reconstruction error。</p>
-<p><img src="/2020/11/17/fGAN-WGAN-EBGAN/image-20201117162308824.png" alt="image-20201117162308824" style="zoom:40%;"></p>
+<p><img src="/2020/11/17/fgan-wgan-ebgan/image-20201117162308824.png" alt="image-20201117162308824" style="zoom:40%;"></p>
 <p>所以我们设定一个threshold，告诉discriminator当一张图片的reconstruction error小于这个therehold的时候，就可以了。</p>
 
         </div>
@@ -405,11 +384,11 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
             <div class="post-copyright-info">
                 <div class="article-copyright-info-container">
     <ul>
-        <li>本文标题：fGAN+WGAN+EBGAN</li>
+        <li>本文标题：fGAN+WGAN+EBGAN解读</li>
         <li>本文作者：徐徐</li>
         <li>创建时间：2020-11-17 09:39:44</li>
         <li>
-            本文链接：https://drunk99.xyz/2020/11/17/fGAN-WGAN-EBGAN/
+            本文链接：https://machacroissant.github.io/2020/11/17/fgan-wgan-ebgan/
         </li>
         <li>
             版权声明：本博客所有文章除特别声明外，均采用 <a class="license" target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh">BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -426,7 +405,7 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
                     <div class="article-prev">
                         <a class="prev"
                            rel="prev"
-                           href="/2020/11/17/GANwithfeatureextraction/"
+                           href="/2020/11/17/ganfeatureextraction/"
                         >
                             <span class="left arrow-icon flex-center">
                               <i class="fas fa-chevron-left"></i>
@@ -442,7 +421,7 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
                     <div class="article-next">
                         <a class="next"
                            rel="next"
-                           href="/2020/11/15/my-Nov-films/"
+                           href="/2020/11/15/nov-films/"
                         >
                             <span class="title flex-center">
                                 <span class="post-nav-title-item">十一月观影总结</span>
@@ -469,10 +448,10 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
         
             
     <div class="valine-container">
-        <script data-pjax
+        <script 
                 src="//cdn.jsdelivr.net/npm/valine@latest/dist/Valine.min.js"></script>
         <div id="vcomments"></div>
-        <script data-pjax>
+        <script >
             function loadValine() {
                 new Valine({
                     el: '#vcomments',
@@ -481,7 +460,7 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
                     meta: ['nick', 'mail', 'link'],
                     avatar: 'wavatar',
                     enableQQ: true,
-                    placeholder: '来一起讨论吧～',
+                    placeholder: 'Let&#39;s talk!',
                     lang: 'zh-CN'.toLowerCase()
                 });
 
@@ -518,7 +497,7 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
                 }, 2000);
             }
 
-            if ('true') {
+            if ('false') {
                 const loadValineTimeout = setTimeout(() => {
                     loadValine();
                     clearTimeout(loadValineTimeout);
@@ -557,12 +536,8 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
             2021&nbsp;<i class="fas fa-heart icon-animate"></i>&nbsp;<a href="/">徐徐</a>
         </div>
         
-            <script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+            <script async  src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
             <div class="website-count info-item">
-                
-                    <span id="busuanzi_container_site_uv">
-                        访问人数&nbsp;<span id="busuanzi_value_site_uv"></span>&ensp;
-                    </span>
                 
                 
                     <span id="busuanzi_container_site_pv">
@@ -572,7 +547,7 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
             </div>
         
         <div class="theme-info info-item">
-            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.2</a>
+            由 <a target="_blank" href="https://hexo.io">Hexo</a> 驱动&nbsp;|&nbsp;主题&nbsp;<a class="theme-version" target="_blank" href="https://github.com/XPoet/hexo-theme-keep">Keep v3.4.3</a>
         </div>
         
     </div>
@@ -636,6 +611,10 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
         
 
         
+            <li class="tools-item tool-scroll-to-top flex-center">
+                <i class="fas fa-arrow-up"></i>
+            </li>
+        
 
         <li class="tools-item tool-scroll-to-bottom flex-center">
             <i class="fas fa-arrow-down"></i>
@@ -646,11 +625,6 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
         <li class="tools-item tool-toggle-show flex-center">
             <i class="fas fa-cog fa-spin"></i>
         </li>
-        
-            <li class="tools-item tool-scroll-to-top flex-center">
-                <i class="arrow-up fas fa-arrow-up"></i>
-                <span class="percent"></span>
-            </li>
         
     </ul>
 </div>
@@ -707,55 +681,23 @@ D_f(P\|Q) = \int_x q(x)f(\frac{p(x)}{q(x)})dx</script><p>where <mjx-container cl
 
 
 
-<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/dark-light-toggle.js"></script>
+<script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/utils.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/main.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/header-shrink.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/back2top.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/dark-light-toggle.js"></script>
 
 
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/local-search.js"></script>
-
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/code-copy.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/local-search.js"></script>
 
 
 
+    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/code-copy.js"></script>
 
-<div class="post-scripts pjax">
+
+
+
+<div class="post-scripts">
     
-        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/toc.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/left-side-toggle.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/libs/anime.min.js"></script><script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.3/source/js/toc.js"></script>
     
 </div>
-
-
-    <script src="//cdn.jsdelivr.net/npm/hexo-theme-keep@3.4.2/source/js/libs/pjax.min.js"></script>
-<script>
-    window.addEventListener('DOMContentLoaded', () => {
-        const pjax = new Pjax({
-            selectors: [
-                'head title',
-                '.page-container',
-                '.pjax'
-            ],
-            history: true,
-            debug: false,
-            cacheBust: false,
-            timeout: 0,
-            analytics: false,
-            currentUrlFullReload: false,
-            scrollRestoration: false,
-            // scrollTo: true,
-        });
-
-        document.addEventListener('pjax:send', () => {
-            KEEP.utils.pjaxProgressBarStart();
-        });
-
-        document.addEventListener('pjax:complete', () => {
-            KEEP.utils.pjaxProgressBarEnd();
-            pjax.executeScripts(document.querySelectorAll('script[data-pjax], .pjax script'));
-            KEEP.refresh();
-        });
-    });
-</script>
 
 
 
